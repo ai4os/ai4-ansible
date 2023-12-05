@@ -1,0 +1,11 @@
+---
+# tasks file for consul_server
+
+- name: Configure consul server
+
+  block:
+  - name: "Copy server certificates"
+    include_tasks: copy_certificates.yml
+
+  - name: "Server configuration"
+    include_tasks: configure.yml

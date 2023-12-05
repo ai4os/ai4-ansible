@@ -1,0 +1,8 @@
+## Zip directory with certs, keys and tokens for new nodes
+
+- name: Zip
+  community.general.archive:
+    path: "{{ new_certs }}"
+    dest: "{{ new_certs}}.zip"
+  delegate_to: 127.0.0.1
+

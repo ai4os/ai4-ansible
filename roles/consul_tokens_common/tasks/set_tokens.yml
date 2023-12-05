@@ -1,0 +1,15 @@
+- name: "Get consul ACL token from consul_master"
+  shell: cat {{ consul_certs}}consul_bootstrap | grep -oP 'SecretID:\s+\K\S+'
+  register: consul_token
+
+- name: "Export consul token"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "{{ item }}{{ consul_token.stdout }}"
+  with_items:
+    - export CONSUL_HTTP_TOKEN=
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"
+

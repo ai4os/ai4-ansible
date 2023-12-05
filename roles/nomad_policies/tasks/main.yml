@@ -1,0 +1,6 @@
+---
+# tasks file for nomad_policies
+
+  - name: "Create nomad policies"
+    include_tasks: policies.yml
+

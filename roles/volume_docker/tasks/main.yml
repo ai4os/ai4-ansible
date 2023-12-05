@@ -1,0 +1,9 @@
+---
+# tasks file for volume_docker
+
+- block:
+  - name: "Enable swap limit capabilities"
+    include_tasks: swap.yml
+
+  - name: "Mount volume"
+    include_tasks: volume.yml

@@ -1,0 +1,6 @@
+{
+{% if vol_name is defined %}
+	"data-root": "{{ mount_dir }}",
+{% endif %}
+	"registry-mirrors": ["{{ docker_registry }}"]	
+}

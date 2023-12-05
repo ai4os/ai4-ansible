@@ -1,0 +1,13 @@
+---
+# tasks file for consul_tokens_common
+
+- name: Get tokens
+
+  block:
+  - name: "Get tokens"
+    include_tasks: copy_tokens.yml
+
+  - name: "Set tokens"
+    include_tasks: set_tokens.yml
+
+

@@ -1,0 +1,7 @@
+---
+# tasks file for docker_config
+
+- block:
+  - name: "Configure docker"
+    include_tasks: config.yml
+

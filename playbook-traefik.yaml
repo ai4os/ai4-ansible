@@ -1,0 +1,44 @@
+######## FROM SCRATCH TRAEFIK SERVICE INSTALLATION ########
+##################################################
+
+ - name: CAUTION WARNING
+   hosts: traefik_master
+   tasks:
+     - name: Security check
+       assert:
+         that:
+           - from_scratch_cluster_installation
+         fail_msg: "ABORTING FROM-SCRATCH TRAEFIK SERVICE INSTALLATION"
+         success_msg: "INSTALLING TRAEFIK SERVICE FROM SCRATCH"
+
+ - name: Traefik installation
+   hosts: nomad_clients
+   become: true
+   roles:
+     - { role: traefik_install, when: from_scratch_cluster_installation }
+
+ - name: Traefik policies
+   hosts: consul_master
+   become: true
+   roles:
+     - { role: traefik_policies, when: from_scratch_cluster_installation }
+
+ - name: Volume managing
+   hosts: nomad_volume
+   become: true
+   roles:
+     - { role: volume_docker }
+
+ - name: Docker config
+   hosts: nomad_volume
+   become: true
+   roles:
+     - { role: docker_config }
+
+ - name: Traefik service
+   hosts: traefik_master
+   become: true
+   roles:
+     - { role: traefik_service, when: from_scratch_cluster_installation }  
+
+

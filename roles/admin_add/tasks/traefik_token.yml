@@ -1,0 +1,8 @@
+## Copy traefik token for new nodes
+
+- name: "Fetch traefik token from consul-master to ansible-master"
+  fetch:
+    src: "{{ path }}traefik_token"
+    dest: "{{ new_certs }}/"
+    flat: yes
+

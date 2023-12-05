@@ -1,0 +1,16 @@
+- name: "Define job config"
+  template:
+    src: templates/{{ item }}.j2
+    dest: "{{ path}}{{ item }}.hcl"
+    owner: ubuntu
+  with_items:
+    - example-job
+
+- name: "Plan and run job"
+  shell: "{{ item }}"
+  with_items:
+    - nomad job plan example-job.hcl
+    - nomad job run example-job.hcl
+  ignore_errors: true
+
+

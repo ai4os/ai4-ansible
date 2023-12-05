@@ -1,0 +1,97 @@
+######## FROM SCRATCH NOMAD INSTALLATION ########
+##################################################
+
+ - name: CAUTION WARNING
+   hosts: nomad
+   tasks:
+     - name: Security check
+       assert:
+         that:
+           - from_scratch_cluster_installation
+         fail_msg: "ABORTING FROM-SCRATCH NOMAD INSTALLATION"
+         success_msg: "INSTALLING NOMAD FROM SCRATCH"
+
+ - name: Nomad installation
+   hosts: nomad
+   become: true
+   roles:
+     - { role: nomad_install, when: from_scratch_cluster_installation }
+
+ - name: Nvidia drivers
+   hosts: nomad_gpu_clients
+   become: true
+   roles:
+     - { role: nomad_nvidia, when: from_scratch_cluster_installation }
+
+ - name: Nomad master configuration
+   hosts: nomad_master
+   become: true
+   roles:
+     - { role: nomad_master, when: from_scratch_cluster_installation }
+
+ - name: Nomad common configuration
+   hosts: nomad
+   become: true
+   roles:
+     - { role: nomad_common, when: from_scratch_cluster_installation }
+
+ - name: Nomad CPU clients configuration
+   hosts: nomad_cpu_clients
+   become: true
+   roles: 
+     - { role: nomad_cpu_client, when: from_scratch_cluster_installation }
+
+ - name: Nomad GPU clients configuration
+   hosts: nomad_gpu_clients
+   become: true
+   roles:
+     - { role: nomad_gpu_client, when: from_scratch_cluster_installation }
+
+
+ - name: Nomad server configuration
+   hosts: nomad_servers 
+   become: true
+   roles:
+     - { role: nomad_server, when: from_scratch_cluster_installation }
+
+ - name: Create nomad policies in consul
+   hosts: consul_master
+   become: true
+   roles: 
+     - { role: nomad_policies, when: from_scratch_cluster_installation }
+
+ - name: Get nomad tokens
+   hosts: nomad
+   become: true
+   roles:
+     - { role: nomad_tokens_common, when: from_scratch_cluster_installation }
+
+ - name: Set client tokens
+   hosts: nomad_clients
+   become: true
+   roles:
+     - { role: nomad_tokens_client, when: from_scratch_cluster_installation }
+
+ - name: Set server tokens
+   hosts: nomad_servers
+   become: true
+   roles:
+     - { role: nomad_tokens_server, when: from_scratch_cluster_installation }
+
+ - name: Start nomad
+   hosts: nomad
+   become: true
+   roles:
+     - { role: nomad_start, when: from_scratch_cluster_installation }
+     
+ - name: Restart nomad
+   hosts: nomad
+   become: true
+   roles:
+     - { role: nomad_restart, when: from_scratch_cluster_installation }
+
+ - name: Create namespaces
+   hosts: nomad_master
+   become: true
+   roles:
+     - { role: nomad_namespaces, when: from_scratch_cluster_installation }

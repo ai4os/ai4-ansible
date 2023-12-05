@@ -1,0 +1,8 @@
+---
+# tasks file for nomad_nvidia
+  
+  - name: "Install Nvidia plugin"
+    include_tasks: plugin.yml
+
+  - name: "Install Nvidia driver and toolkit"
+    include_tasks: driver.yml

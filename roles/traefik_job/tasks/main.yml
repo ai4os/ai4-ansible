@@ -1,0 +1,7 @@
+---
+# tasks file for traefik_job
+
+- block:
+  - name: "Create job"
+    include_tasks: job.yml
+

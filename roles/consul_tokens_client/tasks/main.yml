@@ -1,0 +1,9 @@
+---
+# tasks file for consul_tokens_client
+
+- name: Set consul client tokens
+
+  block:
+  - name: "Set tokens"
+    include_tasks: set_tokens.yml
+

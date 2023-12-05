@@ -1,0 +1,9 @@
+---
+# tasks file for nomad_tokens_common
+
+- name: Get tokens
+
+  block:
+  - name: "Get tokens"
+    include_tasks: copy_tokens.yml
+

@@ -1,0 +1,65 @@
+ - name: Consul installation
+   hosts: consul_new
+   become: true
+   roles:
+     - { role: consul_install }
+
+ - name: Consul common configuration
+   hosts: consul_new
+   become: true
+   roles:
+     - { role: consul_add_common }
+
+ - name: Consul clients configuration
+   hosts: consul_new_clients
+   become: true
+   roles: 
+     - { role: consul_add_client }
+      
+ - name: Consul server configuration
+   hosts: consul_new_servers 
+   become: true
+   roles:
+     - { role: consul_add_server }
+ 
+ - name: Start consul
+   hosts: consul_new
+   become: true
+   roles:
+     - { role: consul_start }
+
+ - name: Restart consul
+   hosts: consul_new
+   become: true
+   roles:
+      - { role: consul_restart }
+
+ - name: Get consul tokens
+   hosts: consul_new
+   become: true
+   roles:
+     - { role: consul_add_tokens_common }
+
+ - name: Set server tokens
+   hosts: consul_new_servers
+   become: true
+   roles:
+     - { role: consul_add_tokens_server }
+
+ - name: Set client tokens
+   hosts: consul_new_clients
+   become: true
+   roles:
+     - { role: consul_tokens_client }
+
+ - name: Start consul
+   hosts: consul_new
+   become: true
+   roles:
+     - { role: consul_start }
+
+ - name: Restart consul
+   hosts: consul_new
+   become: true
+   roles: 
+     - { role: consul_restart }

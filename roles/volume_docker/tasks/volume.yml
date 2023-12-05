@@ -1,0 +1,35 @@
+- name: "Install parted tool"
+  ansible.builtin.package:
+   name:
+     - parted
+   update_cache: yes
+
+- name: "Check disk parititions"
+  shell: lsblk {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }} | grep -c part
+  register: unpart_disk
+  ignore_errors: true
+
+- name: "Partition disk volume if unpartitioned"
+  shell: "{{ item }}"
+  with_items:
+    - "sudo parted --script {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }} mklabel gpt"
+    - "sudo parted -a opt {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }} mkpart primary ext4 0% 100%" 
+  when: unpart_disk.stdout | int == 0
+
+- name: "Check mounting in partition"
+  shell: "sudo mount | grep {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1 | wc -l"
+  register: mountings
+
+- name: "Create filesystem on partition"
+  shell: "{{ item }}"
+  with_items:
+    - "sudo mkfs.xfs -f -L {{ partition_name }} {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1"
+  when: mountings.stdout | int == 0
+
+- name: "Create mounting dir and mount filesystem on partition"
+  shell: "{{ item }}"
+  with_items:
+    - "sudo mkdir -p {{ mount_dir }}"
+    - "sudo mount -o defaults,pquota {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1 {{ mount_dir }}"
+  when: mountings.stdout | int == 0
+

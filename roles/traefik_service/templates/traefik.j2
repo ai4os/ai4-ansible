@@ -1,0 +1,108 @@
+job "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
+  region      = "{{ consul_dc_name }}"
+  datacenters = ["{{ hostvars[inventory_hostname]['nomad_dc'] }}"]
+  type     = "service"
+  priority = 100          # traefik job cannot be displaced by a regular job
+ 
+  # We need to fix the client were Traefik is deployed
+  # because the DNS is pointing to that client's IP.
+  constraint {
+    attribute = "${node.unique.name}"
+    operator  = "="
+    value     = "{{ inventory_hostname }}"
+  }
+
+  group "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
+    count = 1
+ 
+    task "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
+ 
+      driver = "docker"
+ 
+      config {
+        image        = "traefik:v2.10"
+        network_mode = "host"
+        volumes      = [
+          "local/traefik.toml:/etc/traefik/traefik.toml",
+          "local/dynamic.toml:/etc/traefik/dynamic.toml",
+          "{{ traefik_certs }}:/etc/traefik/ssl-certs"
+        ]
+      }
+ 
+      template {
+        data = <<EOF
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+ 
+    [entryPoints.web.http]
+      [entryPoints.web.http.redirections]
+        [entryPoints.web.http.redirections.entryPoint]
+          to = "websecure"
+          scheme = "https"
+ 
+  [entryPoints.websecure]
+    address = ":443"
+ 
+  [entryPoints.traefik]
+    address = ":8081"
+ 
+[api]
+  dashboard = false
+  insecure  = true
+ 
+# Enable Consul Catalog configuration backend.
+[providers.consulCatalog]
+  prefix           = "traefik"
+  exposedByDefault = false
+ 
+  [providers.consulCatalog.endpoint]
+    address = "127.0.0.1:8500"
+    token = "{{ default_token }}"
+    scheme  = "http"
+ 
+[providers.file]
+  filename = "/etc/traefik/dynamic.toml"
+ 
+# [log]
+#   level = "DEBUG"
+ 
+EOF
+ 
+        destination = "local/traefik.toml"
+      }
+ 
+      template {
+        data = <<EOF
+ 
+[http]
+ 
+  [http.routers]
+    [http.routers.routerTest]
+      service = "srv-grpc"
+      rule = "Host(`frontend.local`)"
+ 
+  [http.services]
+    [http.services.srv-grpc]
+      [http.services.srv-grpc.loadBalancer]
+        [[http.services.srv-grpc.loadBalancer.servers]]
+          url = "h2c://backend.local:8080"
+ 
+[tls.stores]
+  [tls.stores.default]
+    [tls.stores.default.defaultCertificate]
+      certFile = "/etc/traefik/ssl-certs/domain.pem"
+      keyFile  = "/etc/traefik/ssl-certs/domain.key"
+ 
+EOF
+ 
+        destination = "local/dynamic.toml"
+      }
+ 
+      resources {
+        cpu    = 100
+        memory = 128
+      }
+    }
+  }
+}

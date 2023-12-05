@@ -1,0 +1,6 @@
+ - name: Job in traefik
+   hosts: job_deployer
+   become: true
+   roles:
+     - { role: traefik_job }
+

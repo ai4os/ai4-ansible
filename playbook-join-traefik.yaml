@@ -1,0 +1,25 @@
+ - name: Traefik installation
+   hosts: nomad_new_clients
+   become: true
+   roles:
+     - { role: traefik_install }
+
+ - name: Volume managing
+   hosts: nomad_volume
+   become: true
+   roles:
+     - { role: volume_docker }
+
+ - name: Docker config
+   hosts: nomad_volume
+   become: true
+   roles:
+     - { role: docker_config }
+       
+ - name: Traefik service
+   hosts: traefik_new_master
+   become: true
+   roles:
+     - { role: traefik_add_service }  
+
+

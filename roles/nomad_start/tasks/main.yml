@@ -1,0 +1,6 @@
+---
+# tasks file for nomad_start
+
+  - name: "Start nomad"
+    include_tasks: start.yml
+

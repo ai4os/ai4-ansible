@@ -1,0 +1,11 @@
+---
+# tasks file for consul_acl
+
+- name: Generating consul ACLs
+
+  block:
+  - name: "Create policies and token access"
+    include_tasks: policies.yml
+
+
+

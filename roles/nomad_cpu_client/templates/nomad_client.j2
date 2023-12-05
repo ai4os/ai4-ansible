@@ -1,0 +1,96 @@
+# Increase log verbosity
+#log_level = "DEBUG"
+ 
+# Make sure Nomad nodes leave before shutting down the agent to prevent messing up the raft consensus
+leave_on_interrupt = true
+leave_on_terminate = true
+ 
+# Enable the client
+client {
+  network_interface = "ens3"
+  enabled = true
+
+  meta {
+   namespace = "{{ hostvars[inventory_hostname]['nomad_namespaces'] }}"
+{% if inventory_hostname in groups['traefik_master'] %}
+   compute = false
+   tags = "traefik"
+{% else %}
+   compute = true
+   tags = "cpu"
+{% endif %}  
+   domain = "{{ hostvars[inventory_hostname]['domain'] }}"
+  }
+
+{% if inventory_hostname not in groups['traefik_master'] %}
+  reserved = {
+   memory = {{ nomad_reserved_memory_mb }}
+  }
+{% endif %}
+
+}
+  # For demo assume you are talking to server1. For production,
+  # this should be like "nomad.service.consul:4647" and a system
+  # like Consul used for service discovery.
+ 
+# Modify our port to avoid a collision with server1
+ 
+# Require TLS
+tls {
+  http = true
+  rpc  = true
+ 
+  ca_file   = "{{ nomad_certs }}nomad-ca.pem"
+  cert_file = "{{ nomad_certs }}client.pem"
+  key_file  = "{{ nomad_certs }}client-key.pem"
+ 
+  verify_server_hostname = true
+  verify_https_client    = true
+}
+ 
+# Bind to all addresses so that the Nomad agent is available both on loopback
+# and externally.
+bind_addr = "0.0.0.0"
+ 
+# Advertise an accessible IP address so the server is reachable by other servers
+# and clients. The IPs can be materialized by Terraform or be replaced by an
+# init script.
+advertise {
+    http = "{{ my_ip }}:4646"
+    rpc = "{{ my_ip }}:4647"
+    serf = "{{ my_ip }}:4648"
+}
+ 
+consul {
+    # The address to the Consul agent.
+    address = "127.0.0.1:8500"
+ 
+    token = "{{ default_token }}"
+ 
+    # The service name to register the server and client with Consul.
+    server_service_name = "nomad-server"
+    client_service_name = "nomad-client"
+ 
+    # Enables automatically registering the services.
+    auto_advertise = true
+ 
+    # Enabling the server and client to bootstrap using Consul.
+    server_auto_join = true
+    client_auto_join = true
+}
+ 
+plugin "docker" {
+  config {
+    allow_privileged = true
+    volumes {
+      enabled = true
+    }
+  }
+}
+ 
+#this will be later removed from production datacenters
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}

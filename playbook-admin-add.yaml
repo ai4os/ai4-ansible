@@ -1,0 +1,9 @@
+## This playbook should be executed ONLY by IFCA admins.
+
+ - name: Generate and copy consul/nomad certs, keys and tokens for new nodes
+   hosts: consul_master
+   become: true
+   roles:
+     - { role: admin_add, when: add_new_nodes }
+
+

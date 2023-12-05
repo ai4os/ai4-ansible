@@ -1,0 +1,11 @@
+---
+# tasks file for consul_client
+
+- name: Configure consul client
+
+  block:
+  - name: "Consul encryption key"
+    include_tasks: copy_certificates.yml
+      
+  - name: "Client configuration"
+    include_tasks: configure.yml

@@ -1,0 +1,114 @@
+## Use public IPs when available
+
+#######################################################
+####### MODIFY THIS GROUPS TO ADD THE NEW NODES #######
+#######################################################
+
+# -- Consul new
+##### Use just one consul server
+[consul_new_servers]
+new-server ansible_host=193.146.75.194
+
+[consul_new_clients]
+new-cpu-client ansible_host=172.16.43.137
+new-gpu-client ansible_host=172.16.43.58
+new-traefik ansible_host=193.146.75.162
+
+[consul_new:children]
+consul_new_servers
+consul_new_clients
+
+# -- Nomad new
+[nomad_new_servers]
+new-server nomad_dc=new_nomad_dc
+
+[nomad_new_gpu_clients]
+new-gpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+
+[nomad_new_cpu_clients]
+new-cpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+new-traefik nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+
+[nomad_new_clients:children]
+nomad_new_cpu_clients
+nomad_new_gpu_clients
+
+[nomad_new:children]
+nomad_new_servers
+nomad_new_clients
+
+
+# ---- Volume-docker
+[nomad_new_volume]
+new-cpu-client vol_name=vdb partition_name=part1
+new-gpu-client vol_name=vdb partition_name=part1
+
+# -- Traefik new
+[traefik_new_master]
+new-traefik
+
+
+
+
+
+
+#########################################
+####### DO NOT MODIFY THIS GROUPS #######
+#########################################
+
+# ----- Consul
+[consul_master]
+node-ifca-0 ansible_host=193.146.75.205
+
+[consul_servers:children]
+consul_master
+
+[consul_clients]
+node-ifca-1 ansible_host=172.16.44.26
+node-ifca-gpu-0 ansible_host=172.16.44.233
+node-ifca-traefik ansible_host=193.146.75.208
+
+[consul:children]
+consul_clients
+consul_servers
+
+
+# ----- Nomad
+[nomad_master]
+node-ifca-0 nomad_dc=ifca-ai4eosc
+
+[nomad_servers:children]
+nomad_master
+
+[nomad_gpu_clients]
+node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+
+[nomad_cpu_clients]
+node-ifca-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+
+[nomad_clients:children]
+nomad_cpu_clients
+nomad_gpu_clients
+
+[nomad:children]
+nomad_clients
+nomad_servers
+
+
+# ---- Volume-docker
+[nomad_volume]
+node-ifca-1 vol_name=vdb partition_name=part1
+node-ifca-gpu-0 vol_name=vdb partition_name=part1
+
+
+# ----- Traefik
+[traefik_master]
+node-ifca-traefik
+
+[job_deployer]
+node-ifca-1
+
+
+
+

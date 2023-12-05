@@ -1,0 +1,6 @@
+---
+# tasks file for traefik_policies
+
+- block:
+  - name: "Create traefik policy"
+    include_tasks: policies.yml

@@ -1,0 +1,13 @@
+Host ansible2
+   User ubuntu
+   Hostname 193.146.75.209
+
+Host 172.16.40.*
+   ProxyJump ansible2
+
+Host host-ifca-dc1-server
+   User ubuntu
+   Hostname 193.146.75.206
+
+Host 172.16.44.*
+   ProxyJump host-ifca-dc1-server

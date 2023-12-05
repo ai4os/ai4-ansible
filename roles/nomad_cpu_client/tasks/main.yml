@@ -1,0 +1,12 @@
+---
+# tasks file for nomad_cpu_client
+
+- name: Configure nomad CPU client
+
+  block:
+  - name: "Copy client certificates"
+    include_tasks: copy_certificates.yml
+
+  - name: "Client configuration"
+    include_tasks: configure.yml
+

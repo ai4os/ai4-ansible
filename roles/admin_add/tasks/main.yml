@@ -1,0 +1,25 @@
+---
+# tasks file for admin_add
+
+- name: Generating certificates, keys and tokens for new nodes
+
+  block:
+  - name: "Generate and copy consul certs and keys"
+    include_tasks: consul_certs.yml
+ 
+  - name: "Create and copy consul tokens"
+    include_tasks: consul_tokens.yml
+ 
+  - name: "Copy nomad certs"
+    include_tasks: nomad_certs.yml
+ 
+  - name: "Create and copy nomad tokens"
+    include_tasks: nomad_tokens.yml
+
+  - name: "Copy traefik token"
+    include_tasks: traefik_token.yml
+
+  - name: "Zip directory with certs, keys and toknes"
+    include_tasks: zip.yml
+
+

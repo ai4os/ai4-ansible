@@ -1,0 +1,9 @@
+---
+# tasks file for nomad_add_common
+
+  - name: "Copy nomad-ca.pem"
+    include_tasks: copy.yml
+
+  - name: "Configure nomad.hcl"
+    include_tasks: configure.yml
+

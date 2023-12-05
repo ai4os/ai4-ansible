@@ -1,0 +1,18 @@
+
+- name: "Export CA cert path"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: export CONSUL_CACERT={{ consul_certs }}consul-agent-ca.pem
+
+- name: "Set consul environment variables"
+  become: false
+  shell: ". {{ environment_file }}"
+
+- name: "Start consul"
+  shell: "{{ item }}"
+  with_items:
+   - sudo systemctl stop consul
+   - sudo systemctl disable consul
+   - sudo systemctl enable consul
+   - sudo systemctl start consul
+

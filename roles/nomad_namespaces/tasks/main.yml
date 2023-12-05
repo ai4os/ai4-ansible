@@ -1,0 +1,10 @@
+---
+# tasks file for nomad_namespaces
+
+- name: Generating nomad namespaces
+
+  block:
+  - name: "Create namespaces"
+    include_tasks: namespace.yml
+
+

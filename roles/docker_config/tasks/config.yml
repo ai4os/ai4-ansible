@@ -1,0 +1,12 @@
+- name: "Configure docker daemon"
+  template:
+   src: "templates/{{ item }}.j2"
+   dest: "{{ docker_config }}{{ item }}.json"
+   owner: ubuntu
+  with_items:
+    - daemon
+  register: docker_file
+
+- name: "Restart docker"
+  shell: sudo systemctl restart docker
+  when: docker_file.changed

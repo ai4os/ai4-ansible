@@ -1,0 +1,17 @@
+
+- name: "Copy consul.hcl configuration"
+  vars:
+     server_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+  template:
+   src: templates/consul.j2
+   dest: "{{ consul_config }}consul.hcl"
+   owner: ubuntu
+
+- name: "Copy server.hcl configuration"
+  template:
+   src: templates/consul_server.j2
+   dest: "{{ consul_config }}server.hcl"
+   owner: ubuntu
+
+
+

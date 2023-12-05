@@ -1,0 +1,10 @@
+---
+# tasks file for nomad_restart
+
+- name: Restart nomad
+
+  block:
+  - name: "Restart"
+    include_tasks: restart.yml
+
+

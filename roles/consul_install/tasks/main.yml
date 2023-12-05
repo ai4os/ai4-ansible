@@ -1,0 +1,18 @@
+---
+# tasks file for consul_install
+
+- name: Checking if consul is installed
+  stat: 
+    path: "{{ consul }}"
+  register: consul_output
+
+- block:
+  - name: "Install packages"
+    include_tasks: dependencies.yml
+
+  - name: "Install consul"
+    include_tasks: install.yml
+
+    when: consul_output.stat.exists == False
+
+

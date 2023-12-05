@@ -1,0 +1,9 @@
+---
+# tasks file for consul_common
+
+  - name: "Copy consul-agent-ca.pem"
+    include_tasks: copy_certificates.yml
+
+  - name: "Configure consul.service"
+    include_tasks: configure.yml
+

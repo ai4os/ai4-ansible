@@ -1,0 +1,13 @@
+---
+# tasks file for nomad_add_gpu_client
+
+- name: Configure nomad GPU client
+
+  block:
+  - name: "Copy client certificates"
+    include_tasks: copy_certificates.yml
+
+  - name: "Client configuration"
+    include_tasks: configure.yml
+
+
