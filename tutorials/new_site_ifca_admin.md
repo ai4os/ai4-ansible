@@ -63,7 +63,7 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
     
     - **nomad_new_cpu_clients**
         
-        Modify the lines to match the new Nomad CPU client names. NOTE: CPU clients are those Nomad clients without GPU. The Traefik node should not be included in this group. If there are no CPU clients, leave the group empty (do not delete the group).
+        Modify the lines to match the new Nomad CPU client names. NOTE: CPU clients are those Nomad clients without GPU. The Traefik node should also be included in this group. If there are no CPU clients, leave the group empty (do not delete the group).
         
         Line template: `<new_cpu_client_name>`
         
@@ -72,6 +72,7 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
         ```
         [nomad_new_cpu_clients]
         new-cpu-client
+        new-traefik
         ```
         
     
