@@ -95,7 +95,7 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
       
       Set the name and IP of the ansible master on section *Ansible*.
       
-      Line template: `ansible_amster: { name: <ansible_master_name>, ip: <ansible_master_ip }`.
+      Line template: `ansible_amster: { name: <ansible_master_name>, ip: <ansible_master_ip }`
       
       Example:
       ```yaml
@@ -116,7 +116,7 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
         
         Set this variable on section *Common* to the path in which the certificates for the joining site will be created. NOTE: it is recommended to mantain `{{ path }}` and just append the name of the new directory to it. This will be the name of the ZIP file that should be handed over to the new site admins.
         
-        Line template: `new_certs:"{{ path }}<new_certs_dir>`"
+        Line template: `new_certs:"{{ path }}<new_certs_dir>"`
         
         Example: 
         
@@ -135,7 +135,7 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
 
 
     
-5. Deliver the new ZIP file `<new_certs_dir>.zip` to the new site admins. This file should be available on the Ansible master in the specified `{{ path }}` (by default: `/home/ubuntu/<new_certs_dir>.zip`.
+5. Deliver the new ZIP file `<new_certs_dir>.zip` to the new site admins. This file should be available on the Ansible master in the specified `{{ path }}` (by default: `/home/ubuntu/<new_certs_dir>.zip`).
 
 6. Modify `group_vars/all.yml` to unset the previously set variable in order to avoid future accidental executions.
     - **add_new_nodes**
