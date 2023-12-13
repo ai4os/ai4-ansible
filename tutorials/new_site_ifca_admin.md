@@ -91,6 +91,17 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
         
     
 2. Modify `group_vars/all.yml` file. Specifically, modify the following variables:
+    - **ansible_master**
+      
+      Set the name and IP of the ansible master on section *Ansible*.
+      
+      Line template: `ansible_amster: { name: <ansible_master_name>, ip: <ansible_master_ip }`.
+      
+      Example:
+      ```yaml
+      ansible_master: { name: ansible1, ip: 172.16.40.39 }
+      ```
+      
     - **add_new_nodes**
         
         Set this variable on section *Admin* to true. 
@@ -114,7 +125,7 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
         ```
         
 
-3. Execute `playbook-admin-add.yaml` playbook to generate the ZIP file.
+4. Execute `playbook-admin-add.yaml` playbook to generate the ZIP file.
     
     Execution command:
     
@@ -124,9 +135,9 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the 
 
 
     
-4. Deliver the new ZIP file `<new_certs_dir>.zip` to the new site admins. This file should be available on the Ansible master in the specified `{{ path }}` (by default: `/home/ubuntu/<new_certs_dir>.zip`.
+5. Deliver the new ZIP file `<new_certs_dir>.zip` to the new site admins. This file should be available on the Ansible master in the specified `{{ path }}` (by default: `/home/ubuntu/<new_certs_dir>.zip`.
 
-5. Modify `group_vars/all.yml` to unset the previously set variable in order to avoid future accidental executions.
+6. Modify `group_vars/all.yml` to unset the previously set variable in order to avoid future accidental executions.
     - **add_new_nodes**
         
         Set this variable on section *Admin* to false. 
