@@ -1,6 +1,12 @@
 # New site: guest admin configuration
 
 
+<aside>
+🛑 This tutorial assumes previous site creation following the prerequisite tutorial `tutorials/new_site_guest_initial.md`.
+
+</aside>
+
+---
 
 To join the federated cluster with a new site, its admin should follow the next steps from the **ansible master**.
 
