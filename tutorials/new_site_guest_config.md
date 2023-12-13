@@ -126,7 +126,7 @@ To join the federated cluster with a new site, its admin should follow the next 
       
       Set the name and IP of the ansible master on section *Ansible*.
       
-      Line template: `ansible_amster: { name: <ansible_master_name>, ip: <ansible_master_ip }`.
+      Line template: `ansible_master: { name: <ansible_master_name>, ip: <ansible_master_ip }`.
       
       Example:
       ```yaml
@@ -138,7 +138,7 @@ To join the federated cluster with a new site, its admin should follow the next 
         Set this variable on section *Common* to the path on which the ZIP file with the cluster certificates will be extracted on the Ansible master. The directory name must be the same as the ZIP file name, and in the same path.
         NOTE: it is recommended to mantain `{{ path }}` and just append the name of the ZIP file to it, without the `.zip` extension.
         
-        Line template: `new_certs:"{{ path }}<new_certs_dir>`"
+        Line template: `new_certs:"{{ path }}<new_certs_dir>"`
         
         Example: 
         
