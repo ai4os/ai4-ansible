@@ -7,8 +7,7 @@ This tutorial provides a guide to create an OpenStack site to later join the fed
 Create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*. To create each of them:
 
 1. In section `Project > Network > Security groups`click `Create Security Group`
-
-1. Set security group name and click `Create Security Group`.
+2. Set security group name and click `Create Security Group`.
 
 Add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
 
@@ -84,19 +83,12 @@ Example: 193.144.210.0.
 ## Create server node
 
 1. Click `Launch instance` in section `Project > Compute > Instances`.
-
-1. Set `Instance name` in section `Details`.
-
-1. Select image source in section `Source`. It is recommended to be Ubuntu 22.04.
-
-1. Select CPU flavour in section `Flavour`. It is recommended to be have a huge capacity.
-
-1. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
-    
-    
-2. Select key pair in section `Key Pair`.
-
-1. Click `Launch instance`.
+2. Set `Instance name` in section `Details`.
+3. Select image source in section `Source`. It is recommended to be Ubuntu 22.04.
+4. Select CPU flavour in section `Flavour`. It is recommended to be have a huge capacity.
+5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
+6. Select key pair in section `Key Pair`.
+7. Click `Launch instance`.
 
 ## Create Traefik node
 
@@ -123,10 +115,8 @@ Both server and Traefik node need a public IP each. For the rest of the nodes (C
 To associate a public IP to an instance:
 
 1. In section `Project > Network > Floating IPs` select an available public IP address and click `Associate`.
-
-1. In `Port to be associated`, select the port to the instace.
-
-1. Click `Associate`.
+2. In `Port to be associated`, select the port to the instace.
+3. Click `Associate`.
 
 ## Add volumes
 
@@ -135,9 +125,12 @@ CPU and GPU client nodes are recommended to have an attached volume. For the res
 To attach a volume to an instance:
 
 1. In section `Project > Volumes > Volumes` select an available volume and click the down arrow (▼) next to the `Edit volume` option.
+2. Click `Manage Attachments`
+3. In `Attach to Instance`, select the instace.
+4. Click `Attach volume`.
 
-1. Click `Manage Attachments`
+---
 
-1. In `Attach to Instance`, select the instace.
+After completing all steps for the new site creation, the configuration tutorial `tutorials/new_site_guest_initial.md` can be followed to join the federated cluster.
 
-1. Click `Attach volume`.
+
