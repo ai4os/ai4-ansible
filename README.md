@@ -29,7 +29,7 @@ Host <private-ips-on-bastion-subnet>
 ### Ansible configuration
 The ssh public key of the Ansible master must be added to every node it manages. 
 
-Example: copy `./ssh/id_rsa.pub` from Ansible master to `.ssh/authorized_keys` on each Ansible slave.
+Example: copy `.ssh/id_rsa.pub` from Ansible master to `.ssh/authorized_keys` on each Ansible slave.
 
 ---
 
