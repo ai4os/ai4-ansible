@@ -85,7 +85,7 @@ Example: 193.144.210.0.
 1. Click `Launch instance` in section `Project > Compute > Instances`.
 2. Set `Instance name` in section `Details`.
 3. Select image source in section `Source`. It is recommended to be Ubuntu 22.04.
-4. Select CPU flavour in section `Flavour`. It is recommended to be have a huge capacity.
+4. Select CPU flavour in section `Flavour`. It is recommended to be have a huge capacity. Example: a CPU flavour with 16 CPUs, 46 GB RAM, 40 GB SSD.
 5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
 6. Select key pair in section `Key Pair`.
 7. Click `Launch instance`.
@@ -94,19 +94,19 @@ Example: 193.144.210.0.
 
 Repite the same steps from [Create server node](https://www.notion.so/Create-server-node-a6a4ddcf706247f8bf7caa14b3ba3f41?pvs=21). 
 
-In step 4, select a CPU flavour with low capacity.
+In step 4, select a CPU flavour with low capacity. Example: a CPU flavour with 1 CPU,	2 GB RAM,	10 GB SSD.
 
 ## Create CPU client nodes
 
 Repite the same steps from [Create server node](https://www.notion.so/Create-server-node-a6a4ddcf706247f8bf7caa14b3ba3f41?pvs=21) for each desired CPU client.
 
-In step 4, select a CPU flavour with huge capacity.
+In step 4, select a CPU flavour with huge capacity. Example: a CPU flavour with 64 CPUs, 184 GB RAM, 100 GB SSD.
 
 ## Create GPU client nodes
 
 Repite the same steps from [Create server node](https://www.notion.so/Create-server-node-a6a4ddcf706247f8bf7caa14b3ba3f41?pvs=21) for each desired GPU client.
 
-In step 4, select a GPU flavour with huge capacity.
+In step 4, select a GPU flavour with huge capacity. Example: a GPU flavour with 86 CPUs, 8 GPUs, 351.6 GB RAM,	200 GB SSD.
 
 ## Add public IPs
 
@@ -125,12 +125,12 @@ CPU and GPU client nodes are recommended to have an attached volume. For the res
 To attach a volume to an instance:
 
 1. In section `Project > Volumes > Volumes` select an available volume and click the down arrow (▼) next to the `Edit volume` option.
-2. Click `Manage Attachments`
+2. Click `Manage Attachments`.
 3. In `Attach to Instance`, select the instace.
 4. Click `Attach volume`.
 
 ---
 
-After completing all steps for the new site creation, the configuration tutorial `tutorials/new_site_guest_initial.md` can be followed to join the federated cluster.
+After completing all steps for the new site creation, the configuration tutorial `tutorials/new_site_guest_config.md` can be followed to join the federated cluster.
 
 
