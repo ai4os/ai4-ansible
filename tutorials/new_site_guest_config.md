@@ -1,4 +1,4 @@
-# New site: guest admin steps
+# New site: guest admin configuration
 
 
 
