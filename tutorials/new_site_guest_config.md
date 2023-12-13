@@ -121,6 +121,18 @@ To join the federated cluster with a new site, its admin should follow the next 
         
     
 2. Modify `group_vars/all.yml` file. Specifically, modify the following variable:
+   
+    - **ansible_master**
+      
+      Set the name and IP of the ansible master on section *Ansible*.
+      
+      Line template: `ansible_amster: { name: <ansible_master_name>, ip: <ansible_master_ip }`.
+      
+      Example:
+      ```yaml
+      ansible_master: { name: ansible1, ip: 172.16.40.39 }
+      ```
+
     - **new_certs**
         
         Set this variable on section *Common* to the path on which the ZIP file with the cluster certificates will be extracted on the Ansible master. The directory name must be the same as the ZIP file name, and in the same path.
@@ -134,8 +146,8 @@ To join the federated cluster with a new site, its admin should follow the next 
         new_certs: "{{ path }}new_site_name"
         ```
 
-3. Place the ZIP file on the Ansible master in the specified `{{ path }}` (by default: `/home/ubuntu/<new_certs_dir>.zip`.
-4. Execute `playbook-join-consul.yaml` playbook to join Consul.
+4. Place the ZIP file on the Ansible master in the specified `{{ path }}` (by default: `/home/ubuntu/<new_certs_dir>.zip`.
+5. Execute `playbook-join-consul.yaml` playbook to join Consul.
     
     Execution command:
     
@@ -143,7 +155,7 @@ To join the federated cluster with a new site, its admin should follow the next 
     ansible-playbook -i hosts playbook-join-consul.yaml
     ```
 
-5. Execute `playbook-join-nomad.yaml` playbook to join Nomad.
+6. Execute `playbook-join-nomad.yaml` playbook to join Nomad.
     
     Execution command:
     
@@ -151,7 +163,7 @@ To join the federated cluster with a new site, its admin should follow the next 
     ansible-playbook -i hosts playbook-join-nomad.yaml
     ```
     
-6. Execute `playbook-join-traefik.yaml` playbook to configure the volumes, docker and the Traefik service.
+7. Execute `playbook-join-traefik.yaml` playbook to configure the volumes, docker and the Traefik service.
     
     Execution command:
     
