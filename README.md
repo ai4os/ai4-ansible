@@ -7,12 +7,18 @@ The Ansible roles are valid to manage both iMagine and AI4EOSC sites.
 
 ### IFCA admin
 
-- Follow [tutorials/new_site_ifca_admin.md](./tutorials/new_site_ifca_admin.md) to create the ZIP file with required certificates for the new site.
+If you are an IFCA admin willing to include a new site into the federated cluster,
+you need to complete the following steps:
 
-### New site admin
+- [Run Ansible to create the required certificates for the new site.](./docs/ifca_ansible.md)
 
-- Follow [tutorials/new_site_guest_initial.md](./new_site_guest_initial.md) to create the OpenStack new site.
-- Follow [tutorials/new_site_guest_config.md](./new_site_guest_config.md) to join the federated cluster with the new site.
+### Site admin
+
+If you are the admin of a new site willing to join to the cluster,
+you need to complete the following steps:
+
+- [Configure your Openstack](./docs/site_openstack.md)
+- [Run Ansible to join the federated cluster](./docs/site_ansible.md)
 
 
 ## Hosts configuration

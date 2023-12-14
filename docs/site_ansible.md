@@ -1,7 +1,8 @@
 # New site: Ansible configuration
 
 > ⓘ  **Requirements** \
-> This tutorial assumes previous site creation following the prerequisite tutorial [new_site_guest_initial.md](./new_site_guest_initial.md).
+> This tutorial assumes you already have completed the
+> [Openstack configuration](./site_openstack.md) of your site.
 
 To join the federated cluster with a new site, its admin should follow the following
 steps from the **ansible master**.
