@@ -1,15 +1,21 @@
-# New site: guest admin prerequisites
+# New site: Openstack configuration
 
 This tutorial provides a guide to create an OpenStack site to later join the federated cluster.
 
-## Create security groups
+Once this tutorials is completed you can proceed with
+[Running Ansible to join the federated cluster](./site_ansible.md)
 
-Create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*. To create each of them:
+## 1. Create security groups
 
-1. In section `Project > Network > Security groups`click `Create Security Group`
+You need to create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*.
+To create each one of them:
+
+1. In section `Project > Network > Security groups` click `Create Security Group`
 2. Set security group name and click `Create Security Group`.
 
-Add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
+Then add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
+
+<!-- todo: Susana needs to check these rules with Álvaro -->
 
 The needed rules for each group are:
 
@@ -68,69 +74,64 @@ The needed rules for each group are:
 | Ingress | IPv4 | TCP | 8081 | <new_site_network> | Traefik dashboard |
 | Ingress | IPv4 | TCP | 8081 | <traefik_node_public_IP>/24 | Traefik dashboard |
 
----
+where:
 
-*<new_site_network>*: subnet of the new site. 
+* `<new_site_network>` is subnet of the new site (eg. `193.146.75.0/24`)`.
+* `<traefik_node_public_IP>` is the public IP assigned to the new site’s Traefik node
+  (eg. `193.144.210.0`)`.
 
-Example: 193.146.75.0/24.
+## 2. Create nodes
 
-*<traefik_node_public_IP>*: public IP assigned to the new site’s Traaefik node.
-
-Example: 193.144.210.0.
-
----
-
-## Create server node
+To create a node in OpenstacK:
 
 1. Click `Launch instance` in section `Project > Compute > Instances`.
 2. Set `Instance name` in section `Details`.
-3. Select image source in section `Source`. It is recommended to be Ubuntu 22.04.
-4. Select CPU flavour in section `Flavour`. It is recommended to be have a huge capacity. Example: a CPU flavour with 16 CPUs, 46 GB RAM, 40 GB SSD.
+3. Select image source in section `Source`. We recommend Ubuntu 22.04.
+4. Select CPU flavour in section `Flavour`, were based on the required node specs.
 5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
 6. Select key pair in section `Key Pair`.
 7. Click `Launch instance`.
 
-## Create Traefik node
+You should create the following nodes:
 
-Repite the same steps from [Create server node](https://www.notion.so/Create-server-node-a6a4ddcf706247f8bf7caa14b3ba3f41?pvs=21). 
+* 1 server node: \
+  Tentative specs: `16 CPUs, 46 GB RAM, 40 GB SSD`
+* 1 Traefik node: \
+  Tentative specs: `1 CPU, 2 GB RAM, 10 GB SSD`
+* $N$ CPU client nodes ($N \geqslant 0 $): \
+  Tentative specs: `64 CPUs, 184 GB RAM, 100 GB SSD`
+* $N$ GPU client nodes ($N \geqslant 0 $): \
+  Tentative specs: `86 CPUs, 8 GPUs, 351.6 GB RAM, 200 GB SSD`
 
-In step 4, select a CPU flavour with low capacity. Example: a CPU flavour with 1 CPU,	2 GB RAM,	10 GB SSD.
+<!-- todo: add Ansible master ssh key in every node? -->
 
-## Create CPU client nodes
+## 3. Attach public IPs
 
-Repite the same steps from [Create server node](https://www.notion.so/Create-server-node-a6a4ddcf706247f8bf7caa14b3ba3f41?pvs=21) for each desired CPU client.
-
-In step 4, select a CPU flavour with huge capacity. Example: a CPU flavour with 64 CPUs, 184 GB RAM, 100 GB SSD.
-
-## Create GPU client nodes
-
-Repite the same steps from [Create server node](https://www.notion.so/Create-server-node-a6a4ddcf706247f8bf7caa14b3ba3f41?pvs=21) for each desired GPU client.
-
-In step 4, select a GPU flavour with huge capacity. Example: a GPU flavour with 86 CPUs, 8 GPUs, 351.6 GB RAM,	200 GB SSD.
-
-## Add public IPs
-
-Both server and Traefik node need a public IP each. For the rest of the nodes (CPU and GPU clients), it is not necessary.  
+Both server and Traefik node need a public IP each.
+For the rest of the nodes (CPU and GPU clients), it is not necessary.
 
 To associate a public IP to an instance:
 
 1. In section `Project > Network > Floating IPs` select an available public IP address and click `Associate`.
-2. In `Port to be associated`, select the port to the instace.
+2. In `Port to be associated`, select the port to the instance.
 3. Click `Associate`.
 
-## Add volumes
+## 4. Create and attach volumes
 
-CPU and GPU client nodes are recommended to have an attached volume. For the rest of the nodes (server and Traefik), it is pointless.
+CPU and GPU client nodes are recommended to have an attached volume.
+
+Server and Traefik nodes do not need attached volumes.
+
+<!-- todo: how to create a volume -->
 
 To attach a volume to an instance:
 
 1. In section `Project > Volumes > Volumes` select an available volume and click the down arrow (▼) next to the `Edit volume` option.
 2. Click `Manage Attachments`.
-3. In `Attach to Instance`, select the instace.
+3. In `Attach to Instance`, select the instance.
 4. Click `Attach volume`.
 
----
-
-After completing all steps for the new site creation, the configuration tutorial `tutorials/new_site_guest_config.md` can be followed to join the federated cluster.
-
-
+<!-- todo: fix these numbers -->
+We recommend that:
+* **CPU nodes** have volumes with _at least_ 10 GB per CPU core.
+* **GPU nodes** have volumes with _at least_ 50 GB per GPU.
