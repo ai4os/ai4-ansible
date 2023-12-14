@@ -1,5 +1,20 @@
 # Ansible roles for Consul, Nomad and Traefik automated deployment
 
+These are the Ansible roles to manage the federated Nomad cluster in the AI4OS project.
+The Ansible roles are valid to manage both iMagine and AI4EOSC sites.
+
+## Usage
+
+### IFCA admin
+
+- Follow [tutorials/new_site_ifca_admin.md](./tutorials/new_site_ifca_admin.md) to create the ZIP file with required certificates for the new site.
+
+### New site admin
+
+- Follow [tutorials/new_site_guest_initial.md](./new_site_guest_initial.md) to create the OpenStack new site.
+- Follow [tutorials/new_site_guest_config.md](./new_site_guest_config.md) to join the federated cluster with the new site.
+
+
 ## Hosts configuration
 
 ### hosts file
@@ -14,7 +29,7 @@ This file configures a bastion node with a public IP which will be used as a pro
 
 > It must be modified to match the cluster configuration.
 Provided that each Nomad DC would be deployed on a different subnet, the following section must be replicated as many times as Nomad DCs.
-> 
+
 
 ```
 Host <bastion-name>
@@ -27,23 +42,6 @@ Host <private-ips-on-bastion-subnet>
 ```
 
 ### Ansible configuration
-The ssh public key of the Ansible master must be added to every node it manages. 
+The ssh public key of the Ansible master must be added to every node it manages.
 
 Example: copy `.ssh/id_rsa.pub` from Ansible master to `.ssh/authorized_keys` on each Ansible slave.
-
----
-
-## Use guide
-
-### IFCA admin
-
-- Follow `tutorials/new_site_ifca_admin.md` to create the ZIP file with required certificates for the new site.
-
-
-### New site admin
-
-- Follow `tutorials/new_site_guest_initial.md` to create the OpenStack new site.
-- Follow `tutorials/new_site_guest_config.md` to join the federated cluster with the new site.
-
-
-
