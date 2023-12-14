@@ -6,12 +6,12 @@
 To join the federated cluster with a new site, its admin should follow the following
 steps from the **ansible master**.
 
-## 1. Modify hosts
+## 1. Modify `hosts``
 
 Modify [hosts](../hosts) file to match the new cluster configuration.
 Specifically, modify the following groups:
 
-#### `consul_new_servers`
+### Group `consul_new_servers`
 
 Modify the line to match the new Consul server name and its public IP.
 
@@ -29,7 +29,7 @@ Group example:
 new-server ansible_host=193.146.75.194
 ```
 
-#### `consul_new_clients`
+### Group `consul_new_clients`
 
 Modify the lines to match the new Consul client names and its IPs.
 
@@ -51,7 +51,7 @@ new-gpu-client2 ansible_host=172.16.43.59
 new-traefik ansible_host=193.146.75.162
 ```
 
-#### `nomad_new_servers`
+### Group `nomad_new_servers`
 
 Modify the line to match the new Nomad server name. Add its Nomad datacenter name.
 
@@ -69,7 +69,7 @@ Group example:
 new-server nomad_dc=my_new_nomad_dc
 ```
 
-#### `nomad_new_gpu_clients`
+### Group `nomad_new_gpu_clients`
 
 Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces (if it belongs to both namespaces, separate them with just a comma)
 
@@ -88,7 +88,7 @@ new-gpu-client1 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=a
 new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine
 ```
 
-#### `nomad_new_cpu_clients`
+### Group `nomad_new_cpu_clients`
 
 Modify the lines to match the new Nomad CPU client names. Add its Nomad datacenter name, domain and namespaces (if both namespaces, separate them with just a comma).
 
@@ -111,7 +111,7 @@ new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai
 new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
 ```
 
-#### `nomad_new_volume`
+### Group `nomad_new_volume`
 
 Modify the line to match the names of the new Nomad clients with an attached volume. Add its volume name and the name of its desired partition
 
@@ -127,7 +127,7 @@ new-cpu-client vol_name=vdb partition_name=part1
 new-gpu-client1 vol_name=vdb partition_name=part1
 ```
 
-#### `traefik_new_master`
+### Group `traefik_new_master`
 
 Modify the line to match the new Traefik name.
 
