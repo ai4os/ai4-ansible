@@ -1,4 +1,4 @@
-# New site: guest admin configuration
+# New site: Ansible configuration
 
 > ⓘ  **Requirements** \
 > This tutorial assumes previous site creation following the prerequisite tutorial [new_site_guest_initial.md](./new_site_guest_initial.md).
@@ -9,8 +9,8 @@ steps from the **ansible master**.
 
 ## 1. Modify hosts
 
-Modify [hosts](../hosts) file to match the new cluster configuration. Specifically, modify
-the following groups:
+Modify [hosts](../hosts) file to match the new cluster configuration.
+Specifically, modify the following groups:
 
 - **consul_new_servers**
 
@@ -108,6 +108,8 @@ the following groups:
 
 - **nomad_new_volume**
 
+    <!-- todo: move to the end? -->
+
     Modify the line to match the names of the new Nomad clients with an attached volume. Add its volume name and the name of its desired partition
 
     Line template:
@@ -141,7 +143,8 @@ the following groups:
 
 ## 2. Modify group_vars
 
-Modify `group_vars/all.yml` file. Specifically, modify the following variables:
+Modify [group_vars/all.ym](../group_vars/all.yml) file.
+Specifically, modify the following variables:
 
 - **ansible_master**
 

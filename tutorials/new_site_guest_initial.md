@@ -1,10 +1,10 @@
-# New site: guest admin prerequisites
+# New site: Openstack configuration
 
 This tutorial provides a guide to create an OpenStack site to later join the federated cluster.
 
 After completing all steps for the new site creation, the configuration tutorial `tutorials/new_site_guest_config.md` can be followed to join the federated cluster.
 
-## Create security groups
+## 1. Create security groups
 
 You need to create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*.
 To create each one of them:
@@ -77,7 +77,7 @@ where:
 * `<traefik_node_public_IP>` is the public IP assigned to the new site’s Traefik node
   (eg. `193.144.210.0`)`.
 
-## Create nodes
+## 2. Create nodes
 
 To create a node in OpenstacK:
 
@@ -100,7 +100,7 @@ You should create the following nodes:
 * $N$ GPU client nodes ($N \geqslant 0 $): \
   Tentative specs: `86 CPUs, 8 GPUs, 351.6 GB RAM, 200 GB SSD`
 
-## Attach public IPs
+## 3. Attach public IPs
 
 Both server and Traefik node need a public IP each.
 For the rest of the nodes (CPU and GPU clients), it is not necessary.
@@ -111,7 +111,7 @@ To associate a public IP to an instance:
 2. In `Port to be associated`, select the port to the instance.
 3. Click `Associate`.
 
-## Create and attach volumes
+## 4. Create and attach volumes
 
 CPU and GPU client nodes are recommended to have an attached volume.
 
