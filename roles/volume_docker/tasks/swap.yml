@@ -2,7 +2,7 @@
   ansible.builtin.lineinfile:
     path: "{{ grub_path }}"
     regexp: '^GRUB_CMDLINE_LINUX='
-    line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1'
+    line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
   register: line_changed
 
 - name: "Update grub boot loader"
