@@ -2,7 +2,8 @@
 
 This tutorial provides a guide to create an OpenStack site to later join the federated cluster.
 
-After completing all steps for the new site creation, the configuration tutorial `tutorials/new_site_guest_config.md` can be followed to join the federated cluster.
+Once this tutorials is completed you can proceed with
+[Running Ansible to join the federated cluster](./site_ansible.md)
 
 ## 1. Create security groups
 
@@ -13,6 +14,8 @@ To create each one of them:
 2. Set security group name and click `Create Security Group`.
 
 Then add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
+
+<!-- todo: Susana needs to check these rules with Álvaro -->
 
 The needed rules for each group are:
 
@@ -99,6 +102,8 @@ You should create the following nodes:
   Tentative specs: `64 CPUs, 184 GB RAM, 100 GB SSD`
 * $N$ GPU client nodes ($N \geqslant 0 $): \
   Tentative specs: `86 CPUs, 8 GPUs, 351.6 GB RAM, 200 GB SSD`
+
+<!-- todo: add Ansible master ssh key in every node? -->
 
 ## 3. Attach public IPs
 

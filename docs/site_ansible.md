@@ -5,7 +5,7 @@
 > [Openstack configuration](./site_openstack.md) of your site.
 
 To join the federated cluster with a new site, its admin should follow the following
-steps from the **ansible master**.
+steps from the [Ansible master](../README.md#ansible-configuration).
 
 
 ## 1. Modify hosts
@@ -182,7 +182,8 @@ Specifically, modify the following variables:
 
 ## 3. Place ZIP file
 
-Place the ZIP file on the Ansible master in the specified `{{ path }}`.
+Place the ZIP file, that you should have received from the IFCA admin,
+on the Ansible master at the specified `{{ path }}`.
 
 Default location: `/home/ubuntu/<new_certs_dir>.zip`.
 

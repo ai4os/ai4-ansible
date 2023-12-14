@@ -1,7 +1,8 @@
 # IFCA admin: Ansible configuration
 
 To add a new site to the federated cluster, an **IFCA admin** should follow the
-following steps from the **ansible master** to generate certs.
+following steps from the [Ansible master](../README.md#ansible-configuration)
+to generate certs.
 
 
 ## 1. Modify hosts
@@ -181,7 +182,7 @@ This file should be available on the Ansible master in the specified `{{ path }}
 Default location: `/home/ubuntu/<new_certs_dir>.zip`.
 
 
-## 5. Modify group_vars
+## 5. Modify back group_vars
 
 Modify [group_vars/all.yml](../group_vars/all.yml) to unset the previously set
 variable in order to avoid future accidental executions.
