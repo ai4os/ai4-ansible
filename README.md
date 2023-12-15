@@ -3,6 +3,10 @@
 These are the Ansible roles to manage the federated Nomad cluster in the AI4OS project.
 The Ansible roles are valid to manage both iMagine and AI4EOSC sites.
 
+<!-- todo: host -> host.example, customize, cp before tutorial -->
+<!-- todo: add ifca host to gitignore -->
+<!-- todo: reorder hosts groups -->
+
 
 ## Ansible configuration
 
@@ -24,10 +28,11 @@ ansible-playbook -i hosts <playbook>
 The default location for this file is `.ssh/config`.
 This file configures a bastion node with a public IP which will be used as a proxy to provide SSH access to the rest of the nodes in that subnet .
 
-> It must be modified to match the cluster configuration.
+It must be modified to match the cluster configuration.
 > Provided that each Nomad DC would be deployed on a different subnet, the following section must be replicated as many times as Nomad DCs.
-<!-- todo: check susana -->
+<!-- todo: ignacio -->
 ```
+# Datacenter number 1
 Host <bastion-name>
    User <ssh-username>
    Hostname <bastion-public-ip>
@@ -35,7 +40,11 @@ Host <bastion-name>
 Host <private-ips-on-bastion-subnet>
    ProxyJump <bastion-name>
 
+# Datacenter number 2
+# ...
 ```
+
+<!-- todo: bastion is server, reference back to openstactk tuto -->
 
 ## Usage
 

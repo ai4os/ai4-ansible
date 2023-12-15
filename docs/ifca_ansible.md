@@ -5,6 +5,8 @@ following steps from the [Ansible master](../README.md#ansible-configuration)
 to generate certs.
 
 
+<!-- todo: ifca admin receives host guests -->
+
 ## 1. Modify hosts
 
 Modify [hosts](../hosts) file to match the new cluster configuration.
@@ -89,6 +91,7 @@ Specifically, modify the following groups:
     > included in this group.
 
     > ⚠ If there are no CPU clients, leave the group empty (**do not delete the group**).
+    <!-- todo: cambiar -->
 
     Line template:
     ```ini
@@ -153,7 +156,10 @@ Specifically, modify the following variables:
     Set this variable on section *Common* to the path in which the certificates
     for the joining site will be created.
 
-    > ⓘ It is recommended to maintain `{{ path }}` and just append the name of the new directory to it. This will be the name of the ZIP file that should be handed over to the new site admins.
+    > ⓘ It is recommended to maintain `{{ path }}` and just append the name of
+    > the new directory to it.
+    > This will be the name of the ZIP file that should be handed over to the new
+    > site admins.
 
     Line template:
     ```yaml

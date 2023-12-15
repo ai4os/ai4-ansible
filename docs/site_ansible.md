@@ -94,6 +94,7 @@ Specifically, modify the following groups:
     > included in this group.
 
     > ⚠ If there are no CPU clients, leave the group empty (**do not delete the group**).
+    <!-- todo: cambiar -->
 
     Line template:
     ```ini
@@ -163,12 +164,11 @@ Specifically, modify the following variables:
 
 - **new_certs**
 
-    Set this variable on section *Common* to the path on which the ZIP file with the cluster certificates will be extracted on the Ansible master. The directory name must be the same as the ZIP file name, and in the same path.
+    Set this variable on section *Common* to the path on which the ZIP file with the
+    cluster certificates will be extracted on the Ansible master.
 
     > ⓘ It is recommended to keep `{{ path }}` and just append the name of the ZIP
-    > file to it (without the `.zip` extension).
-
-    <!-- todo: check this with admin guide -->
+    > filename to it (without the `.zip` extension).
 
     Line template:
     ```yaml
@@ -179,6 +179,14 @@ Specifically, modify the following variables:
     ```yaml
     new_certs: "{{ path }}new_site_name"
     ```
+
+<!-- todo: add your Traefik certs to group vars -->
+
+
+
+
+
+<!-- todo: additional step: send host file to ifca admin -->
 
 ## 3. Place ZIP file
 

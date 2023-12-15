@@ -15,8 +15,6 @@ To create each one of them:
 
 Then, add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
 
-<!-- todo: Susana needs to check these rules with Álvaro -->
-
 The needed rules for each group are:
 
 - default
@@ -73,6 +71,7 @@ The needed rules for each group are:
 | Ingress | IPv4 | TCP | 443 (HTTPS) | 0.0.0.0/0 | Allow SSL |
 | Ingress | IPv4 | TCP | 8081 | <new_site_network> | Traefik dashboard |
 | Ingress | IPv4 | TCP | 8081 | <traefik_node_public_IP>/24 | Traefik dashboard |
+<!-- todo: check -->
 
 where:
 
@@ -86,8 +85,10 @@ To create a node in OpenstacK:
 
 1. Click `Launch instance` in section `Project > Compute > Instances`.
 2. Set `Instance name` in section `Details`.
+<!-- todo: warning nombres guión -->
 3. Select image source in section `Source`. We recommend Ubuntu 22.04.
-4. Select CPU flavour in section `Flavour`, were based on the required node specs.
+4. Select CPU flavour in section `Flavour`, where hardware requirements are based on the
+ tentative node specs listed below.
 5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
 6. Select key pair in section `Key Pair`.
 7. Click `Launch instance`.
@@ -103,7 +104,7 @@ You should create the following nodes:
 * $N$ GPU client nodes ($N \geqslant 0 $): \
   Tentative specs: `86 CPUs, 8 GPUs, 351.6 GB RAM, 200 GB SSD`
 
-<!-- todo: add Ansible master ssh key in every node? -->
+<!-- todo: add Ansible master ssh key in every node?  reference readme -->
 
 ## 3. Associate public IPs
 
@@ -135,3 +136,6 @@ To attach a volume to an instance:
 We recommend that:
 * **CPU nodes** have volumes with _at least_ 10 GB per CPU core.
 * **GPU nodes** have volumes with _at least_ 50 GB per GPU.
+
+
+<!-- todo: ignacio, crreate Traefik certs nsupdate -->
