@@ -26,23 +26,24 @@ ansible-playbook -i hosts <playbook>
 ### SSH config file
 
 The default location for this file is `.ssh/config`.
-This file configures a bastion node with a public IP which will be used as a proxy to provide SSH access to the rest of the nodes in that subnet .
+This file configures a bastion node with a public IP which will be used as a proxy to
+provide SSH access to the rest of the nodes in that subnet .
 
-It must be modified to match the cluster configuration.
-> Provided that each Nomad DC would be deployed on a different subnet, the following section must be replicated as many times as Nomad DCs.
-<!-- todo: ignacio -->
+Template:
 ```
-# Datacenter number 1
 Host <bastion-name>
    User <ssh-username>
    Hostname <bastion-public-ip>
 
 Host <private-ips-on-bastion-subnet>
    ProxyJump <bastion-name>
-
-# Datacenter number 2
-# ...
 ```
+
+Example:
+```
+```
+<!-- todo: add example -->
+
 
 <!-- todo: bastion is server, reference back to openstactk tuto -->
 
