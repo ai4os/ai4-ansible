@@ -10,10 +10,10 @@ Once this tutorials is completed you can proceed with
 You need to create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*.
 To create each one of them:
 
-1. In section `Project > Network > Security groups` click `Create Security Group`
+1. In section `Project > Network > Security groups`, click `Create Security Group`.
 2. Set security group name and click `Create Security Group`.
 
-Then add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
+Then, add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
 
 <!-- todo: Susana needs to check these rules with Álvaro -->
 
@@ -76,9 +76,9 @@ The needed rules for each group are:
 
 where:
 
-* `<new_site_network>` is subnet of the new site (eg. `193.146.75.0/24`)`.
+* `<new_site_network>` is subnet of the new site (eg. `193.146.75.0/24`).
 * `<traefik_node_public_IP>` is the public IP assigned to the new site’s Traefik node
-  (eg. `193.144.210.0`)`.
+  (eg. `193.144.210.0`).
 
 ## 2. Create nodes
 
@@ -105,14 +105,14 @@ You should create the following nodes:
 
 <!-- todo: add Ansible master ssh key in every node? -->
 
-## 3. Attach public IPs
+## 3. Associate public IPs
 
 Both server and Traefik node need a public IP each.
 For the rest of the nodes (CPU and GPU clients), it is not necessary.
 
 To associate a public IP to an instance:
 
-1. In section `Project > Network > Floating IPs` select an available public IP address and click `Associate`.
+1. In section `Project > Network > Floating IPs`, select an available public IP address and click `Associate`.
 2. In `Port to be associated`, select the port to the instance.
 3. Click `Associate`.
 
@@ -126,7 +126,7 @@ Server and Traefik nodes do not need attached volumes.
 
 To attach a volume to an instance:
 
-1. In section `Project > Volumes > Volumes` select an available volume and click the down arrow (▼) next to the `Edit volume` option.
+1. In section `Project > Volumes > Volumes`, select an available volume and click the down arrow (▼) next to the `Edit volume` option.
 2. Click `Manage Attachments`.
 3. In `Attach to Instance`, select the instance.
 4. Click `Attach volume`.
