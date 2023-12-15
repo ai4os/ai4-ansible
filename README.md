@@ -56,6 +56,8 @@ you need to complete the following steps:
 
 - [Run Ansible to create the required certificates for the new site](./docs/ifca_ansible.md)
 
+<!-- add post actions - Openstack: add new site IPs to security groups  -->
+
 ### Site admin
 
 If you are the admin of a new site willing to join to the cluster,
