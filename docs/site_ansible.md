@@ -21,7 +21,7 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_server_name> ansible_host=<new_server_public_IP>`
+    <new_server_name> ansible_host=<new_server_public_IP>
     ```
 
     Group example:
@@ -39,7 +39,7 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_client_name> ansible_host=<new_client_IP>`
+    <new_client_name> ansible_host=<new_client_IP>
     ```
 
     Group example:
@@ -59,7 +59,7 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_server_name> nomad_dc=<new_nomad_dc_name>`
+    <new_server_name> nomad_dc=<new_nomad_dc_name>
     ```
 
     Group example:
@@ -70,13 +70,13 @@ Specifically, modify the following groups:
 
 - **nomad_new_gpu_clients**
 
-    Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces (if it belongs to both namespaces, separate them with just a comma)
+    Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces (if it belongs to both namespaces, separate them with just a comma).
 
     > ⚠ If there are no GPU clients, leave the group empty (**do not delete the group**).
 
     Line template:
     ```ini
-    <new_gpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>`
+    <new_gpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
     ```
 
     Group example:
@@ -111,7 +111,7 @@ Specifically, modify the following groups:
 
     <!-- todo: move to the end? -->
 
-    Modify the line to match the names of the new Nomad clients with an attached volume. Add its volume name and the name of its desired partition
+    Modify the line to match the names of the new Nomad clients with an attached volume. Add its volume name and the name of its desired partition.
 
     Line template:
     ```ini
