@@ -117,7 +117,7 @@ Specifically, modify the following groups:
     ```ini
     [traefik_new_master]
     new-traefik
-        ```
+    ```
 
 
 ## 2. Modify group_vars
