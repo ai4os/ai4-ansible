@@ -16,6 +16,9 @@
   - name: "Create and copy nomad tokens"
     include_tasks: nomad_tokens.yml
 
+  - name: "Copy traefik certs"
+    include_tasks: traefik_certs.yml
+
   - name: "Copy traefik token"
     include_tasks: traefik_token.yml
 
