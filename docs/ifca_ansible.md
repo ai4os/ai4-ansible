@@ -20,7 +20,7 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_server_name> ansible_host=<new_server_public_IP>`
+    <new_server_name> ansible_host=<new_server_public_IP>
     ```
 
     Group example:
@@ -38,7 +38,7 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_client_name> ansible_host=<new_client_IP>`
+    <new_client_name> ansible_host=<new_client_IP>
     ```
 
     Group example:
