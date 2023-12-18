@@ -10,7 +10,7 @@ Once this tutorials is completed you can proceed with
 You need to create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*.
 To create each one of them:
 
-1. In section `Project > Network > Security groups`, click `Create Security Group`.
+1. In section `Project > Network > Security Groups`, click `Create Security Group`.
 2. Set security group name and click `Create Security Group`.
 
 Then, add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
@@ -83,15 +83,15 @@ where:
 
 To create a node in OpenstacK:
 
-1. Click `Launch instance` in section `Project > Compute > Instances`.
-2. Set `Instance name` in section `Details`.
+1. Click `Launch Instance` in section `Project > Compute > Instances`.
+2. Set `Instance Name` in section `Details`.
 <!-- todo: warning nombres guión -->
 3. Select image source in section `Source`. We recommend Ubuntu 22.04.
 4. Select CPU flavour in section `Flavour`, where hardware requirements are based on the
  tentative node specs listed below.
 5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
 6. Select key pair in section `Key Pair`.
-7. Click `Launch instance`.
+7. Click `Launch Instance`.
 
 You should create the following nodes:
 
@@ -104,7 +104,13 @@ You should create the following nodes:
 * $N$ GPU client nodes ($N \geqslant 0 $): \
   Tentative specs: `86 CPUs, 8 GPUs, 351.6 GB RAM, 200 GB SSD`
 
+Once the nodes are created, the [Ansible master](../README.md#ansible-configuration) must be followed to:
+- Add the Ansible master SSH key to every node.
+- Configure [hosts](../hosts).
+
+
 <!-- todo: add Ansible master ssh key in every node?  reference readme -->
+
 
 ## 3. Associate public IPs
 
@@ -123,14 +129,19 @@ CPU and GPU client nodes are recommended to have an attached volume.
 
 Server and Traefik nodes do not need attached volumes.
 
-<!-- todo: how to create a volume -->
+To create a volume:
+
+1. In section `Project > Volumes > Volumes`, select `Create Volume`.
+2. Set volume name in `Volume Name`.
+3. Set volume size in `Volume Size (GiB)`.
+4. Click `Create Volume`.
 
 To attach a volume to an instance:
 
-1. In section `Project > Volumes > Volumes`, select an available volume and click the down arrow (▼) next to the `Edit volume` option.
+1. In section `Project > Volumes > Volumes`, select an available volume and click the down arrow (▼) next to the `Edit Volume` option.
 2. Click `Manage Attachments`.
 3. In `Attach to Instance`, select the instance.
-4. Click `Attach volume`.
+4. Click `Attach Volume`.
 
 <!-- todo: fix these numbers -->
 We recommend that:
