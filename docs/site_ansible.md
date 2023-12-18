@@ -8,9 +8,10 @@ To join the federated cluster with a new site, its admin should follow the follo
 steps from the [Ansible master](../README.md#ansible-configuration).
 
 
-## 1. Modify hosts
+## 1. Configure hosts
 
-Modify [hosts](../hosts) file to match the new cluster configuration.
+Copy [hosts_site_admin_template](../hosts_site_admin_template) into your own hosts file (e.g. `myhosts`).
+Modify your hosts file to match the new cluster configuration.
 Specifically, modify the following groups:
 
 - **consul_new_servers**
@@ -51,6 +52,23 @@ Specifically, modify the following groups:
     new-traefik ansible_host=193.146.75.162
     ```
 
+- **traefik_new_master**
+
+    Modify the line to match the new Traefik name.
+
+    > ⚠ There should only be one Traefik instance.
+
+    Line template:
+    ```ini
+    <new_traefik_name>
+    ```
+
+    Group example:
+    ```ini
+    [traefik_new_master]
+    new-traefik
+    ```
+
 - **nomad_new_servers**
 
     Modify the line to match the new Nomad server name. Add its Nomad datacenter name.
@@ -67,7 +85,28 @@ Specifically, modify the following groups:
     [nomad_new_servers]
     new-server nomad_dc=my_new_nomad_dc
     ```
+- **nomad_new_cpu_clients**
 
+    Modify the lines to match the new Nomad CPU client names. Add its Nomad datacenter name, domain and namespaces (if both namespaces, separate them with just a comma).
+
+    > ⓘ CPU clients are Nomad clients without GPU. The Traefik node should also be
+    > included in this group.
+
+    > ⚠ If there are no CPU clients, leave the group empty (**do not delete the group**).
+    <!-- todo: cambiar -->
+
+    Line template:
+    ```ini
+    <new_cpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+    ```
+
+    Group example:
+    ```ini
+    [nomad_new_cpu_clients]
+    new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
+    new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
+    ```
+    
 - **nomad_new_gpu_clients**
 
     Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces (if it belongs to both namespaces, separate them with just a comma).
@@ -84,28 +123,6 @@ Specifically, modify the following groups:
     [nomad_new_gpu_clients]
     new-gpu-client1 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine
-    ```
-
-- **nomad_new_cpu_clients**
-
-    Modify the lines to match the new Nomad CPU client names. Add its Nomad datacenter name, domain and namespaces (if both namespaces, separate them with just a comma).
-
-    > ⓘ CPU clients are Nomad clients without GPU. The Traefik node should also be
-    > included in this group.
-
-    > ⚠ If there are no CPU clients, leave the group empty (**do not delete the group**).
-    <!-- todo: cambiar -->
-
-    Line template:
-    ```ini
-    <new_cpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>`
-    ```
-
-    Group example:
-    ```ini
-    [nomad_new_cpu_clients]
-    new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
-    new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     ```
 
 - **nomad_new_volume**
@@ -126,22 +143,6 @@ Specifically, modify the following groups:
     new-gpu-client1 vol_name=vdb partition_name=part1
     ```
 
-- **traefik_new_master**
-
-    Modify the line to match the new Traefik name.
-
-    > ⚠ There should only be one Traefik instance.
-
-    Line template:
-    ```ini
-    <new_traefik_name>
-    ```
-
-    Group example:
-    ```ini
-    [traefik_new_master]
-    new-traefik
-    ```
 
 ## 2. Modify group_vars
 
@@ -201,17 +202,17 @@ Default location: `/home/ubuntu/<new_certs_dir>.zip`.
 * Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join Consul.
 
     ```console
-    ansible-playbook -i hosts playbook-join-consul.yaml
+    ansible-playbook -i <your_hosts_file> playbook-join-consul.yaml
     ```
 
 * Execute [playbook-join-nomad.yaml](../playbook-join-nomad.yaml) playbook to join Nomad.
 
     ```console
-    ansible-playbook -i hosts playbook-join-nomad.yaml
+    ansible-playbook -i <your_hosts_file> playbook-join-nomad.yaml
     ```
 
 * Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to configure the volumes, docker and the Traefik service.
 
     ```console
-    ansible-playbook -i hosts playbook-join-traefik.yaml
+    ansible-playbook -i <your_hosts_file> playbook-join-traefik.yaml
     ```
