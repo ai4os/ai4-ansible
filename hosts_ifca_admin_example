@@ -18,10 +18,10 @@ node-ifca-0 ansible_host=193.146.75.205
 new-server ansible_host=193.146.75.194
 
 [consul_new_clients]
+new-traefik ansible_host=193.146.75.162
 new-cpu-client ansible_host=172.16.43.137
 new-gpu-client1 ansible_host=172.16.43.58
 new-gpu-client2 ansible_host=172.16.43.59
-new-traefik ansible_host=193.146.75.162
 
 
 # -- Traefik new
@@ -34,8 +34,8 @@ new-traefik
 new-server
 
 [nomad_new_cpu_clients]
-new-cpu-client 
 new-traefik
+new-cpu-client 
   
 [nomad_new_gpu_clients]
 new-gpu-client1 
