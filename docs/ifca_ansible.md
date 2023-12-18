@@ -12,10 +12,12 @@ Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into your own hos
 Modify your hosts file to match the new cluster configuration.
 Specifically, modify the following groups:
 
--**consul_master**
+- **consul_master**
+  
     Modify the line to match the IFCA Consul master name and its public IP.
     
     > ⚠ There should only be one Consul master, which coincides with the Consul server.
+
 
     Line template:
     ```ini
@@ -192,12 +194,15 @@ Specifically, modify the following variables:
 
 ## 3. Execute playbooks
 
-* Execute [playbook-admin-add.yaml](../playbook-admin-add.yaml) playbook to generate
+Execute [playbook-admin-add.yaml](../playbook-admin-add.yaml) playbook to generate
 the ZIP file.
 
-    ```console
-    ansible-playbook -i <your_hosts_file> playbook-admin-add.yaml
-    ```
+
+
+```console
+ansible-playbook -i <your_hosts_file> playbook-admin-add.yaml
+```
+    
 
 ## 4. Send ZIP file
 
