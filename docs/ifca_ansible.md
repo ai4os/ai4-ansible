@@ -1,4 +1,4 @@
-# IFCA admin: Ansible configuration
+# IFCA admin: Ansible deployment
 
 To add a new site to the federated cluster, an **IFCA admin** should follow the
 following steps from the [Ansible master](../README.md#ansible-configuration)
