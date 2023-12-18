@@ -12,6 +12,22 @@ Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into your own hos
 Modify your hosts file to match the new cluster configuration.
 Specifically, modify the following groups:
 
+-**consul_master**
+    Modify the line to match the IFCA Consul master name and its public IP.
+    
+    > ⚠ There should only be one Consul master, which coincides with the Consul server.
+
+    Line template:
+    ```ini
+    <ifca_consul_master_node> ansible_host=<ifca_consul_master_public_ip>
+    ```
+
+    Group example:
+    ```ini
+    [consul_master]
+    node-ifca-0 ansible_host=193.146.75.205
+    ```
+
 - **consul_new_servers**
 
     Modify the line to match the new Consul server name and its public IP.
@@ -49,6 +65,23 @@ Specifically, modify the following groups:
     new-traefik ansible_host=193.146.75.162
     ```
 
+- **traefik_new_master**
+
+    Modify the line to match the new Traefik name.
+
+    > ⚠ There should only be one Traefik instance.
+
+    Line template:
+    ```ini
+    <new_traefik_name>
+    ```
+
+    Group example:
+    ```ini
+    [traefik_new_master]
+    new-traefik
+    ```
+    
 - **nomad_new_servers**
 
     Modify the line to match the new Nomad server name.
@@ -64,23 +97,6 @@ Specifically, modify the following groups:
     ```ini
     [nomad_new_servers]
     new-server
-    ```
-
-- **nomad_new_gpu_clients**
-
-    Modify the lines to match the new Nomad GPU client names.
-
-    > ⚠ If there are no GPU clients, leave the group empty (**do not delete the group**).
-
-    Line template:
-    ```ini
-    <new_gpu_client_name>
-    ```
-
-    Group example:
-    ```ini
-    [nomad_new_gpu_clients]
-    new-gpu-client
     ```
 
 - **nomad_new_cpu_clients**
@@ -104,23 +120,26 @@ Specifically, modify the following groups:
     new-cpu-client
     new-traefik
     ```
+    
+- **nomad_new_gpu_clients**
 
-- **traefik_new_master**
+    Modify the lines to match the new Nomad GPU client names.
 
-    Modify the line to match the new Traefik name.
-
-    > ⚠ There should only be one Traefik instance.
+    > ⚠ If there are no GPU clients, leave the group empty (**do not delete the group**).
 
     Line template:
     ```ini
-    <new_traefik_name>
+    <new_gpu_client_name>
     ```
 
     Group example:
     ```ini
-    [traefik_new_master]
-    new-traefik
+    [nomad_new_gpu_clients]
+    new-gpu-client
     ```
+
+
+
 
 
 ## 2. Modify group_vars
@@ -177,7 +196,7 @@ Specifically, modify the following variables:
 the ZIP file.
 
     ```console
-    ansible-playbook -i hosts playbook-admin-add.yaml
+    ansible-playbook -i <your_hosts_file> playbook-admin-add.yaml
     ```
 
 ## 4. Send ZIP file
