@@ -57,10 +57,6 @@ Host node-ifca-0
 Host 172.16.44.*
    ProxyJump node-ifca-0
 ```
-<!-- todo: add example -->
-
-
-<!-- todo: bastion is server, reference back to openstactk tuto -->
 
 ## Usage
 
