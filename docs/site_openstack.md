@@ -71,7 +71,6 @@ The needed rules for each group are:
 | Ingress | IPv4 | TCP | 443 (HTTPS) | 0.0.0.0/0 | Allow SSL |
 | Ingress | IPv4 | TCP | 8081 | <new_site_network> | Traefik dashboard |
 | Ingress | IPv4 | TCP | 8081 | <traefik_node_public_IP>/24 | Traefik dashboard |
-<!-- todo: check -->
 
 where:
 
@@ -85,13 +84,14 @@ To create a node in OpenstacK:
 
 1. Click `Launch Instance` in section `Project > Compute > Instances`.
 2. Set `Instance Name` in section `Details`.
-<!-- todo: warning nombres guión -->
-3. Select image source in section `Source`. We recommend Ubuntu 22.04.
-4. Select CPU flavour in section `Flavour`, where hardware requirements are based on the
+
+   > ⚠  Nodes must not use hyphens `-` in their name. Instead, they may use underscores `_`.
+4. Select image source in section `Source`. We recommend Ubuntu 22.04.
+5. Select CPU flavour in section `Flavour`, where hardware requirements are based on the
  tentative node specs listed below.
-5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
-6. Select key pair in section `Key Pair`.
-7. Click `Launch Instance`.
+6. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
+7. Select key pair in section `Key Pair`.
+8. Click `Launch Instance`.
 
 You should create the following nodes:
 
