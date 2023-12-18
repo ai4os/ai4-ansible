@@ -4,14 +4,14 @@ To add a new site to the federated cluster, an **IFCA admin** should follow the
 following steps from the [Ansible master](../README.md#ansible-configuration)
 to generate certs.
 
+> ⚠  **Requirements** \
+> Before starting this tutorial, the IFCA admin must **receive the hosts file** from the new site admin.
 
-<!-- todo: ifca admin receives host guests -->
 
 ## 1. Configure hosts
 Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into your own hosts file (e.g. `myhosts`).
-Modify your hosts file to match the new cluster configuration. An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_example)
-
-Specifically, modify the following groups:
+Modify your hosts file to match the new cluster configuration reflected in the received hosts file from the new site admin.
+An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_example). Specifically, modify the following groups:
 
 - **consul_master**
   
