@@ -104,12 +104,9 @@ You should create the following nodes:
 * $N$ GPU client nodes ($N \geqslant 0 $): \
   Tentative specs: `86 CPUs, 8 GPUs, 351.6 GB RAM, 200 GB SSD`
 
-Once the nodes are created, the [Ansible master](../README.md#ansible-configuration) must be followed to:
+Once the nodes are created, the [Ansible configuration](../README.md#ansible-configuration) must be followed to:
 - Add the Ansible master SSH key to every node.
-- Configure [hosts](../hosts).
-
-
-<!-- todo: add Ansible master ssh key in every node?  reference readme -->
+- Set SSH configuration in [config](../config).
 
 
 ## 3. Associate public IPs
