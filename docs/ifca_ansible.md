@@ -7,9 +7,9 @@ to generate certs.
 
 <!-- todo: ifca admin receives host guests -->
 
-## 1. Modify hosts
-
-Modify [hosts](../hosts) file to match the new cluster configuration.
+## 1. Configure hosts
+Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into your own hosts file (e.g. `myhosts`).
+Modify your hosts file to match the new cluster configuration.
 Specifically, modify the following groups:
 
 - **consul_new_servers**
