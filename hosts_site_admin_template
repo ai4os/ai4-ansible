@@ -1,0 +1,67 @@
+## hosts file template for IFCA admins
+
+
+#######################################################
+####### MODIFY THIS GROUPS TO ADD THE NEW NODES #######
+#######################################################
+
+## NEW SITE CONFIGURATION
+# -- Consul new
+##### Use just one consul server
+[consul_new_servers]
+<new_server_name> ansible_host=<new_server_public_IP>
+
+[consul_new_clients]
+<new_client1_name> ansible_host=<new_client1_IP>
+  ...
+<new_clientN_name> ansible_host=<new_clientN_IP>
+
+
+# -- Traefik new
+[traefik_new_master]
+<new_traefik_name>
+
+  
+# -- Nomad new
+[nomad_new_servers]
+<new_server_name> nomad_dc=<new_nomad_dc_name>
+
+[nomad_new_cpu_clients]
+<new_cpu_client1_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+  ...
+<new_cpu_clientN_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+  
+[nomad_new_gpu_clients]
+<new_gpu_client1_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+  ...
+<new_gpu_clientN_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+
+
+# ---- Volume-docker
+[nomad_new_volume]
+<new_nomad_client1_name> vol_name=<new_vol_name> partition_name=<new_partition_name>
+  ...
+<new_nomad_clientN_name> vol_name=<new_vol_name> partition_name=<new_partition_name>
+
+
+
+
+
+
+  
+
+#########################################
+####### DO NOT MODIFY THIS GROUPS #######
+#########################################
+
+[consul_new:children]
+consul_new_servers
+consul_new_clients
+
+[nomad_new_clients:children]
+nomad_new_cpu_clients
+nomad_new_gpu_clients
+
+[nomad_new:children]
+nomad_new_servers
+nomad_new_clients
