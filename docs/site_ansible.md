@@ -46,10 +46,10 @@ Specifically, modify the following groups:
     Group example:
     ```ini
     [consul_new_clients]
+    new-traefik ansible_host=193.146.75.162
     new-cpu-client ansible_host=172.16.43.137
     new-gpu-client1 ansible_host=172.16.43.58
     new-gpu-client2 ansible_host=172.16.43.59
-    new-traefik ansible_host=193.146.75.162
     ```
 
 - **traefik_new_master**
@@ -92,8 +92,7 @@ Specifically, modify the following groups:
     > ⓘ CPU clients are Nomad clients without GPU. The Traefik node should also be
     > included in this group.
 
-    > ⚠ If there are no CPU clients, leave the group empty (**do not delete the group**).
-    <!-- todo: cambiar -->
+    > ⚠ There should always be at least 1 CPU client; the Traefik node.
 
     Line template:
     ```ini
@@ -103,8 +102,8 @@ Specifically, modify the following groups:
     Group example:
     ```ini
     [nomad_new_cpu_clients]
-    new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
+    new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     ```
     
 - **nomad_new_gpu_clients**
