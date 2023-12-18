@@ -1,0 +1,63 @@
+## hosts file example for IFCA admins
+
+
+#######################################################
+####### MODIFY THIS GROUPS TO ADD THE NEW NODES #######
+#######################################################
+
+## IFCA CONFIGURATION
+# ----- Consul
+[consul_master]
+node-ifca-0 ansible_host=193.146.75.205
+
+
+## NEW SITE CONFIGURATION 
+# -- Consul new
+##### Use just one consul server
+[consul_new_servers]
+new-server ansible_host=193.146.75.194
+
+[consul_new_clients]
+new-cpu-client ansible_host=172.16.43.137
+new-gpu-client ansible_host=172.16.43.58
+new-traefik ansible_host=193.146.75.162
+
+
+# -- Traefik new
+[traefik_new_master]
+new-traefik
+  
+  
+# -- Nomad new
+[nomad_new_servers]
+new-server nomad_dc=new_nomad_dc
+
+[nomad_new_cpu_clients]
+new-cpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+new-traefik nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+  
+[nomad_new_gpu_clients]
+new-gpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+
+
+
+
+
+
+
+
+#########################################
+####### DO NOT MODIFY THIS GROUPS #######
+#########################################
+
+[consul_new:children]
+consul_new_servers
+consul_new_clients
+
+[nomad_new_clients:children]
+nomad_new_cpu_clients
+nomad_new_gpu_clients
+
+[nomad_new:children]
+nomad_new_servers
+nomad_new_clients
