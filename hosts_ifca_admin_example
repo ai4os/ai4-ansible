@@ -19,7 +19,8 @@ new-server ansible_host=193.146.75.194
 
 [consul_new_clients]
 new-cpu-client ansible_host=172.16.43.137
-new-gpu-client ansible_host=172.16.43.58
+new-gpu-client1 ansible_host=172.16.43.58
+new-gpu-client2 ansible_host=172.16.43.59
 new-traefik ansible_host=193.146.75.162
 
 
@@ -30,15 +31,15 @@ new-traefik
   
 # -- Nomad new
 [nomad_new_servers]
-new-server nomad_dc=new_nomad_dc
+new-server
 
 [nomad_new_cpu_clients]
-new-cpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
-new-traefik nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+new-cpu-client 
+new-traefik
   
 [nomad_new_gpu_clients]
-new-gpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
-
+new-gpu-client1 
+new-gpu-client2
 
 
 
