@@ -143,7 +143,14 @@ Specifically, modify the following groups:
     ```
 
 
-## 2. Modify group_vars
+## 2. Send hosts file
+
+- Send the already configured hosts file to the IFCA admin.
+
+- Wait for the IFCA admin to provide the ZIP file with the certificates to join the deferated cluster.
+
+
+## 3. Modify group_vars
 
 Modify [group_vars/all.ym](../group_vars/all.yml) file.
 Specifically, modify the following variables:
@@ -184,11 +191,7 @@ Specifically, modify the following variables:
 
 
 
-
-
-<!-- todo: additional step: send host file to ifca admin -->
-
-## 3. Place ZIP file
+## 4. Place ZIP file
 
 Place the ZIP file, that you should have received from the IFCA admin,
 on the Ansible master at the specified `{{ path }}`.
@@ -196,7 +199,7 @@ on the Ansible master at the specified `{{ path }}`.
 Default location: `/home/ubuntu/<new_certs_dir>.zip`.
 
 
-## 4. Execute playbooks
+## 5. Execute playbooks
 
 * Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join Consul.
 
