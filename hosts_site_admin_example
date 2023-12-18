@@ -13,7 +13,8 @@ new-server ansible_host=193.146.75.194
 
 [consul_new_clients]
 new-cpu-client ansible_host=172.16.43.137
-new-gpu-client ansible_host=172.16.43.58
+new-gpu-client1 ansible_host=172.16.43.58
+new-gpu-client2 ansible_host=172.16.43.59
 new-traefik ansible_host=193.146.75.162
 
   
@@ -31,7 +32,8 @@ new-cpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,
 new-traefik nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
   
 [nomad_new_gpu_clients]
-new-gpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+new-gpu-client1 nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine
 
 
 # ---- Volume-docker
