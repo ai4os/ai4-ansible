@@ -175,7 +175,7 @@ Specifically, modify the following variables:
     cluster certificates will be extracted on the Ansible master.
 
     > ⓘ It is recommended to keep `{{ path }}` and just append the name of the ZIP
-    > filename to it (without the `.zip` extension).
+    > file to it (without the `.zip` extension).
 
     Line template:
     ```yaml
@@ -187,16 +187,32 @@ Specifically, modify the following variables:
     new_certs: "{{ path }}new_site_name"
     ```
 
-<!-- todo: add your Traefik certs to group vars -->
+- **traefik_certs_zip_name**
 
+    Set this variable on section *Traefik* to the name of the the ZIP file with the
+    Traefik certificates which will be extracted on the Ansible master.
 
+    > ⓘ It should just be the name of the ZIP file (without the `.zip` extension).
 
-## 4. Place ZIP file
+    Line template:
+    ```yaml
+    traefik_certs_zip_name: <new_traefik_certs_zip_name>
+    ```
 
-Place the ZIP file, that you should have received from the IFCA admin,
-on the Ansible master at the specified `{{ path }}`.
+    Line example:
+    ```yaml
+    traefik_certs_zip_name: ifca-deployments.cloud.ai4eosc.eu
+    ```
 
-Default location: `/home/ubuntu/<new_certs_dir>.zip`.
+## 4. Place ZIP files
+
+- Place the ZIP file received from the IFCA admin with the new site certificates on the Ansible master at the specified `{{ path }}`.
+  
+  Default location: `/home/ubuntu/<new_certs_dir>.zip`.
+  
+- Place the ZIP file with the Traefik certs on the same path `{{ path }}`.
+  
+  Default location: `/home/ubuntu/<new_traefik_certs_zip_name>.zip`.
 
 
 ## 5. Execute playbooks
