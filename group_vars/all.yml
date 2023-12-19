@@ -35,7 +35,6 @@ grub_path: /etc/default/grub
 # -- Traefik
 traefik_certs: /etc/nomad.d/traefik-certs
 traefik_certs_zip_name: ifca-deployments.cloud.ai4eosc.eu
-traefik_new_certs_zip_name: new
 
 # -- Nomad
 nomad_version: 1.6.3
