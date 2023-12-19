@@ -10,8 +10,8 @@ steps from the [Ansible master](../README.md#ansible-configuration).
 
 ## 1. Configure hosts
 
-Copy [hosts_site_admin_template](../hosts_site_admin_template) into your own hosts file (e.g. `myhosts`).
-Modify your hosts file to match the new cluster configuration. An example can be found on [hosts_site_admin_example](../hosts_site_admin_example).
+Copy [hosts_site_admin_template](../hosts_site_admin_template) into a new hosts file (e.g. `myhosts`).
+Modify the new hosts file to match the new cluster configuration. An example can be found on [hosts_site_admin_example](../hosts_site_admin_example).
 Specifically, modify the following groups:
 
 - **consul_new_servers**
@@ -220,17 +220,17 @@ Specifically, modify the following variables:
 * Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join Consul.
 
     ```console
-    ansible-playbook -i <your_hosts_file> playbook-join-consul.yaml
+    ansible-playbook -i <new_hosts_file> playbook-join-consul.yaml
     ```
 
 * Execute [playbook-join-nomad.yaml](../playbook-join-nomad.yaml) playbook to join Nomad.
 
     ```console
-    ansible-playbook -i <your_hosts_file> playbook-join-nomad.yaml
+    ansible-playbook -i <new__hosts_file> playbook-join-nomad.yaml
     ```
 
 * Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to configure the volumes, docker and the Traefik service.
 
     ```console
-    ansible-playbook -i <your_hosts_file> playbook-join-traefik.yaml
+    ansible-playbook -i <new__hosts_file> playbook-join-traefik.yaml
     ```
