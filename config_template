@@ -1,0 +1,8 @@
+## config file template for SSH
+
+Host <bastion-name>
+   User <ssh-username>
+   Hostname <bastion-public-ip>
+
+Host <private-ips-on-bastion-subnet>
+   ProxyJump <bastion-name>
