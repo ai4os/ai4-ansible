@@ -126,8 +126,6 @@ Specifically, modify the following groups:
 
 - **nomad_new_volume**
 
-    <!-- todo: move to the end? -->
-
     Modify the line to match the names of the new Nomad clients with an attached volume. Add its volume name and the name of its desired partition.
 
     Line template:
