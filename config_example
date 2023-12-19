@@ -1,0 +1,8 @@
+## config file example for SSH
+
+Host node-ifca-0
+   User ubuntu
+   Hostname 193.146.75.205
+
+Host 172.16.44.*
+   ProxyJump node-ifca-0
