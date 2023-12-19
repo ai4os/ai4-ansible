@@ -3,8 +3,6 @@
 These are the Ansible roles to manage the federated Nomad cluster in the AI4OS project.
 The Ansible roles are valid to manage both iMagine and AI4EOSC sites.
 
-<!-- todo: add ifca host to gitignore -->
-
 
 ## Ansible configuration
 
