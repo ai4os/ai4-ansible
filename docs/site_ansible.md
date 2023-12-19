@@ -11,7 +11,7 @@ steps from the [Ansible master](../README.md#ansible-configuration).
 ## 1. Configure hosts
 
 Copy [hosts_site_admin_template](../hosts_site_admin_template) into your own hosts file (e.g. `myhosts`).
-Modify your hosts file to match the new cluster configuration. An example can be found on [hosts_site_admin_example](../hosts_site_admin_example)
+Modify your hosts file to match the new cluster configuration. An example can be found on [hosts_site_admin_example](../hosts_site_admin_example).
 Specifically, modify the following groups:
 
 - **consul_new_servers**
