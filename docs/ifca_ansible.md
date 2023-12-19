@@ -5,20 +5,25 @@ following steps from the [Ansible master](../README.md#ansible-configuration)
 to generate certs.
 
 > ⚠  **Requirements** \
-> Before starting this tutorial, the IFCA admin must **receive the hosts file** from the new site admin.
+> Before starting this tutorial, the IFCA admin must **receive the hosts file**
+> from the new site admin.
 
 
 ## 1. Configure hosts
-Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into a new hosts file (e.g. `myhosts`).
-Modify the new hosts file to match the new cluster configuration reflected in the received hosts file from the new site admin.
-An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_example). Specifically, modify the following groups:
+
+Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into a new hosts file
+(e.g. `myhosts`).
+
+Modify the new hosts file to match the new cluster configuration reflected in the
+_received_ hosts file from the new site admin.
+An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_example).
+Specifically, modify the following groups:
 
 - **consul_master**
-  
-    Modify the line to match the IFCA Consul master name and its public IP.
-    
-    > ⚠ There should only be one Consul master, which coincides with the Consul server.
 
+    Modify the line to match the IFCA Consul master name and its public IP.
+
+    > ⚠ There should only be one Consul master, which matches with the Consul server.
 
     Line template:
     ```ini
@@ -84,7 +89,7 @@ An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_exampl
     [traefik_new_master]
     new-traefik
     ```
-    
+
 - **nomad_new_servers**
 
     Modify the line to match the new Nomad server name.
@@ -111,7 +116,6 @@ An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_exampl
 
     > ⚠ There should always be at least 1 CPU client; the Traefik node.
 
-
     Line template:
     ```ini
     <new_cpu_client_name>
@@ -123,7 +127,7 @@ An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_exampl
     new-traefik
     new-cpu-client
     ```
-    
+
 - **nomad_new_gpu_clients**
 
     Modify the lines to match the new Nomad GPU client names.
@@ -140,9 +144,6 @@ An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_exampl
     [nomad_new_gpu_clients]
     new-gpu-client
     ```
-
-
-
 
 
 ## 2. Modify group_vars
@@ -193,17 +194,16 @@ Specifically, modify the following variables:
     new_certs: "{{ path }}new_site_name"
     ```
 
+
 ## 3. Execute playbooks
 
 Execute [playbook-admin-add.yaml](../playbook-admin-add.yaml) playbook to generate
 the ZIP file.
 
-
-
 ```console
 ansible-playbook -i <new_hosts_file> playbook-admin-add.yaml
 ```
-    
+
 
 ## 4. Send ZIP file
 

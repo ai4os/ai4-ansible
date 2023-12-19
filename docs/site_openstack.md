@@ -1,9 +1,11 @@
 # New site: Openstack configuration
 
-This tutorial provides a guide to create an OpenStack site to later join the federated cluster.
+This tutorial provides a guide to create an OpenStack site to later join the federated
+cluster.
 
 Once this tutorials is completed you can proceed with
 [Running Ansible to join the federated cluster](./site_ansible.md)
+
 
 ## 1. Create security groups
 
@@ -13,7 +15,8 @@ To create each one of them:
 1. In section `Project > Network > Security Groups`, click `Create Security Group`.
 2. Set security group name and click `Create Security Group`.
 
-Then, add rules to the security groups. To add them, simply click on the `Manage Rule` option of the security group and then `Add Rule`.
+Then, add rules to the security groups. To add them, simply click on the `Manage Rule`
+option of the security group and then `Add Rule`.
 
 The needed rules for each group are:
 
@@ -78,20 +81,21 @@ where:
 * `<traefik_node_public_IP>` is the public IP assigned to the new site’s Traefik node
   (eg. `193.144.210.0`).
 
+
 ## 2. Create nodes
 
 To create a node in OpenstacK:
 
 1. Click `Launch Instance` in section `Project > Compute > Instances`.
 2. Set `Instance Name` in section `Details`.
-
-   > ⚠  Nodes must not use hyphens `-` in their name. Instead, they may use underscores `_`.
-4. Select image source in section `Source`. We recommend Ubuntu 22.04.
-5. Select CPU flavour in section `Flavour`, where hardware requirements are based on the
+   > ⚠  Nodes must **not** use hyphens `-` in their name.
+   > Instead, they may use underscores `_`.
+3. Select image source in section `Source`. We recommend Ubuntu 22.04.
+4. Select CPU flavour in section `Flavour`, where hardware requirements are based on the
  tentative node specs listed below.
-6. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
-7. Select key pair in section `Key Pair`.
-8. Click `Launch Instance`.
+5. Select *default*, *Consul*, *Nomad* and *Traefik* security groups in section `Security Groups`.
+6. Select key pair in section `Key Pair`.
+7. Click `Launch Instance`.
 
 You should create the following nodes:
 
@@ -106,7 +110,7 @@ You should create the following nodes:
 
 Once the nodes are created, the [Ansible configuration](../README.md#ansible-configuration) must be followed to:
 - Add the Ansible master SSH key to every node.
-- Set SSH configuration in [config](../config).
+- Complete the [SSH configuration](../README.md#ssh-config-file).
 
 
 ## 3. Associate public IPs
@@ -116,9 +120,12 @@ For the rest of the nodes (CPU and GPU clients), it is not necessary.
 
 To associate a public IP to an instance:
 
-1. In section `Project > Network > Floating IPs`, select an available public IP address and click `Associate`.
+1. In section `Project > Network > Floating IPs`, select an available public IP address
+  and click `Associate`.
 2. In `Port to be associated`, select the port to the instance.
 3. Click `Associate`.
+<!-- todo: check with susana, why do we need to associate ports? -->
+
 
 ## 4. Create and attach volumes
 
@@ -135,15 +142,14 @@ To create a volume:
 
 To attach a volume to an instance:
 
-1. In section `Project > Volumes > Volumes`, select an available volume and click the down arrow (▼) next to the `Edit Volume` option.
+1. In section `Project > Volumes > Volumes`, select an available volume and click the
+  down arrow (▼) next to the `Edit Volume` option.
 2. Click `Manage Attachments`.
 3. In `Attach to Instance`, select the instance.
 4. Click `Attach Volume`.
 
-<!-- todo: fix these numbers -->
 We recommend that:
-* **CPU nodes** have volumes with _at least_ 10 GB per CPU core.
-* **GPU nodes** have volumes with _at least_ 50 GB per GPU.
-
-
-<!-- todo: ignacio, crreate Traefik certs nsupdate -->
+* **CPU nodes** have volumes with _at least_ 5 GB per CPU core.
+  As a reference, IFCA cluster has 15 GB per CPU core.
+* **GPU nodes** have volumes with _at least_ 50 GB per GPU device.
+  As a reference, IFCA cluster has 250 GB per GPU device.

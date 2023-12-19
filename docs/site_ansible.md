@@ -10,8 +10,11 @@ steps from the [Ansible master](../README.md#ansible-configuration).
 
 ## 1. Configure hosts
 
-Copy [hosts_site_admin_template](../hosts_site_admin_template) into a new hosts file (e.g. `myhosts`).
-Modify the new hosts file to match the new cluster configuration. An example can be found on [hosts_site_admin_example](../hosts_site_admin_example).
+Copy [hosts_site_admin_template](../hosts_site_admin_template) into a new hosts file
+(e.g. `myhosts`).
+
+Modify the new hosts file to match the new cluster configuration. An example can be
+found on [hosts_site_admin_example](../hosts_site_admin_example).
 Specifically, modify the following groups:
 
 - **consul_new_servers**
@@ -105,7 +108,7 @@ Specifically, modify the following groups:
     new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     ```
-    
+
 - **nomad_new_gpu_clients**
 
     Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces (if it belongs to both namespaces, separate them with just a comma).
@@ -141,14 +144,45 @@ Specifically, modify the following groups:
     ```
 
 
-## 2. Send hosts file
+## 2. Ask for certificates
+
+To join the federated cluster, you need Nomad certificates for your nodes.
+For this:
 
 - Send the already configured hosts file to the IFCA admin.
+- Wait for the IFCA admin to provide the ZIP file with the Nomad certificates.
 
-- Wait for the IFCA admin to provide the ZIP file with the certificates to join the deferated cluster.
+In addition, you need SSL certificates for your Traefik nodes.
+For this:
 
+- select a name where your deployments will be accessible
+- send an email to the provided contact person asking for certificates covering:
+  + `<your_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
+  + `*.<your_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
+  + `<your_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
+  + `*.<your_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
+- you will receive an reply with a `.key` file,
+- you will receive an email with several `.pem` files.
+  Download the one stating **Certificate (w/ issuer after), PEM encoded**,
+- put both files in a folder and zip the contents,
+- go to [nsupdate](https://nsupdate.fedcloud.eu/) and log with your EGI credentials.
+  You should be able to see you new domains in `Overview`.
+  Go to each host and use `Set new IPv4 address` to set the IP address to the public IP
+  of your Traefik node.
+
+Once you have the ZIP files, place them in your Ansible master. By default the should go
+under `/home/ubuntu/`:
+
+- `/home/ubuntu/<new_site_certs>.zip`.
+- `/home/ubuntu/<traefik_certs>.zip`.
 
 ## 3. Modify group_vars
+
+<!-- todo: can we remove node_pools? -->
+<!-- todo: check what is default token - is this a security concern? -->
+<!-- todo: empty nomad UI password? -->
+<!-- todo: where is the variable to configure the "domain"? -->
+<!-- todo: edit the supported namespaces -->
 
 Modify [group_vars/all.ym](../group_vars/all.yml) file.
 Specifically, modify the following variables:
@@ -165,6 +199,21 @@ Specifically, modify the following variables:
     Line example:
     ```yaml
     ansible_master: { name: ansible1, ip: 172.16.40.39 }
+    ```
+
+- **path**
+
+    This should be the folder where you placed the Nomad/Traefik ZIP file certs from
+    the previous step.
+
+    Line template:
+    ```yaml
+    path: <cert_folder_path>
+    ```
+
+    Line example:
+    ```yaml
+    path: /home/ubuntu/
     ```
 
 - **new_certs**
@@ -190,7 +239,9 @@ Specifically, modify the following variables:
     Set this variable on section *Traefik* to the name of the the ZIP file with the
     Traefik certificates which will be extracted on the Ansible master.
 
-    > ⓘ It should just be the name of the ZIP file (without the `.zip` extension).
+    > ⓘ It should just be the name of the ZIP file (**without** the `.zip` extension).
+
+    <!-- todo: why this doesn't have a {{ path }} ? -->
 
     Line template:
     ```yaml
@@ -202,32 +253,25 @@ Specifically, modify the following variables:
     traefik_certs_zip_name: ifca-deployments.cloud.ai4eosc.eu
     ```
 
-## 4. Place ZIP files
 
-- Place the ZIP file received from the IFCA admin with the new site certificates on the Ansible master at the specified `{{ path }}`.
-  
-  Default location: `/home/ubuntu/<new_certs_dir>.zip`.
-  
-- Place the ZIP file with the Traefik certs on the same path `{{ path }}`.
-  
-  Default location: `/home/ubuntu/<new_traefik_certs_zip_name>.zip`.
+## 4. Execute playbooks
 
-
-## 5. Execute playbooks
-
-* Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join Consul.
+* Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join
+  Consul.
 
     ```console
     ansible-playbook -i <new_hosts_file> playbook-join-consul.yaml
     ```
 
-* Execute [playbook-join-nomad.yaml](../playbook-join-nomad.yaml) playbook to join Nomad.
+* Execute [playbook-join-nomad.yaml](../playbook-join-nomad.yaml) playbook to join
+  Nomad.
 
     ```console
     ansible-playbook -i <new__hosts_file> playbook-join-nomad.yaml
     ```
 
-* Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to configure the volumes, docker and the Traefik service.
+* Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to
+  configure the volumes, docker and the Traefik service.
 
     ```console
     ansible-playbook -i <new__hosts_file> playbook-join-traefik.yaml
