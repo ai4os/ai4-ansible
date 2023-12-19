@@ -22,13 +22,15 @@ ansible-playbook -i hosts <playbook>
 ```
 
 ### SSH config file
-
-The default location for this file is `.ssh/config`.
 This file configures a bastion node with a public IP which will be used as a proxy to
 provide SSH access to the rest of the nodes in that subnet. 
 The bastion node will be the server node of the new site ([Create nodes](/docs/site_openstack.md#2-create-nodes)),
 which will be used to connect to the client nodes of the new site (which do not have public IP). 
-Therefore:
+
+Copy [config_template](/config_template) into a config file with name `config`. The location for this file must be the SSH folder (`.ssh/config`).
+
+Modify the config file to match the cluster configuration. An example can be found on [config_example](/config_example).
+The following parameters must be set:
 - **bastion-name** is the name of the server node.
 - **bastion-public-ip** is the public IP associated to the server node ([Associate public IPs](/docs/site_openstack.md#3-associate-public-ips)).
 - **ssh-username** is the username of the server node's machine. If it was created with an Ubuntu flavour
