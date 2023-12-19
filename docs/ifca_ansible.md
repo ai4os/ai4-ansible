@@ -9,8 +9,8 @@ to generate certs.
 
 
 ## 1. Configure hosts
-Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into your own hosts file (e.g. `myhosts`).
-Modify your hosts file to match the new cluster configuration reflected in the received hosts file from the new site admin.
+Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into a new hosts file (e.g. `myhosts`).
+Modify the new hosts file to match the new cluster configuration reflected in the received hosts file from the new site admin.
 An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_example). Specifically, modify the following groups:
 
 - **consul_master**
@@ -201,7 +201,7 @@ the ZIP file.
 
 
 ```console
-ansible-playbook -i <your_hosts_file> playbook-admin-add.yaml
+ansible-playbook -i <new_hosts_file> playbook-admin-add.yaml
 ```
     
 
