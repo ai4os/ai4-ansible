@@ -88,16 +88,24 @@ Specifically, modify the following groups:
     [nomad_new_servers]
     new-server nomad_dc=my_new_nomad_dc
     ```
+
 - **nomad_new_cpu_clients**
 
-    Modify the lines to match the new Nomad CPU client names. Add its Nomad datacenter name, domain and namespaces.
+    Modify the lines to match the new Nomad CPU client names.
+    Add its Nomad datacenter name, domain and namespaces.
 
-    > ⓘ CPU clients are Nomad clients without GPU. The Traefik node should also be
+    + There are two supported _namespaces_: `ai4eosc`and `imagine`.
+      A Nomad client can belong to one or both (if both, separate them with just a
+      comma).
+    + The _domain_ is the hostname where the deployments will be accessible.
+      All clients should share the same domain.
+      Eg. if `domain=ifca` and your site belong to the `imagine` namespace,
+      your deployments will be accessible under:
+      `*.<domain>-deployments.cloud.imagine-ai.eu`
+
+    > ⚠ CPU clients are Nomad clients without GPU. The Traefik node should also be
     > included in this group.
-
-    > ⓘ The two spported namespaces are `ai4eosc`and `imagine`. A Nomad client can belong to one or both (if both, separate them with just a comma).
-
-    > ⚠ There should always be at least 1 CPU client; the Traefik node.
+    > Therefore there should **always be at least 1 CPU client**: the Traefik node.
 
     Line template:
     ```ini
@@ -113,9 +121,8 @@ Specifically, modify the following groups:
 
 - **nomad_new_gpu_clients**
 
-    Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces.
-  
-    > ⓘ The two spported namespaces are `ai4eosc`and `imagine`. A Nomad client can belong to one or both (if both, separate them with just a comma).
+    Modify the lines to match the new Nomad GPU client names.
+    Add its Nomad datacenter name, domain and namespaces.
 
     > ⚠ If there are no GPU clients, leave the group empty (**do not delete the group**).
 
@@ -133,7 +140,8 @@ Specifically, modify the following groups:
 
 - **nomad_new_volume**
 
-    Modify the line to match the names of the new Nomad clients with an attached volume. Add its volume name and the name of its desired partition.
+    Modify the line to match the names of the new Nomad clients with an attached volume.
+    Add its volume name and the name of its desired partition.
 
     Line template:
     ```ini
@@ -159,12 +167,13 @@ For this:
 In addition, SSL certificates are needed for the new Traefik node.
 For this:
 
-- Select a name `new_site_name` where the new site deployments will be accessible.
+- Remember the `domain` name you selected in the previous step, when configuring
+  cpu/gpu clients.
 - Send an email to the provided contact person asking for certificates covering:
-  + `<new_site_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
-  + `*.<new_site_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
-  + `<new_site_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
-  + `*.<new_site_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
+  + `<domain>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
+  + `*.<domain>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
+  + `<domain>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
+  + `*.<domain>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
 - You will receive a reply with a `.key` file.
 - You will receive an email with several `.pem` files.
   Download the one stating **Certificate (w/ issuer after), PEM encoded**.
