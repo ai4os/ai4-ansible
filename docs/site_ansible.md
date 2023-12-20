@@ -90,10 +90,12 @@ Specifically, modify the following groups:
     ```
 - **nomad_new_cpu_clients**
 
-    Modify the lines to match the new Nomad CPU client names. Add its Nomad datacenter name, domain and namespaces (if both namespaces, separate them with just a comma).
+    Modify the lines to match the new Nomad CPU client names. Add its Nomad datacenter name, domain and namespaces.
 
     > ⓘ CPU clients are Nomad clients without GPU. The Traefik node should also be
     > included in this group.
+
+    > ⓘ The two spported namespaces are `ai4eosc`and `imagine`. A Nomad client can belong to one or both (if both, separate them with just a comma).
 
     > ⚠ There should always be at least 1 CPU client; the Traefik node.
 
@@ -111,7 +113,9 @@ Specifically, modify the following groups:
 
 - **nomad_new_gpu_clients**
 
-    Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces (if it belongs to both namespaces, separate them with just a comma).
+    Modify the lines to match the new Nomad GPU client names. Add its Nomad datacenter name, domain and namespaces.
+  
+    > ⓘ The two spported namespaces are `ai4eosc`and `imagine`. A Nomad client can belong to one or both (if both, separate them with just a comma).
 
     > ⚠ If there are no GPU clients, leave the group empty (**do not delete the group**).
 
@@ -177,8 +181,6 @@ under `/home/ubuntu/`:
 - `/home/ubuntu/<traefik_certs>.zip`.
 
 ## 3. Modify group_vars
-
-<!-- todo: edit the supported namespaces -->
 
 Modify [group_vars/all.ym](../group_vars/all.yml) file.
 Specifically, modify the following variables:
