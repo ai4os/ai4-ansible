@@ -1,0 +1,21 @@
+
+
+
+ - name: Consul and Nomad new version installation
+   hosts: version_update
+   become: true
+   roles:
+       - { role: update_versions }
+
+ - name: Consul restart
+   hosts: version_update
+   become: true
+   roles:
+      - { role: consul_restart }
+
+ - name: Nomad restart
+   hosts: version_update
+   become: true
+   roles:
+      - { role: nomad_restart }
+

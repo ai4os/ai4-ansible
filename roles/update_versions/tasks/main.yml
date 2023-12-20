@@ -1,0 +1,10 @@
+---
+# tasks file for update_versions
+
+- block:
+
+  - name: "Install consul"
+    include_tasks: install_consul.yml
+
+  - name: "Install nomad"
+    include_tasks: install_nomad.yml

@@ -1,0 +1,14 @@
+- name: "Check if consul ZIP file exists"
+  stat:
+   path: "{{ path }}consul_{{ consul_version }}_linux_amd64.zip"
+  register: stat_consul_zip
+
+- name: "Download Consul binary"
+  command: curl --silent --remote-name "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
+  when: stat_consul_zip.stat.exists == False
+
+- name: "Unzip consul file"
+  command: "{{ item }}"
+  with_items:
+   - unzip {{ path }}consul_{{ consul_version }}_linux_amd64.zip
+   - mv consul {{ path_bin }}
