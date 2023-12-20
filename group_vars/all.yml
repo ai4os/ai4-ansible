@@ -53,9 +53,6 @@ nomad_namespaces:
   - tutorials
 nomad_nvidia_plugin_version: 1.0.0
 gpu_plugin_dir: plugins
-nomad_node_pools:
-  - ai4eosc
-  - imagine
 nomad_reserved_memory_mb: 4096
 
 # -- Consul
