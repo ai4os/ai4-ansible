@@ -178,10 +178,6 @@ under `/home/ubuntu/`:
 
 ## 3. Modify group_vars
 
-<!-- todo: can we remove node_pools? -->
-<!-- todo: check what is default token - is this a security concern? -->
-<!-- todo: empty nomad UI password? -->
-<!-- todo: where is the variable to configure the "domain"? -->
 <!-- todo: edit the supported namespaces -->
 
 Modify [group_vars/all.ym](../group_vars/all.yml) file.
