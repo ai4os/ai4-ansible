@@ -164,7 +164,7 @@ For this:
 - You will receive a reply with a `.key` file.
 - You will receive an email with several `.pem` files.
   Download the one stating **Certificate (w/ issuer after), PEM encoded**.
-- Put both files (`.key`and `.pem`) in a folder and zip the content.
+- Put both files (`.key`and `.pem`) in a folder and zip the content (`<traefik_certs>.zip`).
 - Go to [nsupdate](https://nsupdate.fedcloud.eu/) and log with your EGI credentials.
   You should be able to see you new domains in `Overview`.
   Go to each host and use `Set new IPv4 address` to set the IP address to the public IP
@@ -234,7 +234,7 @@ Specifically, modify the following variables:
     new_certs: "{{ path }}new_site_name"
     ```
 
-- **traefik_certs_zip_name**
+- **traefik_certs**
 
     Set this variable on section *Traefik* to the name of the the ZIP file with the
     Traefik certificates which will be extracted on the Ansible master.
@@ -245,12 +245,12 @@ Specifically, modify the following variables:
 
     Line template:
     ```yaml
-    traefik_certs_zip_name: <new_traefik_certs_zip_name>
+    traefik_certs: <new_traefik_certs_zip_name>
     ```
 
     Line example:
     ```yaml
-    traefik_certs_zip_name: ifca-deployments.cloud.ai4eosc.eu
+    traefik_certs: ifca-deployments.cloud.ai4eosc.eu
     ```
 
 
