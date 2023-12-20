@@ -124,7 +124,6 @@ To associate a public IP to an instance:
   and click `Associate`.
 2. In `Port to be associated`, select the port to the instance.
 3. Click `Associate`.
-<!-- todo: check with susana, why do we need to associate ports? -->
 
 
 ## 4. Create and attach volumes
