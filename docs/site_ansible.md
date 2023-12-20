@@ -146,31 +146,31 @@ Specifically, modify the following groups:
 
 ## 2. Ask for certificates
 
-To join the federated cluster, you need Nomad certificates for your nodes.
+To join the federated cluster, new site certificates are needed for the new nodes.
 For this:
 
 - Send the already configured hosts file to the IFCA admin.
-- Wait for the IFCA admin to provide the ZIP file with the Nomad certificates.
+- Wait for the IFCA admin to provide the ZIP file with those certificates.
 
-In addition, you need SSL certificates for your Traefik nodes.
+In addition, SSL certificates are needed for the new Traefik node.
 For this:
 
-- select a name where your deployments will be accessible
-- send an email to the provided contact person asking for certificates covering:
-  + `<your_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
-  + `*.<your_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
-  + `<your_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
-  + `*.<your_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
-- you will receive an reply with a `.key` file,
-- you will receive an email with several `.pem` files.
-  Download the one stating **Certificate (w/ issuer after), PEM encoded**,
-- put both files in a folder and zip the contents,
-- go to [nsupdate](https://nsupdate.fedcloud.eu/) and log with your EGI credentials.
+- Select a name `new_site_name` where the new site deployments will be accessible.
+- Send an email to the provided contact person asking for certificates covering:
+  + `<new_site_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
+  + `*.<new_site_name>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
+  + `<new_site_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
+  + `*.<new_site_name>-deployments.cloud.imagine-ai.eu` (for iMagine sites)
+- You will receive a reply with a `.key` file.
+- You will receive an email with several `.pem` files.
+  Download the one stating **Certificate (w/ issuer after), PEM encoded**.
+- Put both files (`.key`and `.pem`) in a folder and zip the content.
+- Go to [nsupdate](https://nsupdate.fedcloud.eu/) and log with your EGI credentials.
   You should be able to see you new domains in `Overview`.
   Go to each host and use `Set new IPv4 address` to set the IP address to the public IP
   of your Traefik node.
 
-Once you have the ZIP files, place them in your Ansible master. By default the should go
+Once having obtained both ZIP files, place them in the Ansible master. By default they should go
 under `/home/ubuntu/`:
 
 - `/home/ubuntu/<new_site_certs>.zip`.
@@ -222,7 +222,7 @@ Specifically, modify the following variables:
     cluster certificates will be extracted on the Ansible master.
 
     > ⓘ It is recommended to keep `{{ path }}` and just append the name of the ZIP
-    > file to it (without the `.zip` extension).
+    > file to it (**without** the `.zip` extension).
 
     Line template:
     ```yaml
@@ -267,12 +267,12 @@ Specifically, modify the following variables:
   Nomad.
 
     ```console
-    ansible-playbook -i <new__hosts_file> playbook-join-nomad.yaml
+    ansible-playbook -i <new_hosts_file> playbook-join-nomad.yaml
     ```
 
 * Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to
   configure the volumes, docker and the Traefik service.
 
     ```console
-    ansible-playbook -i <new__hosts_file> playbook-join-traefik.yaml
+    ansible-playbook -i <new_hosts_file> playbook-join-traefik.yaml
     ```
