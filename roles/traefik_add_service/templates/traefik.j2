@@ -25,7 +25,7 @@ job "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
         volumes      = [
           "local/traefik.toml:/etc/traefik/traefik.toml",
           "local/dynamic.toml:/etc/traefik/dynamic.toml",
-          "{{ traefik_certs }}:/etc/traefik/ssl-certs"
+          "{{ traefik_certs_dir }}:/etc/traefik/ssl-certs"
         ]
       }
  

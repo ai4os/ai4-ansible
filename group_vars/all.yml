@@ -33,8 +33,8 @@ docker_registry: https://repo.ifca.es:5000
 grub_path: /etc/default/grub
 
 # -- Traefik
-traefik_certs: /etc/nomad.d/traefik-certs
-traefik_certs_zip_name: ifca-deployments.cloud.ai4eosc.eu
+traefik_certs_dir: /etc/nomad.d/traefik-certs
+traefik_certs: ifca-deployments.cloud.ai4eosc.eu
 
 # -- Nomad
 nomad_version: 1.6.3

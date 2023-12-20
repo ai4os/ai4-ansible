@@ -5,27 +5,27 @@
 
 - name: "Create traefik SSL certs directory in ansible_master if it does not exist"
   ansible.builtin.file:
-    path: "{{ path }}{{ traefik_certs_zip_name }}"
+    path: "{{ path }}{{ traefik_certs }}"
     state: directory
     mode: '0755'
   delegate_to: 127.0.0.1
 
 - name: "Unzip file in ansible_master if it is zipped"
   ansible.builtin.unarchive:
-    src: "{{ path }}{{ traefik_certs_zip_name }}.zip"
+    src: "{{ path }}{{ traefik_certs }}.zip"
     dest: "{{ path }}"
   delegate_to: 127.0.0.1
 
 - name: "Create traefik SSL certs directory in traefik_master if it does not exist"
   ansible.builtin.file:
-    path: "{{ traefik_certs }}"
+    path: "{{ traefik_certs_dir }}"
     state: directory
     mode: '0755'
 
 - name: "Copy traefik SSL certificates from ansible_master to trafik_master"
   copy:
-   src: "{{ path }}{{ traefik_certs_zip_name }}/{{ item }}"
-   dest: "{{ traefik_certs }}"
+   src: "{{ path }}{{ traefik_certs }}/{{ item }}"
+   dest: "{{ traefik_certs_dir }}"
   with_items: 
     - domain.key
     - domain.pem
