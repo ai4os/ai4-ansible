@@ -223,6 +223,20 @@ Specifically, modify the following variables:
     path: /home/ubuntu/
     ```
 
+- **consul_public_ip**
+
+    Set the Consul public IP of the federated cluster on section *Common*.
+
+    Line template:
+    ```yaml
+    consul_public_ip: "<consul_public_ip>"
+    ```
+
+    Line example:
+    ```yaml
+    consul_public_ip: "193.146.75.205"
+
+    
 - **new_certs**
 
     Set this variable on section *Common* to the name of the ZIP file with the
