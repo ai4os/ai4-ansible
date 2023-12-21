@@ -176,7 +176,7 @@ Specifically, modify the following variables:
     
 - **consul_public_ip**
 
-    Set the Consul server public IP of the ansible master on section *Common*.
+    Set the Consul server public IP on section *Common*.
 
     Line template:
     ```yaml
