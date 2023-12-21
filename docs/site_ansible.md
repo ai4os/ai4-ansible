@@ -225,20 +225,19 @@ Specifically, modify the following variables:
 
 - **new_certs**
 
-    Set this variable on section *Common* to the path on which the ZIP file with the
-    cluster certificates will be extracted on the Ansible master.
+    Set this variable on section *Common* to the name of the ZIP file with the
+    cluster certificates which will be extracted on the Ansible master.
 
-    > ⓘ It is recommended to keep `{{ path }}` and just append the name of the ZIP
-    > file to it (**without** the `.zip` extension).
+    > ⓘ It should just be the name of the ZIP file (**without** the `.zip` extension).
 
     Line template:
     ```yaml
-    new_certs: "{{ path }}<new_certs_dir>"
+    new_certs: "<new_certs_dir>"
     ```
 
     Line example:
     ```yaml
-    new_certs: "{{ path }}new_site_name"
+    new_certs: "new_site_name"
     ```
 
 - **traefik_certs**
@@ -247,8 +246,6 @@ Specifically, modify the following variables:
     Traefik certificates which will be extracted on the Ansible master.
 
     > ⓘ It should just be the name of the ZIP file (**without** the `.zip` extension).
-
-    <!-- todo: why this doesn't have a {{ path }} ? -->
 
     Line template:
     ```yaml
