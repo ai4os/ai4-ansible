@@ -85,5 +85,8 @@ you need to complete the following steps:
 - [Configure your Openstack](./docs/site_openstack.md)
 - [Run Ansible to join the federated cluster](./docs/site_ansible.md)
 
-<!-- todo: how to upgrade Nomad version in nodes? Which playbook to run and
-how to do it -->
+### Version update
+
+To update Consul or Nomad versions, complete the following steps:
+
+- [Run Ansible to update versions](./docs/update_versions.md)
