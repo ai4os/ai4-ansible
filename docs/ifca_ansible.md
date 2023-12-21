@@ -179,7 +179,9 @@ Specifically, modify the following variables:
     Set this variable on section *Common* to the ZIP file name in which the certificates
     for the joining site will be created.
 
-    > ⓘ This will be the name of the ZIP file that will be created in `{{ path }}` and
+    > ⓘ It should just be the name of the ZIP file (without the .zip extension).
+    > 
+    > The ZIP file with that name will be created in `{{ path }}` and
     > should be handed over to the new site admins.
 
     Line template:
