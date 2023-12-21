@@ -173,6 +173,20 @@ Specifically, modify the following variables:
     ```yaml
     add_new_nodes: true
     ```
+    
+- **consul_public_ip**
+
+    Set the Consul server public IP of the ansible master on section *Common*.
+
+    Line template:
+    ```yaml
+    consul_public_ip: "<consul_public_ip>"
+    ```
+
+    Line example:
+    ```yaml
+    consul_public_ip: "193.146.75.205"
+
 
 - **new_certs**
 
