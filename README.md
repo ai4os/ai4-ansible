@@ -69,24 +69,34 @@ The location for this file must be the SSH folder (`.ssh/config`).
 
 ### IFCA admin
 
-If you are an IFCA admin willing to include a new site into the federated cluster,
-you need to complete the following steps:
+This use cases are aimed at IFCA admins.
 
-<!-- todo: tutorial+host files to create a Nomad cluster from scratch  -->
+#### Create federated cluster
+
+To create a new federated cluster from scratch,
+the IFCA admin must complete the following step:
+
+- [Run Ansible to create the federated cluster](./docs/create_fed_cluster.md)
+
+
+#### Add a new site to the federated cluster
+
+To include a new site to the federated cluster,
+the IFCA admin must complete the following steps:
 
 - [Run Ansible to create the required certificates for the new site](./docs/ifca_ansible.md)
 - [Configure your Openstack to integrate the new site](./docs/ifca_openstack.md)
 
 ### Site admin
 
-If you are the admin of a new site willing to join to the cluster,
-you need to complete the following steps:
+To join the federated cluster with a new site,
+the new site admin must complete the following steps:
 
-- [Configure your Openstack](./docs/site_openstack.md)
+- [Configure Openstack](./docs/site_openstack.md)
 - [Run Ansible to join the federated cluster](./docs/site_ansible.md)
 
 ### Version update
 
-To update Consul or Nomad versions, complete the following steps:
+To update Consul or Nomad versions on any nodes, the following step must be completed:
 
 - [Run Ansible to update versions](./docs/update_versions.md)
