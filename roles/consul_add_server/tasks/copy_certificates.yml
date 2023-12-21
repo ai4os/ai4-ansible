@@ -1,5 +1,5 @@
 - name: "Find server index"
-  shell: "ls {{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
+  shell: "ls {{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
   register: numbers
   delegate_to: 127.0.0.1
 
@@ -9,17 +9,17 @@
 
 - name: "Copy server certs from consul-master to consul-servers"
   copy:
-    src: "{{ new_certs }}/{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+    src: "{{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
     dest: "{{ consul_certs }}"
 
 - name: "Copy server keys from consul-master to consul-servers"
   copy:
-    src: "{{ new_certs }}/{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+    src: "{{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
     dest: "{{ consul_certs }}"
 
 - name: "Get encryption key from consul-keygen"
   set_fact:
-    consul_keygen: "{{ lookup('file', '{{ new_certs }}/consul_keygen') }}"
+    consul_keygen: "{{ lookup('file', '{{ path }}{{ new_certs }}/consul_keygen') }}"
 
 - name: "Export consul server cert"
   shell: "sed -i '/^{{ item }}/d; $ a\\{{ item }}{{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem' {{ environment_file }}"

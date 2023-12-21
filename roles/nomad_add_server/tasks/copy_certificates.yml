@@ -1,10 +1,10 @@
 - name: "Copy server certificate"
   copy:
-   src: "{{ new_certs }}/server.pem"
+   src: "{{ path }}{{ new_certs }}/server.pem"
    dest: "{{ nomad_certs }}"
 
 - name: "Copy server key certificate"
   copy:
-   src: "{{ new_certs }}/server-key.pem"
+   src: "{{ path }}{{ new_certs }}/server-key.pem"
    dest: "{{ nomad_certs }}"
 

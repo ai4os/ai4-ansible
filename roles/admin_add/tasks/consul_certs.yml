@@ -11,7 +11,7 @@
 
 - name: Create new directory for new certs in ansible_master"
   ansible.builtin.file:
-    path: "{{ new_certs }}"
+    path: "{{ path }}{{ new_certs }}"
     state: directory
     mode: '777'
   delegate_to: 127.0.0.1
@@ -19,13 +19,13 @@
 - name: Copy the certs and keys to new directory
   ansible.posix.synchronize:
     src: "{{ item }}"
-    dest: "{{ new_certs }}/"
+    dest: "{{ path }}{{ new_certs }}/"
     mode: pull
   with_items: "{{ new_certs_and_keys.stdout_lines }}"
 
 - name: "Fetch CA cert from consul-master to ansible-master"
   fetch:
     src: "{{ path }}consul-agent-ca.pem"
-    dest: "{{ new_certs }}/"
+    dest: "{{ path }}{{ new_certs }}/"
     flat: yes
 

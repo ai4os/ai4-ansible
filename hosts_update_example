@@ -1,0 +1,15 @@
+## hosts file example to update Consul and Nomad versions
+
+
+
+#######################################################
+####### MODIFY THIS GROUPS TO ADD THE NODES ###########
+#######################################################
+
+# ----- Update
+[version_update]
+node-ifca-0 ansible_host=193.146.75.205
+node-ifca-1 ansible_host=172.16.44.95
+node-ifca-gpu-0 ansible_host=172.16.44.233
+node-ifca-traefik ansible_host=193.146.75.208
+

@@ -2,29 +2,29 @@
 
 - name: "Unzip file in ansible_master if it is zipped"
   ansible.builtin.unarchive:
-    src: "{{ new_certs }}.zip"
+    src: "{{ path }}{{ new_certs }}.zip"
     dest: "{{ path }}"
   delegate_to: 127.0.0.1
   run_once: true
 
 - name: "Copy CA certificates from ansible_master to consul_hosts"
   copy:
-   src: "{{ new_certs }}/consul-agent-ca.pem"
+   src: "{{ path }}{{ new_certs }}/consul-agent-ca.pem"
    dest: "{{ consul_certs }}"
 
 - name: "Copy consul-keygen from ansible_master to consul_hosts"
   copy:
-   src: "{{ new_certs }}/consul_keygen"
+   src: "{{ path }}{{ new_certs }}/consul_keygen"
    dest: "{{ consul_certs }}"
 
 - name: "Copy consul ACL token from ansible_master to consul_hosts"
   copy:
-   src: "{{ new_certs }}/consul_bootstrap"
+   src: "{{ path }}{{ new_certs }}/consul_bootstrap"
    dest: "{{ consul_certs }}"
 
 - name: "Copy each consul agent token from ansible_master to each consul_host"
   copy:
-   src: "{{ new_certs }}/{{ inventory_hostname }}_consul_token"
+   src: "{{ path }}{{ new_certs }}/{{ inventory_hostname }}_consul_token"
    dest: "{{ consul_certs }}"
 
 

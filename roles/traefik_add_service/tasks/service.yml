@@ -1,6 +1,6 @@
 - name: "Copy traefik token from ansible_master to traefik_master"
   copy:
-   src: "{{ new_certs }}/traefik_token"
+   src: "{{ path }}{{ new_certs }}/traefik_token"
    dest: "{{ consul_certs }}"
 
 - name: "Create traefik SSL certs directory in ansible_master if it does not exist"

@@ -1,5 +1,5 @@
 - name: "Find server index"
-  shell: "ls {{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
+  shell: "ls {{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
   register: numbers
   delegate_to: 127.0.0.1
 
