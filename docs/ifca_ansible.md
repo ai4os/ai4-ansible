@@ -176,22 +176,20 @@ Specifically, modify the following variables:
 
 - **new_certs**
 
-    Set this variable on section *Common* to the path in which the certificates
+    Set this variable on section *Common* to the ZIP file name in which the certificates
     for the joining site will be created.
 
-    > ⓘ It is recommended to maintain `{{ path }}` and just append the name of
-    > the new directory to it.
-    > This will be the name of the ZIP file that should be handed over to the new
-    > site admins.
+    > ⓘ This will be the name of the ZIP file that will be created in `{{ path }}` and
+    > should be handed over to the new site admins.
 
     Line template:
     ```yaml
-    new_certs: "{{ path }}<new_certs_dir>"
+    new_certs: "<new_certs_dir>"
     ```
 
     Example:
     ```yaml
-    new_certs: "{{ path }}new_site_name"
+    new_certs: "new_site_name"
     ```
 
 
