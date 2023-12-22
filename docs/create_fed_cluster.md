@@ -2,7 +2,7 @@
 
 > ⓘ  **Requirements** \
 > This tutorial assumes you already have completed the
-> [Openstack configuration](./site_openstack.md) of the clsuter.
+> [Openstack configuration](./site_openstack.md) of the cluster.
 
 To create the federated cluster, the IFCA admin should follow the 
 steps from the [Ansible master](../README.md#ansible-configuration).
@@ -262,38 +262,44 @@ Specifically, modify the following variables:
 
     Set this variable on section *Nomad* to the list of Nomad namespaces to create.
 
-    > ⓘ It should be a list with each item in a
+    > ⓘ It should be a list with each namespace in a new line, starting with a dash `-`.
 
     Line template:
     ```yaml
-    traefik_certs: <new_traefik_certs_zip_name>
+    nomad_namespaces:
+      - <namespace1>
+          ...
+      - <namespaceN>
     ```
 
     Line example:
     ```yaml
-    traefik_certs: ifca-deployments.cloud.ai4eosc.eu
+    nomad_namespaces:
+      - ai4eosc
+      - imagine
+      - tutorials
     ```
 
 
 ## 4. Execute playbooks
 
-* Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join
+* Execute [playbook-consul.yaml](../playbook-consul.yaml) playbook to deploy
   Consul.
 
     ```console
-    ansible-playbook -i <new_hosts_file> playbook-join-consul.yaml
+    ansible-playbook -i <new_hosts_file> playbook-consul.yaml
     ```
 
-* Execute [playbook-join-nomad.yaml](../playbook-join-nomad.yaml) playbook to join
+* Execute [playbook-nomad.yaml](../playbook-nomad.yaml) playbook to deploy
   Nomad.
 
     ```console
-    ansible-playbook -i <new_hosts_file> playbook-join-nomad.yaml
+    ansible-playbook -i <new_hosts_file> playbook-nomad.yaml
     ```
 
-* Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to
+* Execute [playbook-traefik.yaml](../playbook-traefik.yaml) playbook to
   configure the volumes, docker and the Traefik service.
 
     ```console
-    ansible-playbook -i <new_hosts_file> playbook-join-traefik.yaml
+    ansible-playbook -i <new_hosts_file> playbook-traefik.yaml
     ```
