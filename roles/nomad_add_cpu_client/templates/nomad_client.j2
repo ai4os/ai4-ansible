@@ -12,7 +12,7 @@ client {
 
   meta {
    namespace = "{{ hostvars[inventory_hostname]['nomad_namespaces'] }}"
-{% if inventory_hostname in groups['traefik_master'] %}
+{% if inventory_hostname in groups['traefik_new_master'] %}
    compute = false
    tags = "traefik"
 {% else %}
