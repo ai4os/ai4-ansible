@@ -1,10 +1,10 @@
 # New site: Openstack configuration
 
-This tutorial provides a guide to create an OpenStack site to later join the federated
-cluster.
+This tutorial provides a guide to create an OpenStack site.
 
-Once this tutorials is completed you can proceed with
-[Running Ansible to join the federated cluster](./site_ansible.md)
+Once this tutorials is completed:
+- IFCA admins can proceed with [Running Ansible to create the federated cluster](./create_fed_cluster.md).
+- New site admin can proceed with [Running Ansible to join the federated cluster](./site_ansible.md).
 
 
 ## 1. Create security groups
