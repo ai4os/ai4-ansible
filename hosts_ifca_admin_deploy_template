@@ -43,11 +43,6 @@
 <nomad_clientN_name> vol_name=<vol_name> partition_name=<partition_name>
 
 
-## -- First job
-[job_deployer]
-##### Use just one Nomad client
-<nomad_client_name>
-
 
 
 
