@@ -38,10 +38,6 @@ node-ifca-1 vol_name=vdb partition_name=part1
 node-ifca-gpu-0 vol_name=vdb partition_name=part1
 
 
-## -- First job
-[job_deployer]
-node-ifca-1
-
 
 
 
