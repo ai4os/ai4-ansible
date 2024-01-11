@@ -22,9 +22,6 @@
     dest: "{{ consul_fetched }}"
     flat: yes
 
-- debug:
-    msg: "Consul Token: {{ consul_token.stdout }}"
-
 - name: "Export consul token"
   lineinfile:
     path: "{{ environment_file }}"

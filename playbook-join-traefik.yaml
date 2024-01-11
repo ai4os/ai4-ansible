@@ -5,13 +5,13 @@
      - { role: traefik_install }
 
  - name: Volume managing
-   hosts: nomad_volume
+   hosts: nomad_new_volume
    become: true
    roles:
      - { role: volume_docker }
 
  - name: Docker config
-   hosts: nomad_volume
+   hosts: nomad_new_volume
    become: true
    roles:
      - { role: docker_config }
