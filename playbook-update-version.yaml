@@ -10,12 +10,20 @@
  - name: Consul restart
    hosts: version_update
    become: true
-   roles:
-      - { role: consul_restart }
+   tasks:
+    - name: Restart consul
+      service:
+        name: consul
+        state: restarted
+      when: from_scratch_cluster_installation
 
  - name: Nomad restart
    hosts: version_update
    become: true
    roles:
-      - { role: nomad_restart }
+   tasks:
+    - name: Restart nomad
+      service:
+        name: nomad
+        state: restarted
 

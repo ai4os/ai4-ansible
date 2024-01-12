@@ -87,8 +87,12 @@
  - name: Restart nomad
    hosts: nomad
    become: true
-   roles:
-     - { role: nomad_restart, when: from_scratch_cluster_installation }
+   tasks:
+    - name: Restart nomad
+      service:
+        name: nomad
+        state: restarted
+      when: from_scratch_cluster_installation
 
  - name: Create namespaces
    hosts: nomad_master

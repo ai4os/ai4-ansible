@@ -61,6 +61,8 @@
  - name: Restart nomad
    hosts: nomad_new
    become: true
-   roles:
-     - { role: nomad_restart }
-
+   tasks:
+    - name: Restart nomad
+      service:
+        name: nomad
+        state: restarted

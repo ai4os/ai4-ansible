@@ -44,14 +44,23 @@
  - name: Start consul
    hosts: consul
    become: true
-   roles:
-     - { role: consul_start, when: from_scratch_cluster_installation }
+   tasks:
+    - name: Start consul
+      service:
+        name: consul
+        state: started
+      when: from_scratch_cluster_installation
 
+  # This should be notified not executed directly
  - name: Restart consul
    hosts: consul
    become: true
-   roles:
-     - { role: consul_restart, when: from_scratch_cluster_installation }
+   tasks:
+    - name: Restart consul
+      service:
+        name: consul
+        state: restarted
+      when: from_scratch_cluster_installation
 
  - name: Consul ACLs
    hosts: consul_master
@@ -80,11 +89,19 @@
  - name: Start consul
    hosts: consul
    become: true
-   roles:
-     - { role: consul_start, when: from_scratch_cluster_installation }
+   tasks:
+    - name: Start consul
+      service:
+        name: consul
+        state: started
+      when: from_scratch_cluster_installation
 
  - name: Restart consul
    hosts: consul
    become: true
-   roles: 
-     - { role: consul_restart, when: from_scratch_cluster_installation }
+   tasks:
+    - name: Restart consul
+      service:
+        name: consul
+        state: restarted
+      when: from_scratch_cluster_installation

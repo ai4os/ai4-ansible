@@ -25,14 +25,22 @@
  - name: Start consul
    hosts: consul_new
    become: true
-   roles:
-     - { role: consul_start }
+   tasks:
+    - name: Start consul
+      service:
+        name: consul
+        state: started
+      when: from_scratch_cluster_installation
 
  - name: Restart consul
    hosts: consul_new
    become: true
-   roles:
-      - { role: consul_restart }
+   tasks:
+    - name: Restart consul
+      service:
+        name: consul
+        state: restarted
+      when: from_scratch_cluster_installation
 
  - name: Get consul tokens
    hosts: consul_new
@@ -55,11 +63,19 @@
  - name: Start consul
    hosts: consul_new
    become: true
-   roles:
-     - { role: consul_start }
+   tasks:
+    - name: Start consul
+      service:
+        name: consul
+        state: started
+      when: from_scratch_cluster_installation
 
  - name: Restart consul
    hosts: consul_new
    become: true
-   roles: 
-     - { role: consul_restart }
+   tasks:
+    - name: Restart consul
+      service:
+        name: consul
+        state: restarted
+      when: from_scratch_cluster_installation
