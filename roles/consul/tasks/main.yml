@@ -38,20 +38,32 @@
   tags: 
     - consul_common
 
+# tasks file for consul_add_common
+
+- name: "Copy consul certs, keys and tokens from zip"
+  include_tasks: copy_new.yml
+  tags: 
+    - consul_add_common
+
 # tasks file for consul_client
 
-- name: Configure consul client
-  block:
-
-  - name: "Get encryption key from consul-keygen"
-    set_fact:
-      consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
-      
-  - name: "Client configuration"
-    include_tasks: configure_client.yml
-
-  tags: 
+- name: "Get encryption key from consul-keygen"
+  set_fact:
+    consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
+  tags:
     - consul_client
+
+- name: "Get encryption key from consul-keygen in joined nodes"
+  set_fact:
+    consul_keygen: "{{ lookup('file', '{{ path }}{{ new_certs }}/consul_keygen') }}"
+  tags:
+    - consul_add_client
+
+- name: "Client configuration"
+  include_tasks: configure_client.yml
+  tags:
+    - consul_client
+    - consul_add_client
 
 # tasks file for consul_server
 
@@ -67,6 +79,20 @@
   tags: 
     - consul_server
 
+# tasks file for consul_add_server
+
+- name: Configure new consul server
+  block:
+
+  - name: "Copy server certificates"
+    include_tasks: copy_new_certificates.yml
+
+  - name: "Server configuration"
+    include_tasks: configure_new_server.yml
+
+  tags: 
+    - consul_add_server
+
 # tasks file for consul_acl
 
 - name: Generating consul ACLs
@@ -79,28 +105,28 @@
 
 # tasks file for consul_tokens_common
 
-- name: Get tokens
-
-  block:
-  - name: "Get tokens"
-    include_tasks: copy_tokens.yml
-
-  - name: "Set tokens"
-    include_tasks: set_tokens.yml
-
+- name: "Get tokens"
+  include_tasks: copy_tokens.yml
   tags: 
     - consul_tokens_common
+
+- name: "Set tokens"
+  include_tasks: set_tokens.yml
+  tags: 
+    - consul_tokens_common
+    - consul_add_tokens_common
 
 # tasks file for consul_tokens_server
 
 - name: Set consul server tokens
-
   block:
+
   - name: "Set tokens"
     include_tasks: set_server_tokens.yml
 
   tags: 
     - consul_tokens_server
+    - consul_add_tokens_server
 
 # tasks file for consul_tokens_client
 

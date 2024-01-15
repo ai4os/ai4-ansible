@@ -1,7 +1,0 @@
-## Get consul-keygen for new client config
-
-- name: "Get encryption key from consul-keygen"
-  set_fact:
-    consul_keygen: "{{ lookup('file', '{{ path }}{{ new_certs }}/consul_keygen') }}"
-
-

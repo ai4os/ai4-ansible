@@ -15,7 +15,7 @@
 
 - name: "Copy server.hcl configuration"
   template:
-   src: templates/consul_server.j2
+   src: templates/consul_server_new.j2
    dest: "{{ consul_config }}server.hcl"
    owner: ubuntu
 

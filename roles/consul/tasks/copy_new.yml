@@ -1,7 +1,7 @@
 ## Copy consul certs, keys and tokens from zip file
 
 - name: "Unzip file in ansible_master if it is zipped"
-  ansible.builtin.unarchive:
+  unarchive:
     src: "{{ path }}{{ new_certs }}.zip"
     dest: "{{ path }}"
   delegate_to: 127.0.0.1

@@ -2,36 +2,34 @@
    hosts: consul_new
    become: true
    roles:
-     - { role: consul_install }
+     - role: consul
+   tags:
+     - consul_install
 
  - name: Consul common configuration
    hosts: consul_new
    become: true
    roles:
-     - { role: consul_add_common }
+     - role: consul
+   tags:
+     - consul_add_common
 
  - name: Consul clients configuration
    hosts: consul_new_clients
    become: true
-   roles: 
-     - { role: consul_add_client }
+   roles:
+     - role: consul
+   tags:
+     - consul_add_client
       
  - name: Consul server configuration
    hosts: consul_new_servers 
-   become: true
    roles:
-     - { role: consul_add_server }
- 
- - name: Start consul
-   hosts: consul_new
-   become: true
-   tasks:
-    - name: Start consul
-      service:
-        name: consul
-        state: started
-      when: from_scratch_cluster_installation
+     - role: consul
+   tags:
+     - consul_add_server
 
+ # This should be notified not executed directly
  - name: Restart consul
    hosts: consul_new
    become: true
@@ -40,25 +38,52 @@
       service:
         name: consul
         state: restarted
+      when: from_scratch_cluster_installation
+
+ - name: Start consul
+   hosts: consul_new
+   become: true
+   tasks:
+    - name: Start consul
+      service:
+        name: consul
+        state: started
       when: from_scratch_cluster_installation
 
  - name: Get consul tokens
    hosts: consul_new
    become: true
    roles:
-     - { role: consul_add_tokens_common }
+     - role: consul
+   tags:
+     - consul_add_tokens_common
 
  - name: Set server tokens
    hosts: consul_new_servers
    become: true
    roles:
-     - { role: consul_add_tokens_server }
+     - role: consul
+   tags:
+     - consul_add_tokens_server
 
  - name: Set client tokens
    hosts: consul_new_clients
    become: true
-   roles:
-     - { role: consul_tokens_client }
+   roles: 
+     - role: consul
+   tags:
+     - consul_tokens_client
+
+ # This should be notified not executed directly
+ - name: Restart consul
+   hosts: consul_new
+   become: true
+   tasks:
+    - name: Restart consul
+      service:
+        name: consul
+        state: restarted
+      when: from_scratch_cluster_installation
 
  - name: Start consul
    hosts: consul_new
@@ -68,14 +93,4 @@
       service:
         name: consul
         state: started
-      when: from_scratch_cluster_installation
-
- - name: Restart consul
-   hosts: consul_new
-   become: true
-   tasks:
-    - name: Restart consul
-      service:
-        name: consul
-        state: restarted
       when: from_scratch_cluster_installation
