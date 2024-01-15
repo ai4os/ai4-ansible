@@ -55,27 +55,6 @@
        when: from_scratch_cluster_installation
    tags:
      - consul_server
- 
-  # This should be notified not executed directly
- - name: Restart consul
-   hosts: consul
-   become: true
-   tasks:
-    - name: Restart consul
-      service:
-        name: consul
-        state: restarted
-      when: from_scratch_cluster_installation
-
- - name: Start consul
-   hosts: consul
-   become: true
-   tasks:
-    - name: Start consul
-      service:
-        name: consul
-        state: started
-      when: from_scratch_cluster_installation
 
  - name: Consul ACLs
    hosts: consul_master
@@ -111,24 +90,3 @@
        when: from_scratch_cluster_installation
    tags:
      - consul_tokens_client
-
- # This should be notified not executed directly
- - name: Restart consul
-   hosts: consul
-   become: true
-   tasks:
-    - name: Restart consul
-      service:
-        name: consul
-        state: restarted
-      when: from_scratch_cluster_installation
-
- - name: Start consul
-   hosts: consul
-   become: true
-   tasks:
-    - name: Start consul
-      service:
-        name: consul
-        state: started
-      when: from_scratch_cluster_installation

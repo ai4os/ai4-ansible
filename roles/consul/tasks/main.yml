@@ -93,6 +93,21 @@
   tags: 
     - consul_add_server
 
+# This should be notified not executed directly
+- name: Restart consul
+  service:
+    name: consul
+    state: restarted
+  tags:
+    - always
+
+- name: Start consul
+  service:
+    name: consul
+    state: started
+  tags:
+    - always
+
 # tasks file for consul_acl
 
 - name: Generating consul ACLs
@@ -138,3 +153,18 @@
 
   tags: 
     - consul_tokens_client
+
+# This should be notified not executed directly
+- name: Restart consul
+  service:
+    name: consul
+    state: restarted
+  tags:
+    - always
+
+- name: Start consul
+  service:
+    name: consul
+    state: started
+  tags:
+    - always

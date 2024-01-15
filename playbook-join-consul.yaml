@@ -29,27 +29,6 @@
    tags:
      - consul_add_server
 
- # This should be notified not executed directly
- - name: Restart consul
-   hosts: consul_new
-   become: true
-   tasks:
-    - name: Restart consul
-      service:
-        name: consul
-        state: restarted
-      when: from_scratch_cluster_installation
-
- - name: Start consul
-   hosts: consul_new
-   become: true
-   tasks:
-    - name: Start consul
-      service:
-        name: consul
-        state: started
-      when: from_scratch_cluster_installation
-
  - name: Get consul tokens
    hosts: consul_new
    become: true
@@ -73,24 +52,3 @@
      - role: consul
    tags:
      - consul_tokens_client
-
- # This should be notified not executed directly
- - name: Restart consul
-   hosts: consul_new
-   become: true
-   tasks:
-    - name: Restart consul
-      service:
-        name: consul
-        state: restarted
-      when: from_scratch_cluster_installation
-
- - name: Start consul
-   hosts: consul_new
-   become: true
-   tasks:
-    - name: Start consul
-      service:
-        name: consul
-        state: started
-      when: from_scratch_cluster_installation
