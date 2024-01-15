@@ -36,7 +36,7 @@
   template:
     src: templates/consul_node_policy.j2
     dest: "{{ consul_policies_dir }}/node-policy.hcl"
-    owner: ubuntu
+    owner: "{{ username }}"
 
 - name: "Create consul policies"
   shell: consul acl policy create -name node-policy -description "Consul Client Policy" -rules @"{{ consul_policies_dir }}/node-policy.hcl"

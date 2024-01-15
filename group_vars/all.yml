@@ -13,6 +13,7 @@ add_new_nodes: false
 
 
 # -- General
+username: ubuntu
 path: /home/ubuntu/
 path_system: /etc/systemd/system/
 path_bin: /usr/bin/

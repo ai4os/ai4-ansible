@@ -161,10 +161,3 @@
     state: restarted
   tags:
     - always
-
-- name: Start consul
-  service:
-    name: consul
-    state: started
-  tags:
-    - always

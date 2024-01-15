@@ -6,12 +6,12 @@
   template:
     src: templates/consul.j2
     dest: "{{ consul_config }}consul.hcl"
-    owner: ubuntu
+    owner: "{{ username }}"
 
 - name: "Copy server.hcl configuration"
   template:
     src: templates/consul_server.j2
     dest: "{{ consul_config }}server.hcl"
-    owner: ubuntu
+    owner: "{{ username }}"
   vars:
     server_new: False
