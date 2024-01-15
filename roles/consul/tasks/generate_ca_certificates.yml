@@ -6,11 +6,12 @@
 - name: "Generate CA certificates"
   command:
     cmd: consul tls ca create
+    chdir: "{{ path }}"
     creates: "{{ path }}consul-agent-ca.pem"
-  when: stat_ca.stat.exists == False
 
 - name: "Generate certificate for each server"
   command:
     cmd: consul tls cert create -server -dc {{ consul_dc_name }} -domain consul
+    chdir: "{{ path }}"
     creates: "{{ path }}{{ consul_dc_name }}-server-consul-{{ item }}.pem"
   loop: "{{ range(0, groups['consul_servers'] | length)|list }}"

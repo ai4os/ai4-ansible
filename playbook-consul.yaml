@@ -17,8 +17,7 @@
    roles:
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_install
+       consul_install: true
 
  - name: Consul master configuration
    hosts: consul_master
@@ -26,8 +25,7 @@
    roles:
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_master
+       consul_master: true
 
  - name: Consul common configuration
    hosts: consul
@@ -35,8 +33,7 @@
    roles:
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_common
+       consul_common: true
 
  - name: Consul clients configuration
    hosts: consul_clients
@@ -44,8 +41,7 @@
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_client
+       consul_client: true
       
  - name: Consul server configuration
    hosts: consul_servers 
@@ -53,8 +49,7 @@
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_server
+       consul_server: true
 
  - name: Consul ACLs
    hosts: consul_master
@@ -62,8 +57,7 @@
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_acl
+       consul_acl: true
 
  - name: Get consul tokens
    hosts: consul
@@ -71,16 +65,14 @@
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_tokens_common
+       consul_tokens_common: true
 
  - name: Set server tokens
    hosts: consul_servers
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_tokens_server
+       consul_tokens_server: true
 
  - name: Set client tokens
    hosts: consul_clients
@@ -88,5 +80,4 @@
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
-   tags:
-     - consul_tokens_client
+       consul_tokens_client: true

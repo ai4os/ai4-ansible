@@ -2,7 +2,6 @@
   get_url:
    url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
    dest: "{{ path }}consul_{{ consul_version }}_linux_amd64.zip"
-  when: stat_consul_zip.stat.exists == False
 
 - name: "Unzip consul file"
   unarchive:
@@ -12,7 +11,7 @@
 
 - name: "Create consul certs and data dir"
   file:
-   path: "{{ items }}"
+   path: "{{ item }}"
    state: directory
    mode: 0755
   loop:
