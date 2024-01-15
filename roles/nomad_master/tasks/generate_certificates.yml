@@ -42,8 +42,7 @@
   register: stat_cli
 
 - name: "Generate CLI certificate"
-  shell: "echo '{}' | cfssl gencert -ca=nomad-ca.pem -ca-key=nomad-ca-key.pem -profile=client \
-- | cfssljson -bare cli"
+  shell: "echo '{}' | cfssl gencert -ca=nomad-ca.pem -ca-key=nomad-ca-key.pem -profile=client | cfssljson -bare cli"
   when: not stat_cli.stat.exists
 
 - name: "Export nomad addr"
