@@ -12,8 +12,10 @@ acl = {
 tls {
   defaults {
     ca_file = "{{ consul_certs }}consul-agent-ca.pem"
+{% if server %}
     cert_file = "{{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"       # In case of consul client and auto encryption TLS, remove this line
     key_file = "{{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"    # In case of consul client and auto encryption TLS, remove this line
+{% endif %}
  
     verify_incoming = true
     verify_outgoing = true
@@ -24,8 +26,11 @@ tls {
 }
  
 auto_encrypt {
+{% if server %}
   allow_tls = true               # In case of client comment this line
-  # tls = true                   # In case of client uncomment this line
+{% else %}
+  tls = true                   # In case of client uncomment this line
+{% endif %}
 }
  
 retry_join = ["{{ consul_public_ip}}"]  # This must be a public IP(s) used for all servers/clients in the datacenter

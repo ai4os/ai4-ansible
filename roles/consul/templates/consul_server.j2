@@ -1,5 +1,9 @@
 server = true
+{% if server_new %}
+bootstrap_expect = 1
+{% else %}
 bootstrap_expect = {{ groups['consul_servers'] | length}}                                 # Number of Consul servers expected in the datacenter (recommended: 3, 5 or 7)
+{% endif %}
                                                      # Must be consistent all across all servers in dc
  
 advertise_addr = "{{ my_ip }}"                    # IP of the machine

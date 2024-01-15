@@ -9,15 +9,16 @@
 
 - name: "Copy consul.hcl configuration"
   template:
-   src: templates/consul.j2
-   dest: "{{ consul_config }}consul.hcl"
-   owner: ubuntu
+    src: templates/consul.j2
+    dest: "{{ consul_config }}consul.hcl"
+    owner: ubuntu
+  vars:
+    server: True
 
 - name: "Copy server.hcl configuration"
   template:
-   src: templates/consul_server_new.j2
-   dest: "{{ consul_config }}server.hcl"
-   owner: ubuntu
-
-
-
+    src: templates/consul_server.j2
+    dest: "{{ consul_config }}server.hcl"
+    owner: ubuntu
+  vars:
+    server_new: True
