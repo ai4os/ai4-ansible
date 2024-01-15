@@ -1,0 +1,14 @@
+- name: Get ACL Token
+  set_fact:
+    consul_token: "{{ lookup('file', consul_certs + inventory_hostname + '_consul_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
+
+- name: "Export consul token"
+  replace:
+    path: "{{ consul_config }}server.hcl"
+    replace: "{{ consul_token }}"
+    regexp: '{{ default_token }}'
+
+- name: "Set agent token"
+  command: consul acl set-agent-token agent "{{ consul_token }}"

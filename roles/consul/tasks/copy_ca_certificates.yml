@@ -1,0 +1,10 @@
+- name: "Copy CA certificates from ansible master to consul hosts"
+  copy:
+   src: "{{ consul_fetched }}consul-agent-ca.pem"
+   dest: "{{ consul_certs }}"
+
+- name: "Copy consul-keygen from ansible master to consul hosts"
+  copy:
+   src: "{{ consul_fetched }}consul_keygen"
+   dest: "{{ consul_certs }}"
+

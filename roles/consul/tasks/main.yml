@@ -1,0 +1,114 @@
+---
+# tasks file for consul_install
+
+- name: Checking if consul is installed
+  stat: 
+    path: "{{ consul }}"
+  register: consul_output
+  tags: 
+    - consul_install
+
+- block:
+  - name: "Install packages"
+    include_tasks: dependencies.yml
+
+  - name: "Install consul"
+    include_tasks: install.yml
+
+  when: consul_output.stat.exists == False
+  tags: 
+    - consul_install
+
+# tasks file for consul_master
+
+- name: "Generate CA certificates"
+  include_tasks: generate_ca_certificates.yml
+  tags: 
+    - consul_master
+
+- name: "Fetch certificates to ansible master"
+  include_tasks: fetch_certificates.yml
+  tags: 
+    - consul_master
+
+# tasks file for consul_common
+
+- name: "Copy consul-agent-ca.pem"
+  include_tasks: copy_ca_certificates.yml
+  tags: 
+    - consul_common
+
+# tasks file for consul_client
+
+- name: Configure consul client
+  block:
+
+  - name: "Get encryption key from consul-keygen"
+    set_fact:
+      consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
+      
+  - name: "Client configuration"
+    include_tasks: configure_client.yml
+
+  tags: 
+    - consul_client
+
+# tasks file for consul_server
+
+- name: Configure consul server
+  block:
+
+  - name: "Copy server certificates"
+    include_tasks: copy_server_certificates.yml
+
+  - name: "Server configuration"
+    include_tasks: configure_server.yml
+
+  tags: 
+    - consul_server
+
+# tasks file for consul_acl
+
+- name: Generating consul ACLs
+
+  block:
+  - name: "Create policies and token access"
+    include_tasks: policies.yml
+  tags: 
+    - consul_acl
+
+# tasks file for consul_tokens_common
+
+- name: Get tokens
+
+  block:
+  - name: "Get tokens"
+    include_tasks: copy_tokens.yml
+
+  - name: "Set tokens"
+    include_tasks: set_tokens.yml
+
+  tags: 
+    - consul_tokens_common
+
+# tasks file for consul_tokens_server
+
+- name: Set consul server tokens
+
+  block:
+  - name: "Set tokens"
+    include_tasks: set_server_tokens.yml
+
+  tags: 
+    - consul_tokens_server
+
+# tasks file for consul_tokens_client
+
+- name: Set consul client tokens
+
+  block:
+  - name: "Set tokens"
+    include_tasks: set_client_tokens.yml
+
+  tags: 
+    - consul_tokens_client

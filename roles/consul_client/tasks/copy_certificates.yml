@@ -1,5 +1,0 @@
-- name: "Get encryption key from consul-keygen"
-  set_fact:
-    consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
-
-

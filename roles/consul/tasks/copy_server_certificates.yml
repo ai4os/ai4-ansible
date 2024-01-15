@@ -1,0 +1,33 @@
+- name: "Get consul server index"
+  set_fact:
+    server_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+
+- name: "Copy server certs from consul-master to consul-servers"
+  copy:
+    src: "{{ consul_fetched }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+    dest: "{{ consul_certs }}"
+
+- name: "Copy server keys from consul-master to consul-servers"
+  copy:
+    src: "{{ consul_fetched }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+    dest: "{{ consul_certs }}"
+
+- name: "Get encryption key from consul-keygen"
+  set_fact:
+    consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
+
+- name: "Export consul server cert"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "export CONSUL_CLIENT_CERT={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+    regexp: "^export CONSUL_CLIENT_CERT="
+
+- name: "Export consul server cert"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "export CONSUL_CLIENT_KEY={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+    regexp: "^export CONSUL_CLIENT_KEY="
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"

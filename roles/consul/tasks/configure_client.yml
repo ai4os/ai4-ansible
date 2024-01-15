@@ -1,0 +1,13 @@
+
+- name: "Copy consul.hcl configuration"
+  template:
+   src: templates/consulc.j2
+   dest: "{{ consul_config }}consul.hcl"
+   owner: ubuntu
+
+- name: "Copy client.hcl configuration"
+  template:
+   src: templates/consul_client.j2
+   dest: "{{ consul_config }}client.hcl"
+   owner: ubuntu
+

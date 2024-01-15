@@ -15,42 +15,47 @@
    hosts: consul
    become: true
    roles:
-     - { role: consul_install, when: from_scratch_cluster_installation }
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_install
 
  - name: Consul master configuration
    hosts: consul_master
    become: true
    roles:
-     - { role: consul_master, when: from_scratch_cluster_installation }
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_master
 
  - name: Consul common configuration
    hosts: consul
    become: true
    roles:
-     - { role: consul_common, when: from_scratch_cluster_installation }
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_common
 
  - name: Consul clients configuration
    hosts: consul_clients
    become: true
    roles: 
-     - { role: consul_client, when: from_scratch_cluster_installation }
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_client
       
  - name: Consul server configuration
    hosts: consul_servers 
    become: true
-   roles:
-     - { role: consul_server, when: from_scratch_cluster_installation }
+   roles: 
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_server
  
- - name: Start consul
-   hosts: consul
-   become: true
-   tasks:
-    - name: Start consul
-      service:
-        name: consul
-        state: started
-      when: from_scratch_cluster_installation
-
   # This should be notified not executed directly
  - name: Restart consul
    hosts: consul
@@ -62,30 +67,6 @@
         state: restarted
       when: from_scratch_cluster_installation
 
- - name: Consul ACLs
-   hosts: consul_master
-   become: true
-   roles: 
-     - { role: consul_acl, when: from_scratch_cluster_installation }
-
- - name: Get consul tokens
-   hosts: consul
-   become: true
-   roles:
-     - { role: consul_tokens_common, when: from_scratch_cluster_installation }
-
- - name: Set server tokens
-   hosts: consul_servers
-   become: true
-   roles:
-     - { role: consul_tokens_server, when: from_scratch_cluster_installation }
-
- - name: Set client tokens
-   hosts: consul_clients
-   become: true
-   roles:
-     - { role: consul_tokens_client, when: from_scratch_cluster_installation }
-
  - name: Start consul
    hosts: consul
    become: true
@@ -96,6 +77,42 @@
         state: started
       when: from_scratch_cluster_installation
 
+ - name: Consul ACLs
+   hosts: consul_master
+   become: true
+   roles: 
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_acl
+
+ - name: Get consul tokens
+   hosts: consul
+   become: true
+   roles: 
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_tokens_common
+
+ - name: Set server tokens
+   hosts: consul_servers
+   roles: 
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_tokens_server
+
+ - name: Set client tokens
+   hosts: consul_clients
+   become: true
+   roles: 
+     - role: consul
+       when: from_scratch_cluster_installation
+   tags:
+     - consul_tokens_client
+
+ # This should be notified not executed directly
  - name: Restart consul
    hosts: consul
    become: true
@@ -104,4 +121,14 @@
       service:
         name: consul
         state: restarted
+      when: from_scratch_cluster_installation
+
+ - name: Start consul
+   hosts: consul
+   become: true
+   tasks:
+    - name: Start consul
+      service:
+        name: consul
+        state: started
       when: from_scratch_cluster_installation

@@ -1,0 +1,16 @@
+- name: "Get consul ACL token from consul_master"
+  set_fact:
+    consul_token: "{{ lookup('file', consul_certs + 'consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
+
+- name: "Export consul token"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "CONSUL_HTTP_TOKEN={{ consul_token.stdout }}"
+    regexp: '^CONSUL_HTTP_TOKEN='
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"
+
