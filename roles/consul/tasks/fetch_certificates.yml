@@ -9,13 +9,7 @@
   fetch:
     src: "{{ path }}consul-agent-ca.pem"
     dest: "{{ consul_fetched }}"
-    flat: yes
-
-- name: "Fetch consul-keygen from consul-master to ansible-master"
-  fetch:
-    src: "{{ path }}consul_keygen"
-    dest: "{{ consul_fetched }}"
-    flat: yes      
+    flat: yes   
 
 - name: "Fetch server certs from consul-master to ansible-master"
   fetch:

@@ -39,12 +39,7 @@
 - name: "Get encryption key from consul-keygen"
   set_fact:
     consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
-  when: consul_client
-
-- name: "Get encryption key from consul-keygen in joined nodes"
-  set_fact:
-    consul_keygen: "{{ lookup('file', '{{ path }}{{ new_certs }}/consul_keygen') }}"
-  when: consul_add_client
+  when: consul_client or consul_add_client or consul_server or consul_add_server
 
 - name: "Client configuration"
   include_tasks: configure_client.yml

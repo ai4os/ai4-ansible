@@ -12,10 +12,6 @@
     src: "{{ consul_fetched }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
     dest: "{{ consul_certs }}"
 
-- name: "Get encryption key from consul-keygen"
-  set_fact:
-    consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
-
 - name: "Export consul server cert"
   lineinfile:
     path: "{{ environment_file }}"

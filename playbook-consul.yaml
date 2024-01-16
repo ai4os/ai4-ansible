@@ -69,6 +69,7 @@
 
  - name: Set server tokens
    hosts: consul_servers
+   become: true
    roles: 
      - role: consul
        when: from_scratch_cluster_installation
