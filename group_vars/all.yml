@@ -12,6 +12,7 @@ consul_add_common: false
 consul_add_server: false
 consul_add_tokens_common: false
 consul_add_tokens_server: false
+consul_add_tokens_client: false
 consul_client: false
 consul_common: false
 consul_install: false
