@@ -1,2 +1,6 @@
 ---
 # handlers file for consul_install
+- name: Restart consul
+  service:
+    name: consul
+    state: restarted

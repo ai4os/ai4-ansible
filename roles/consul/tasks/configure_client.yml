@@ -6,9 +6,11 @@
     owner: "{{ username }}"
   vars:
     server: False
+  notify: Restart consul
 
 - name: "Copy client.hcl configuration"
   template:
     src: templates/consul_client.j2
     dest: "{{ consul_config }}client.hcl"
     owner: "{{ username }}"
+  notify: Restart consul

@@ -37,3 +37,4 @@
     src: templates/consul_service.j2
     dest: "{{ path_system }}consul.service"
     owner: "{{ username }}"
+  notify: Restart consul

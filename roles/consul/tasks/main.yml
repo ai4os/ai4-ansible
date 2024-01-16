@@ -111,8 +111,3 @@
   include_tasks: set_client_tokens.yml
   when: consul_tokens_client
 
-# This should be notified not executed directly
-- name: Restart consul
-  service:
-    name: consul
-    state: restarted

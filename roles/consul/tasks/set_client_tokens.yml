@@ -9,3 +9,4 @@
     path: "{{ consul_config }}client.hcl"
     replace: "{{ consul_token }}"
     regexp: '{{ default_token }}'
+  notify: Restart consul
