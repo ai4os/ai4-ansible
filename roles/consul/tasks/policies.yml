@@ -28,7 +28,7 @@
 - name: "Export consul token"
   lineinfile:
     path: "{{ environment_file }}"
-    line: "export CONSUL_HTTP_TOKEN={{ consul_token.stdout }}"
+    line: "export CONSUL_HTTP_TOKEN={{ consul_token }}"
 
 - name: "Set exports"
   become: false
