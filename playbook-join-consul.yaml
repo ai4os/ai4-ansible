@@ -44,4 +44,4 @@
    become: true
    roles: 
      - role: consul
-       consul_tokens_client: true
+       consul_add_tokens_client: true
