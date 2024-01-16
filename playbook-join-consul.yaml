@@ -3,52 +3,45 @@
    become: true
    roles:
      - role: consul
-   tags:
-     - consul_install
+       consul_install: true
 
  - name: Consul common configuration
    hosts: consul_new
    become: true
    roles:
      - role: consul
-   tags:
-     - consul_add_common
+       consul_add_common: true
 
  - name: Consul clients configuration
    hosts: consul_new_clients
    become: true
    roles:
      - role: consul
-   tags:
-     - consul_add_client
+       consul_add_client: true
       
  - name: Consul server configuration
    hosts: consul_new_servers 
    roles:
      - role: consul
-   tags:
-     - consul_add_server
+       consul_add_server: true
 
  - name: Get consul tokens
    hosts: consul_new
    become: true
    roles:
      - role: consul
-   tags:
-     - consul_add_tokens_common
+       consul_add_tokens_common: true
 
  - name: Set server tokens
    hosts: consul_new_servers
    become: true
    roles:
      - role: consul
-   tags:
-     - consul_add_tokens_server
+       consul_add_tokens_server: true
 
  - name: Set client tokens
    hosts: consul_new_clients
    become: true
    roles: 
      - role: consul
-   tags:
-     - consul_tokens_client
+       consul_tokens_client: true
