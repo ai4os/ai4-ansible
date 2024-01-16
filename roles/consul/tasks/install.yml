@@ -38,5 +38,6 @@
     dest: "{{ path_system }}consul.service"
     owner: "{{ username }}"
   notify:
-    - Restart consul
     - systemctl daemon-reload
+    - Restart consul
+    
