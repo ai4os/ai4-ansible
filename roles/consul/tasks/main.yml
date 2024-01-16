@@ -76,12 +76,6 @@
 
   when: consul_add_server
 
-# This should be notified not executed directly
-- name: Restart consul
-  service:
-    name: consul
-    state: restarted
-
 - name: Start consul
   service:
     name: consul
