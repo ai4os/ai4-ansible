@@ -4,3 +4,7 @@
   service:
     name: consul
     state: restarted
+
+- name: systemctl daemon-reload
+  systemd_service:
+    daemon_reload: true
