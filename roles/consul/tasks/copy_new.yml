@@ -21,5 +21,3 @@
   copy:
    src: "{{ path }}{{ new_certs }}/{{ inventory_hostname }}_consul_token"
    dest: "{{ consul_certs }}"
-
-
