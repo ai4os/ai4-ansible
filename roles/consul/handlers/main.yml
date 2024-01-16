@@ -1,8 +1,7 @@
 ---
 # handlers file for consul_install
 - name: systemctl daemon-reload
-  systemd_service:
-    daemon_reload: true
+  command: systemctl daemon-reload
 
 - name: Restart consul
   service:
