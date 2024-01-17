@@ -1,14 +1,12 @@
 - name: "Set consul bootstrap token path"
   set_fact:
     consul_token_path: "{{ path }}{{ new_certs }}/{{ inventory_hostname }}_consul_token"
-  when: ('consul_new_servers' in groups and inventory_hostname in groups['consul_new_servers']) or
-        ('consul_new_clients' in groups and inventory_hostname in groups['consul_new_clients'])
+  when: consul_new_servers or consul_new_clients
 
 - name: "Set consul bootstrap token path"
   set_fact:
     consul_token_path: "{{ consul_fetched_dir }}/{{ inventory_hostname }}_consul_token"
-  when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"]) or
-        ("consul_clients" in groups and inventory_hostname in groups["consul_clients"]) 
+  when: consul_servers or consul_clients
 
 - name: Wait ACL Token
   wait_for:
