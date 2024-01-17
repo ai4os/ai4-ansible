@@ -13,4 +13,4 @@
 - name: "Set exports"
   become: false
   shell: ". {{ environment_file }}"
-
+  changed_when: false
