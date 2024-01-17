@@ -8,6 +8,7 @@
   unarchive:
     src: "{{ path }}{{ new_certs }}.zip"
     dest: "{{ path }}"
+    creates: "{{ path }}{{ new_certs }}/consul-agent-ca.pem"
   delegate_to: 127.0.0.1
   run_once: true
 

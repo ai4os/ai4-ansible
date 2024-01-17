@@ -20,7 +20,7 @@
 
 - name: "Copy consul certs, keys and tokens from zip"
   include_tasks: copy_new.yml
-  when: inventory_hostname in groups["consul_master"]
+  when: inventory_hostname in groups["consul_new_clients"] or inventory_hostname in groups["consul_new_servers"]
 
 - name: Wait consul_keygen
   wait_for:
