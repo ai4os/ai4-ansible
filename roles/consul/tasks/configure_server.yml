@@ -1,7 +1,7 @@
 
 - name: "Copy consul.hcl configuration"
   vars:
-    server_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+    server_index: "{{ lookup('ansible.utils.index_of', groups['consul_servers'], 'eq', inventory_hostname) }}"
     server: True
   template:
     src: templates/consul.j2

@@ -1,6 +1,6 @@
 - name: "Get consul server index"
   set_fact:
-    server_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+    server_index: "{{ lookup('ansible.utils.index_of', groups['consul_servers'], 'eq', inventory_hostname) }}"
 
 - name: "Copy server certs from consul-master to consul-servers"
   copy:
