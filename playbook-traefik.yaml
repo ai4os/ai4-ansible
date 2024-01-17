@@ -27,13 +27,19 @@
    hosts: nomad_volume
    become: true
    roles:
-     - { role: volume_docker }
+     - { role: volume_docker, when: from_scratch_cluster_installation }
 
  - name: Docker config
    hosts: nomad_volume
    become: true
    roles:
-     - { role: docker_config }
+     - { role: docker_config, when: from_scratch_cluster_installation }
+
+ - name: Nvidia drivers
+   hosts: nomad_gpu_clients
+   become: true
+   roles:
+     - { role: nomad_nvidia, when: from_scratch_cluster_installation }
 
  - name: Traefik service
    hosts: traefik_master

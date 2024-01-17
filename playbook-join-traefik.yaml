@@ -15,7 +15,13 @@
    become: true
    roles:
      - { role: docker_config }
-       
+
+ - name: Nvidia drivers
+   hosts: nomad_new_gpu_clients
+   become: true
+   roles:
+     - { role: nomad_nvidia }
+
  - name: Traefik service
    hosts: traefik_new_master
    become: true

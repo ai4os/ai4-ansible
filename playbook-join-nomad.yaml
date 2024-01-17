@@ -4,12 +4,6 @@
    roles:
      - { role: nomad_install }
 
- - name: Nvidia drivers
-   hosts: nomad_new_gpu_clients
-   become: true
-   roles:
-     - { role: nomad_nvidia }
-
  - name: Nomad common configuration
    hosts: nomad_new
    become: true

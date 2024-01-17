@@ -17,12 +17,6 @@
    roles:
      - { role: nomad_install, when: from_scratch_cluster_installation }
 
- - name: Nvidia drivers
-   hosts: nomad_gpu_clients
-   become: true
-   roles:
-     - { role: nomad_nvidia, when: from_scratch_cluster_installation }
-
  - name: Nomad master configuration
    hosts: nomad_master
    become: true
