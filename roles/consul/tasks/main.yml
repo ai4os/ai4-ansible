@@ -1,12 +1,4 @@
 ---
-- name: "Ser conditional vars"
-  set_fact:
-    consul_master: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
-    consul_clients: ("consul_clients" in groups and inventory_hostname in groups["consul_clients"])
-    consul_servers: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"])
-    consul_new_clients: ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"])
-    consul_new_servers: ("consul_new_servers" in groups and inventory_hostname in groups["consul_new_servers"])
-
 - name: "Install packages"
   include_tasks: dependencies.yml
 
@@ -21,27 +13,23 @@
   - name: "Fetch certificates to ansible master"
     include_tasks: fetch_certificates.yml
 
-  when: consul_master
+  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
 - name: "Copy consul-agent-ca.pem"
   include_tasks: copy_ca_certificates.yml
 
 - name: "Copy consul certs, keys and tokens from zip"
   include_tasks: copy_new.yml
-  when: consul_new_clients or consul_new_servers
+  when: ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"]) or
+        ("consul_new_servers" in groups and inventory_hostname in groups["consul_new_servers"])
 
-- name: Wait consul_keygen
-  wait_for:
-    path: "{{ consul_fetched }}consul_keygen"
-  delegate_to: localhost
-
-- name: "Get encryption key from consul-keygen"
-  set_fact:
-    consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
+- name: "Get consul keygen"
+  include_tasks: set_keygen.yml
 
 - name: "Client configuration"
   include_tasks: configure_client.yml
-  when: consul_clients or consul_new_clients
+  when: ("consul_clients" in groups and inventory_hostname in groups["consul_clients"]) or
+        ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"])
 
 - name: Configure consul server
   block:
@@ -52,7 +40,7 @@
   - name: "Server configuration"
     include_tasks: configure_server.yml
 
-  when: consul_servers
+  when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"])
 
 - name: Configure new consul server
   block:
@@ -63,7 +51,7 @@
   - name: "Server configuration"
     include_tasks: configure_new_server.yml
 
-  when: consul_new_servers
+  when: ('consul_new_servers' in groups and inventory_hostname in groups['consul_new_servers'])
 
 - name: Start consul
   service:
@@ -72,7 +60,7 @@
 
 - name: "Generating consul ACLs policies and token access"
   include_tasks: policies.yml
-  when: consul_master
+  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
 - name: "Get tokens"
   include_tasks: copy_tokens.yml
@@ -87,10 +75,13 @@
 
 - name: "Set consul server tokens"
   include_tasks: set_server_tokens.yml
-  when: consul_servers or consul_new_servers
+  when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"]) or
+        ('consul_new_servers' in groups and inventory_hostname in groups['consul_new_servers'])
 
 # tasks file for consul_tokens_client
 
 - name: "Set consul client tokens"
   include_tasks: set_client_tokens.yml
-  when: consul_clients or consul_new_clients
+  when: ("consul_clients" in groups and inventory_hostname in groups["consul_clients"]) or
+        ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"])
+
