@@ -20,7 +20,7 @@
   - name: "Fetch certificates to ansible master"
     include_tasks: fetch_certificates.yml
 
-  when: consul_master
+  when: consul_certificates
 
 # tasks file for consul_common
 
