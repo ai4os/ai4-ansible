@@ -2,10 +2,20 @@
   set_fact:
     server_index: "{{ lookup('ansible.utils.index_of', groups['consul_servers'], 'eq', inventory_hostname) }}"
 
+- name: Wait Server certificate
+  wait:
+    path: "{{ consul_fetched }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+  delegate_to: localhost
+
 - name: "Copy server certs from consul-master to consul-servers"
   copy:
     src: "{{ consul_fetched }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
     dest: "{{ consul_certs }}"
+
+- name: Wait Server certificate key
+  wait:
+    path: "{{ consul_fetched }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+  delegate_to: localhost
 
 - name: "Copy server keys from consul-master to consul-servers"
   copy:

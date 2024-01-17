@@ -3,26 +3,3 @@
    become: true
    roles:
      - role: consul
-       consul_install: true
-
-     - role: consul
-       consul_add_common: true
-
-     - role: consul
-       when: inventory_hostname in groups["consul_new_clients"]
-       consul_add_client: true
-
-     - role: consul
-       when: inventory_hostname in groups["consul_new_servers"]
-       consul_add_server: true
-      
-     - role: consul
-       consul_add_tokens_common: true
-
-     - role: consul
-       when: inventory_hostname in groups["consul_new_servers"]
-       consul_add_tokens_server: true
-
-     - role: consul
-       when: inventory_hostname in groups["consul_new_clients"]
-       consul_add_tokens_client: true

@@ -1,7 +1,17 @@
+- name: Wait consul ACL token
+  wait:
+    path: "{{ consul_fetched }}consul_bootstrap"
+  delegate_to: localhost
+
 - name: "Copy consul ACL token from ansible_master to consul_hosts"
   copy:
    src: "{{ consul_fetched }}consul_bootstrap"
    dest: "{{ consul_certs }}"
+
+- name: Wait consul agent token
+  wait:
+    path: "{{ consul_fetched }}{{ inventory_hostname }}_consul_token"
+  delegate_to: localhost
 
 - name: "Copy each consul agent token from ansible_master to each consul_host"
   copy:

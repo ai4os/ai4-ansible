@@ -1,3 +1,8 @@
+- name: Wait CA certificate
+  wait:
+    path: "{{ consul_fetched }}consul-agent-ca.pem"
+  delegate_to: localhost
+
 - name: "Copy CA certificates from ansible master to consul hosts"
   copy:
    src: "{{ consul_fetched }}consul-agent-ca.pem"

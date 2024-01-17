@@ -1,4 +1,8 @@
 ## Copy consul certs, keys and tokens from zip file
+- name: Wait Certificates Zip file
+  wait:
+    path: "{{ path }}{{ new_certs }}.zip"
+  delegate_to: localhost
 
 - name: "Unzip file in ansible_master if it is zipped"
   unarchive:
