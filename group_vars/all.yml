@@ -5,23 +5,6 @@ ansible_master: { name: ansible1, ip: 172.16.40.39 }
 #########################################################
 ########## WARNING: DO NOT SET THIS VARIABLE ############
 from_scratch_cluster_installation: false
-
-consul_acl: false
-consul_add_client: false
-consul_add_common: false
-consul_add_server: false
-consul_add_tokens_common: false
-consul_add_tokens_server: false
-consul_add_tokens_client: false
-consul_client: false
-consul_common: false
-consul_install: false
-consul_certificates: false
-consul_server: false
-consul_tokens_client: false
-consul_tokens_common: false
-consul_tokens_server: false
-
 #########################################################  
 
 # -- Admin
