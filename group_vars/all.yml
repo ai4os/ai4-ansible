@@ -16,7 +16,7 @@ consul_add_tokens_client: false
 consul_client: false
 consul_common: false
 consul_install: false
-consul_master: false
+consul_certificates: false
 consul_server: false
 consul_tokens_client: false
 consul_tokens_common: false
