@@ -1,6 +1,6 @@
 ## Copy consul certs, keys and tokens from zip file
 - name: Wait Certificates Zip file
-  wait:
+  wait_for:
     path: "{{ path }}{{ new_certs }}.zip"
   delegate_to: localhost
 

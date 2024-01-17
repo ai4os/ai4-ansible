@@ -23,7 +23,7 @@
   when: inventory_hostname in groups["consul_master"]
 
 - name: Wait consul_keygen
-  wait:
+  wait_for:
     path: "{{ consul_fetched }}consul_keygen"
   delegate_to: localhost
 

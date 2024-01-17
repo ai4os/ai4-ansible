@@ -1,5 +1,5 @@
 - name: Wait CA certificate
-  wait:
+  wait_for:
     path: "{{ consul_fetched }}consul-agent-ca.pem"
   delegate_to: localhost
 
