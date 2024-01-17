@@ -20,7 +20,8 @@
 
 - name: "Copy consul certs, keys and tokens from zip"
   include_tasks: copy_new.yml
-  when: inventory_hostname in groups["consul_new_clients"] or inventory_hostname in groups["consul_new_servers"]
+  when: ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"]) or
+        ("consul_new_servers" in groups and inventory_hostname in groups["consul_new_servers"])
 
 - name: Wait consul_keygen
   wait_for:
@@ -33,8 +34,8 @@
 
 - name: "Client configuration"
   include_tasks: configure_client.yml
-  when: inventory_hostname in groups["consul_clients"] or inventory_hostname in groups["consul_new_clients"]
-  
+  when: inventory_hostname in groups["consul_clients"] or
+        ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"])
 
 - name: Configure consul server
   block:
@@ -56,7 +57,7 @@
   - name: "Server configuration"
     include_tasks: configure_new_server.yml
 
-  when: inventory_hostname in groups["consul_new_servers"]
+  when: ('consul_new_servers' in groups and inventory_hostname in groups['consul_new_servers'])
 
 - name: Start consul
   service:
@@ -80,11 +81,13 @@
 
 - name: "Set consul server tokens"
   include_tasks: set_server_tokens.yml
-  when: inventory_hostname in groups["consul_new_servers"] or inventory_hostname in groups["consul_servers"]
+  when: inventory_hostname in groups["consul_servers"] or 
+        ('consul_new_servers' in groups and inventory_hostname in groups['consul_new_servers'])
 
 # tasks file for consul_tokens_client
 
 - name: "Set consul client tokens"
   include_tasks: set_client_tokens.yml
-  when: inventory_hostname in groups["consul_new_clients"] or inventory_hostname in groups["consul_clients"]
+  when: inventory_hostname in groups["consul_clients"] or
+        ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"])
 
