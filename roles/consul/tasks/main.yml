@@ -17,6 +17,8 @@
 
 - name: "Copy consul-agent-ca.pem"
   include_tasks: copy_ca_certificates.yml
+  when: ("consul_clients" in groups and inventory_hostname in groups["consul_clients"]) or
+        ("consul_servers" in groups and inventory_hostname in groups["consul_servers"])
 
 - name: "Copy consul certs, keys and tokens from zip"
   include_tasks: copy_new.yml
