@@ -60,6 +60,9 @@
     name: consul
     state: started
 
+- name: Force consul restart if needed
+  meta: flush_handlers
+
 - name: "Generating consul ACLs policies and token access"
   include_tasks: policies.yml
   when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])

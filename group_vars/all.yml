@@ -20,7 +20,7 @@ path_bin: /usr/bin/
 
 # -- Common
 consul_public_ip: "193.146.75.205" 
-my_ip: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+my_ip: "{{ ansible_default_ipv4.address }}"
 environment_file: /etc/environment
 default_token: 12345678-1234-1234-1234-123456789ABC
 hosts: /etc/hosts
@@ -69,3 +69,4 @@ consul_fetched: "{{ consul_fetched_dir }}/"
 consul_dc_name: ai4os-consul
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
+consul_username: consul

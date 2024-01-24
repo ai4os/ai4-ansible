@@ -12,6 +12,10 @@
   delegate_to: 127.0.0.1
   run_once: true
 
+- name: "Set certs storage path"
+  set_fact:
+    certs_path: "{{ path }}{{ new_certs }}"
+
 - name: "Copy CA certificates from ansible_master to consul_hosts"
   copy:
    src: "{{ path }}{{ new_certs }}/consul-agent-ca.pem"

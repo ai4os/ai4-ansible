@@ -3,21 +3,27 @@
     path: "{{ consul_policies_dir }}"
   register: consul_policies
 
+# Repeat until the error "500 (No cluster leader)" is gone
 - name: "Generate consul ACL bootstrap"
   shell:
-    cmd: consul acl bootstrap > {{ path }}consul_bootstrap
-    creates: "{{ path }}consul_bootstrap" 
+    cmd: consul acl bootstrap
+    creates: "{{ path }}consul_bootstrap"
+  register: acl_bootstrap
+  until: acl_bootstrap is success
+  retries: 24
+  delay: 5
+
+- name: Create Consul Bootstrap Token file
+  copy:
+    content: "{{ acl_bootstrap.stdout }}"
+    dest: "{{ path }}consul_bootstrap" 
+    force: false
+  when: acl_bootstrap is success
 
 - name: "Create policies dir if it does not exist"
   file:
     path: "{{ consul_policies_dir }}"
     state: directory
-
-- name: "Get consul ACL token"
-  set_fact:
-    consul_token: "{{ lookup('file', path + 'consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
-  vars:
-    regexp: 'SecretID:\s+(.*)'
 
 - name: "Fetch consul ACL token from consul-master to ansible-master"
   fetch:
@@ -25,30 +31,30 @@
     dest: "{{ consul_fetched }}"
     flat: yes
 
-- name: "Export consul token"
-  lineinfile:
-    path: "{{ environment_file }}"
-    line: "export CONSUL_HTTP_TOKEN={{ consul_token }}"
-
-- name: "Set exports"
-  become: false
-  shell: ". {{ environment_file }}"
-  changed_when: false
+- name: Get ACL Token
+  set_fact:
+    consul_token: "{{ lookup('file', certs_path + '/consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
 
 - name: "Define consul policies"
   template:
     src: templates/consul_node_policy.j2
     dest: "{{ consul_policies_dir }}/node-policy.hcl"
-    owner: "{{ username }}"
+    owner: "{{ consul_username }}"
 
 - name: "Create consul policies"
   command: consul acl policy create -name node-policy -description "Consul Client Policy" -rules @"{{ consul_policies_dir }}/node-policy.hcl"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_token }}"
   when: not consul_policies.stat.exists
 
 - name: "Generate token for each consul agent"
   shell:
     cmd: consul acl token create -policy-name node-policy -description "Consul Agent Token" -node-identity "{{ item }}:{{ consul_dc_name }}" > {{ path }}{{ item }}_consul_token
     creates: "{{ path }}{{ item }}_consul_token"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_token }}"
   loop: "{{ groups['consul'] }}"
 
 - name: "Fetch each consul agent token from consul-master to ansible-master"

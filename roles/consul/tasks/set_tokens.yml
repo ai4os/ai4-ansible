@@ -1,6 +1,6 @@
 - name: "Get consul ACL token from consul_master"
   set_fact:
-    consul_token: "{{ lookup('file', consul_certs + 'consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
+    consul_token: "{{ lookup('file', certs_path + '/consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
 

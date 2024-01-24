@@ -11,7 +11,7 @@
   template:
     src: templates/consul.j2
     dest: "{{ consul_config }}consul.hcl"
-    owner: "{{ username }}"
+    owner: "{{ consul_username }}"
     force: no
   vars:
     server: True
@@ -21,7 +21,7 @@
   template:
     src: templates/consul_server.j2
     dest: "{{ consul_config }}server.hcl"
-    owner: "{{ username }}"
+    owner: "{{ consul_username }}"
     force: no
   vars:
     server_new: True

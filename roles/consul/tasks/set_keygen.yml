@@ -1,8 +1,8 @@
 - name: Wait consul_keygen
   wait_for:
-    path: "{{ consul_fetched }}consul_keygen"
+    path: "{{ certs_path }}consul_keygen"
   delegate_to: localhost
 
 - name: "Get encryption key from consul-keygen"
   set_fact:
-    consul_keygen: "{{ lookup('file', '{{ consul_fetched }}consul_keygen') }}"
+    consul_keygen: "{{ lookup('file', '{{ certs_path }}consul_keygen') }}"
