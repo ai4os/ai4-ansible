@@ -11,8 +11,8 @@ on:
 
 jobs:
 
-  molecule:
-    name: Molecule
+  consul_test:
+    name: Consul Role Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -36,6 +36,7 @@ jobs:
 
       - name: Run Molecule tests.
         run: molecule test --all
+        working-directory: tests/consul
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
