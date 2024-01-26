@@ -20,7 +20,7 @@
       - name: "Generate token for each new consul agent"
         shell:
           cmd: consul acl token create -policy-name node-policy -description "Consul Agent Token" -node-identity "{{ item }}:{{ consul_dc_name }}" > {{ path }}{{ item }}_consul_token
-          creates: "{{ path }}{{ item }}_consul_token"
+          creates: "/tmp/{{ item }}_consul_token"
         environment:
           CONSUL_HTTP_TOKEN: "{{ consul_token }}"
         loop:
@@ -29,7 +29,7 @@
 
       - name: "Fetch server certs from consul-master to ansible-master"
         fetch:
-          src: "{{ path }}{{ item }}_consul_token"
+          src: "/tmp/{{ item }}_consul_token"
           dest: "{{ consul_fetched }}"
           flat: yes
         loop:
@@ -45,7 +45,7 @@
       - name: Compress new certs dir
         archive:
           path: /tmp/{{ new_certs }}
-          dest: "{{ path }}{{ new_certs }}.zip"
+          dest: "/tmp/{{ new_certs }}.zip"
           format: zip
         delegate_to: localhost
 
