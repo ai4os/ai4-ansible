@@ -42,6 +42,14 @@
           creates: /tmp/{{ new_certs }}
         delegate_to: localhost
 
+      - name: Set new certs dir permissions
+        file:
+          path: /tmp/{{ new_certs }}
+          state: directory
+          mode: 0755
+          recurse: yes
+        delegate_to: localhost
+
       - name: Compress new certs dir
         archive:
           path: /tmp/{{ new_certs }}
