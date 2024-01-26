@@ -30,14 +30,14 @@
       - name: "Fetch server certs from consul-master to ansible-master"
         fetch:
           src: "/tmp/{{ item }}_consul_token"
-          dest: "{{ consul_fetched }}"
+          dest: "/tmp/consul_fetched"
           flat: yes
         loop:
           - server2
           - vnode-2
 
       - name: Create new certs dir
-        command: cp -r {{ consul_fetched }} /tmp/{{ new_certs }}
+        command: cp -r /tmp/consul_fetched /tmp/{{ new_certs }}
         args:
           creates: /tmp/{{ new_certs }}
         delegate_to: localhost
