@@ -19,7 +19,7 @@
 
       - name: "Generate token for each new consul agent"
         shell:
-          cmd: consul acl token create -policy-name node-policy -description "Consul Agent Token" -node-identity "{{ item }}:{{ consul_dc_name }}" > {{ path }}{{ item }}_consul_token
+          cmd: consul acl token create -policy-name node-policy -description "Consul Agent Token" -node-identity "{{ item }}:{{ consul_dc_name }}" > /tmp/{{ item }}_consul_token
           creates: "/tmp/{{ item }}_consul_token"
         environment:
           CONSUL_HTTP_TOKEN: "{{ consul_token }}"
