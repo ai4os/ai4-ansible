@@ -37,7 +37,7 @@
           - vnode-2
 
       - name: Create new certs dir
-        command: mv {{ consul_fetched }} /tmp/{{ new_certs }}
+        command: cp -r {{ consul_fetched }} /tmp/{{ new_certs }}
         args:
           creates: /tmp/{{ new_certs }}
         delegate_to: localhost

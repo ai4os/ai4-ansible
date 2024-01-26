@@ -17,7 +17,9 @@
         that:
           - "'server0' in nodes.stdout"
           - "'server1' in nodes.stdout"
+          - "'server2' in nodes.stdout"
           - "'vnode-1' in nodes.stdout"
+          - "'vnode-2' in nodes.stdout"
           - "'alive   server' in nodes.stdout"
           - "'alive   client' in nodes.stdout"
         fail_msg: "Error getting members"

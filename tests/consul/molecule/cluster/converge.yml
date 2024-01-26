@@ -3,15 +3,6 @@
   hosts: all
   become: true
 
-  tasks:
+- import_playbook: create_consul.yml
 
-    - include_vars: "../../../../group_vars/all.yml"
-
-    - name: "Include consul"
-      include_role:
-        name: "../../../../roles/consul"
-      vars:
-        username: root
-        path: /tmp/
-        consul_public_ip: "{{ hostvars['server0']['ansible_default_ipv4']['address'] }}"
-  
+- import_playbook: create_consul_new.yml
