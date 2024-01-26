@@ -30,7 +30,7 @@
       - name: "Fetch server certs from consul-master to ansible-master"
         fetch:
           src: "/tmp/{{ item }}_consul_token"
-          dest: "/tmp/consul_fetched"
+          dest: "/tmp/consul_fetched/"
           flat: yes
         loop:
           - server2
