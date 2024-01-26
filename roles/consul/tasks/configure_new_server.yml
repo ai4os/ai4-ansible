@@ -2,6 +2,7 @@
   shell: "ls {{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
   register: numbers
   delegate_to: 127.0.0.1
+  changed_when: false
 
 - name: "Get server index"
   set_fact:

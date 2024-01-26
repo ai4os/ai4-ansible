@@ -8,3 +8,4 @@
 - name: "Set agent token"
   command: consul acl set-agent-token agent "{{ agent_consul_token }}"
   changed_when: false
+  ignore_errors: true
