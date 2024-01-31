@@ -49,7 +49,7 @@ job "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
  
 [api]
   dashboard = false
-  insecure  = true
+  insecure  = false
  
 # Enable Consul Catalog configuration backend.
 [providers.consulCatalog]
