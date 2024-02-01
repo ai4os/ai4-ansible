@@ -1,0 +1,18 @@
+---
+- name: Consul
+  hosts: consul_new
+  become: true
+
+  tasks:
+
+    - include_vars: "../../../../group_vars/all.yml"
+
+    - name: "Include consul"
+      include_role:
+        name: "../../../../roles/consul"
+      vars:
+        username: root
+        path: /tmp/
+        consul_public_ip: "{{ hostvars['server0']['ansible_default_ipv4']['address'] }}"
+      when: ("consul" in groups and inventory_hostname in groups["consul"])
+  
