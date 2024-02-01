@@ -20,13 +20,3 @@
   copy:
    src: "{{ certs_path }}consul-agent-ca.pem"
    dest: "{{ consul_certs }}"
-
-- name: "Copy consul ACL token from ansible_master to consul_hosts"
-  copy:
-   src: "{{ certs_path}}consul_bootstrap"
-   dest: "{{ consul_certs }}"
-
-- name: "Copy each consul agent token from ansible_master to each consul_host"
-  copy:
-   src: "{{ certs_path }}{{ inventory_hostname }}_consul_token"
-   dest: "{{ consul_certs }}"

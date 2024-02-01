@@ -3,6 +3,11 @@
     path: "{{ certs_path }}consul_keygen"
   delegate_to: localhost
 
+- name: "Copy consul_keygen from ansible_master to each consul_host"
+  copy:
+   src: "{{ certs_path }}consul_keygen"
+   dest: "{{ consul_certs }}"
+
 - name: "Get encryption key from consul-keygen"
   set_fact:
     consul_keygen: "{{ lookup('file', '{{ certs_path }}consul_keygen') }}"
