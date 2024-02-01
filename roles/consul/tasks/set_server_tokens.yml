@@ -8,3 +8,4 @@
 - name: "Set agent token"
   command: consul acl set-agent-token agent "{{ agent_consul_token }}"
   changed_when: false
+  when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"])
