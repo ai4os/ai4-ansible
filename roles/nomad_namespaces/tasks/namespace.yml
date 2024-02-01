@@ -1,5 +1,0 @@
-# Create nomad namespaces
-
-- name: "Create nomad namespaces"
-  shell: "nomad namespace apply {{ item }}"
-  with_items: "{{ nomad_namespaces }}"

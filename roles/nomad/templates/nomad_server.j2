@@ -1,0 +1,50 @@
+# Increase log verbosity
+#log_level = "DEBUG"
+ 
+# Make sure Nomad nodes leave before shutting down the agent to prevent messing up the raft consensus
+leave_on_interrupt = true
+leave_on_terminate = true
+ 
+# Enable the server
+server {
+    enabled = true
+    bootstrap_expect = {{ groups['nomad_servers'] | length }}  
+}
+ 
+# Require TLS
+tls {
+    http = true
+    rpc  = true
+ 
+    ca_file   = "{{ nomad_certs }}nomad-ca.pem"
+    cert_file = "{{ nomad_certs }}server.pem"
+    key_file  = "{{ nomad_certs }}server-key.pem"
+ 
+    verify_server_hostname = true
+    verify_https_client    = true
+# ...
+}
+ 
+consul {
+    # The address to the Consul agent.
+    address = "127.0.0.1:8500"
+ 
+    token = "{{ default_token }}"
+ 
+    # The service name to register the server and client with Consul.
+    server_service_name = "nomad-server"
+    client_service_name = "nomad-client"
+ 
+    # Enables automatically registering the services.
+    auto_advertise = true
+ 
+    # Enabling the server and client to bootstrap using Consul.
+    server_auto_join = true
+    client_auto_join = true
+}
+ 
+advertise{
+    http = "{{ my_ip }}:4646"
+    rpc = "{{ my_ip }}:4647"
+    serf = "{{ my_ip }}:4648"
+}

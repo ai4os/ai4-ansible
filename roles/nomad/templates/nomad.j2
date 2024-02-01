@@ -1,0 +1,8 @@
+datacenter = "{{ nomad_dc }}"
+region = "{{ consul_dc_name }}"
+{% if inventory_hostname in groups['nomad_volume'] %}
+data_dir = "{{ mount_dir }}"
+{% else %}
+data_dir = "{{ nomad_data_dir }}"
+{% endif %}
+
