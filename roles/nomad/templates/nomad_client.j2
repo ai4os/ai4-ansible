@@ -10,7 +10,7 @@ client {
   network_interface = "ens3"
   enabled = true
   meta {
-   namespace = "{{ hostvars[inventory_hostname]['nomad_namespaces'] }}"
+   namespace = "{{ nomad_namespaces | join(',')  }}"
 {% if "traefik_master" in groups and inventory_hostname in groups['traefik_master'] %}
    compute = false
    tags = "traefik"
@@ -22,7 +22,7 @@ client {
    tags= "cpu"
   {% endif %}
 {% endif %}
-   domain = "{{ hostvars[inventory_hostname]['domain'] }}"
+   domain = "{{ domain }}"
   }
 {% if "traefik_master" not in groups or inventory_hostname not in groups['traefik_master'] %}
   reserved = {

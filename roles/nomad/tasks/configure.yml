@@ -2,12 +2,16 @@
   template:
    src: templates/nomad.j2
    dest: "{{ nomad_config }}nomad.hcl"
-   owner: ubuntu
+   owner: "{{ nomad_username }}"
+  notify:
+    - Restart nomad
 
 - name: "Copy nomad.service configuration"
   template:
     src: templates/nomad_service.j2
     dest: "{{ path_system }}nomad.service"
-    owner: ubuntu
+  notify:
+    - Restart nomad
 
-
+- name: Increase inotify user limit
+  sysctl: name=fs.inotify.max_user_watches value=16384 sysctl_set=yes

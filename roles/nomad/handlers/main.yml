@@ -1,2 +1,8 @@
 ---
-# handlers file for nomad_install
+- name: systemctl daemon-reload
+  command: systemctl daemon-reload
+
+- name: Restart nomad
+  service:
+    name: nomad
+    state: restarted

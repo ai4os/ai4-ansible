@@ -1,28 +1,42 @@
-- name: Checking if nomad is installed
-  stat:
-    path: "{{ nomad }}"
-  register: nomad_output
-
-- name: "Check if nomad ZIP file exists"
-  stat:
-   path: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
-  register: stat_nomad_zip
-
 - name: "Download Nomad binary"
-  command: curl --silent --remote-name "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
-  when: not stat_nomad_zip.stat.exists and nomad_output.stat.exists == False
-
+  get_url:
+   url: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
+   dest: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
 
 - name: "Unzip nomad file"
-  command: "{{ item }}"
-  with_items:
-   - unzip {{ path }}nomad_{{ nomad_version }}_linux_amd64.zip
-   - mv nomad {{ path_bin }}
-   - "{{ nomad }} -autocomplete-install"
-   - mkdir --parents {{ nomad_certs_dir }}
-   - mkdir --parents {{ nomad_data_dir }}
-   - useradd --system --home {{ nomad_config_dir }} --shell /bin/false {{ nomad }}
-  when: nomad_output.stat.exists == False
+  unarchive:
+   src: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
+   dest: "{{ path_bin }}"
+   remote_src: yes
 
+- name: "Create nomad certs and data dir"
+  file:
+   path: "{{ item }}"
+   state: directory
+   mode: 0755
+  loop:
+   - "{{ nomad_certs_dir }}"
+   - "{{ nomad_data_dir }}"
 
+- name: "Create nomad user"
+  user:
+   name: "{{ nomad_username }}"
+   shell: /bin/false
+   system: yes
+   home: "{{ nomad_config_dir }}"
+
+- name: "Configure autocomplete-install"
+  command: "{{ nomad }} -autocomplete-install"
+  args:
+   chdir: "{{ path_bin }}"
+  changed_when: False
+  ignore_errors: True
+
+- name: "Copy nomad.service configuration"
+  template:
+    src: templates/nomad_service.j2
+    dest: "{{ path_system }}nomad.service"
+  notify:
+    - systemctl daemon-reload
+    - Restart nomad
 

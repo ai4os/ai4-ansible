@@ -15,5 +15,8 @@
         path: /tmp/
         nomad_dc: ifca-ai4eosc
         domain: ifca
-        nomad_namespaces: ai4eosc,imagine,tutorials
+        nomad_namespaces:
+          - ai4eosc
+          - imagine
+          - tutorials
       when: ("nomad" in groups and inventory_hostname in groups["nomad"])

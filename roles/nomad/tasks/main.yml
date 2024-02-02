@@ -6,11 +6,13 @@
 
 - set_fact:
     nvidia_support: true
-  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
 
-- name: Install docker with nvidia support
-  include_role: grycap.docker
-  docker_nvidia_support: "{{ nvidia_support }}"
+#- name: Install docker with nvidia support
+#  include_role:
+#    name: grycap.docker
+#  vars:
+#    docker_nvidia_support: "{{ nvidia_support }}"
 
 - name: "Install packages"
   include_tasks: dependencies.yml
@@ -50,7 +52,16 @@
   - name: "Server configuration"
     include_tasks: configure_server.yml
 
-  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"])
+- name: Configure nomad client
+
+  block:
+  - name: "Copy client certificates"
+    include_tasks: copy_client_certificates.yml
+
+  - name: "Client configuration"
+    include_tasks: configure_client.yml
+
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"])
 
 - name: "Create nomad policies"
   include_tasks: policies.yml
@@ -86,11 +97,6 @@
     name: nomad
     state: started
     enabled: yes
-
-- name: Restart nomad
-  service:
-    name: nomad
-    state: restarted
 
 - name: "Create nomad namespaces"
   shell: "nomad namespace apply {{ item }}"

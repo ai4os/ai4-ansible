@@ -2,7 +2,8 @@
   file:
     path: "{{ nomad_fetched_dir }}"
     state: directory
-    mode: '775'
+    mode: '777'
+    owner: "{{ username }}"
   delegate_to: localhost
 
 - name: "Fetch CA cert, and client/server certs/keys from nomad-master to ansible-master"

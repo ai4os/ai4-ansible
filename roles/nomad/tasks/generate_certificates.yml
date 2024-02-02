@@ -1,49 +1,31 @@
-- name: "Check if nomad certificate exists"
-  stat:
-   path: "{{ path }}nomad-ca.pem"
-  register: stat_ca
-
 - name: "Generate CA certificates"
   shell: cfssl print-defaults csr | cfssl gencert -initca - | cfssljson -bare nomad-ca
-  when: not stat_ca.stat.exists
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}nomad-ca.pem"
 
 - name: "Increase the default certificate expiration time"
-  template:
-   src: cfssl.j2
+  copy:
+   src: cfssl.json
    dest: "{{ path }}cfssl.json"
-   owner: ubuntu
-
-- name: "Check if server certificate exists"
-  stat:
-   path: "{{ path }}server.pem"
-  register: stat_server
-
-- name: "Add public host"
-  lineinfile:
-    path: "{{ hosts }}"
-    line: "{{ ansible_host }} {{ inventory_hostname }}" 
 
 - name: "Generate server certificate"
   shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},server.{{ consul_dc_name }}.nomad,server.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare server"
-  when: not stat_server.stat.exists
-
-- name: "Check if client certificate exists"
-  stat:
-   path: "{{ path }}client.pem"
-  register: stat_client
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}server.pem"
 
 - name: "Generate client certificate"
   shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},client.{{ consul_dc_name }}.nomad,client.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare client"
-  when: not stat_client.stat.exists
-
-- name: "Check if CLI certificate exists"
-  stat:
-   path: "{{ path }}cli.pem"
-  register: stat_cli
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}client.pem"
 
 - name: "Generate CLI certificate"
-  shell: "echo '{}' | cfssl gencert -ca=nomad-ca.pem -ca-key=nomad-ca-key.pem -profile=client | cfssljson -bare cli"
-  when: not stat_cli.stat.exists
+  shell: "echo '{}' | cfssl gencert -ca=nomad-ca.pem -ca-key=nomad-ca-key.pem -profile=client - | cfssljson -bare cli"
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}cli.pem"
 
 - name: "Export nomad addr"
   lineinfile:
@@ -61,6 +43,9 @@
 
 - name: "Generate web browser certificate for nomad's UI"
   shell: "openssl pkcs12 -export -inkey ./cli-key.pem -in ./cli.pem -out ./cli.p12 -passout pass:{{ nomad_ui_passwd }} -passin pass:{{ nomad_ui_passwd }}"
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}cli.p12"
 
 - name: "Create zip with nomad's UI certificate"
   community.general.archive:

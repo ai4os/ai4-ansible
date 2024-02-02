@@ -3,5 +3,6 @@
   template:
    src: templates/nomad_server.j2
    dest: "{{ nomad_config }}server.hcl"
-   owner: ubuntu
-
+   owner: "{{ nomad_username }}"
+  notify:
+    - Restart nomad
