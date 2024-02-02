@@ -1,4 +1,6 @@
-- name: "Set agent token"
-  shell: sed -i 's/'{{ default_token }}'/'"$(sudo cat {{ consul_certs }}{{ inventory_hostname }}_nomad_token | grep -oP 'SecretID:\s+\K\S+')"'/g' {{ nomad_config }}client.hcl
-  notify:
-    - Restart nomad
+- name: "Set consul token con client.hcl"
+  replace:
+    path: "{{ nomad_config }}client.hcl"
+    replace: "{{ agent_nomad_token }}"
+    regexp: '{{ default_token }}'
+  notify: Restart nomad

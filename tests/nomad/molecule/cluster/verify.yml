@@ -5,6 +5,11 @@
 
   tasks:
 
+    - name: "Set exports"
+      become: false
+      shell: ". {{ environment_file }}"
+      changed_when: false
+
     - name: Test
       command: nomad server members
       register: servers

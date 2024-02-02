@@ -22,6 +22,7 @@
 - name: "Check if nomad client policy exists"
   shell: consul acl policy list | grep "nomad-client" | cat
   register: client_pol
+  changed_when: false
 
 - name: "Create nomad client policy"
   command: consul acl policy create -name nomad-client -description "Nomad Client Policy" -rules @{{ consul_policies_dir }}/nomad-client-policy.hcl

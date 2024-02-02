@@ -4,5 +4,6 @@
    src: templates/nomad_server.j2
    dest: "{{ nomad_config }}server.hcl"
    owner: "{{ nomad_username }}"
+   force: no
   notify:
     - Restart nomad
