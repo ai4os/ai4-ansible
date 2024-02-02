@@ -7,7 +7,7 @@
 
     - name: "Set exports"
       become: false
-      shell: ". {{ environment_file }}"
+      shell: ". /etc/environment"
       changed_when: false
 
     - name: Test

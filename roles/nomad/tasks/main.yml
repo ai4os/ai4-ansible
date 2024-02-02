@@ -51,6 +51,7 @@
 
   - name: "Server configuration"
     include_tasks: configure_server.yml
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"])
 
 - name: Configure nomad client
 
