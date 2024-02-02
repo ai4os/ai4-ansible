@@ -8,11 +8,11 @@
     nvidia_support: true
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
 
-#- name: Install docker with nvidia support
-#  include_role:
-#    name: grycap.docker
-#  vars:
-#    docker_nvidia_support: "{{ nvidia_support }}"
+- name: Install docker with nvidia support
+  include_role:
+    name: grycap.docker
+  vars:
+    docker_nvidia_support: "{{ nvidia_support }}"
 
 - name: "Install packages"
   include_tasks: dependencies.yml

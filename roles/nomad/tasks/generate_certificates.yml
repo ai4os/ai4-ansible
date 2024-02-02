@@ -1,3 +1,7 @@
+- name: "Install cfssl"
+  package:
+   name: golang-cfssl
+
 - name: "Generate CA certificates"
   shell: cfssl print-defaults csr | cfssl gencert -initca - | cfssljson -bare nomad-ca
   args:
