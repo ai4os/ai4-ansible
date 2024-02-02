@@ -40,6 +40,7 @@
 - name: "Set exports"
   become: false
   shell: ". {{ environment_file }}"
+  changed_when: false
 
 - name: "Generate web browser certificate for nomad's UI"
   shell: "openssl pkcs12 -export -inkey ./cli-key.pem -in ./cli.pem -out ./cli.p12 -passout pass:{{ nomad_ui_passwd }} -passin pass:{{ nomad_ui_passwd }}"
