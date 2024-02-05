@@ -1,6 +1,6 @@
 ---
-- name: Consul
-  hosts: consul
+- name: Nomad Add
+  hosts: nomad_new
   become: true
 
   tasks:
@@ -19,4 +19,3 @@
           - ai4eosc
           - imagine
           - tutorials
-      when: ("nomad" in groups and inventory_hostname in groups["nomad"])

@@ -1,6 +1,0 @@
-- name: "Copy client.hcl configuration"
-  template:
-   src: templates/nomad_client.j2
-   dest: "{{ nomad_config }}client.hcl"
-   owner: ubuntu
-

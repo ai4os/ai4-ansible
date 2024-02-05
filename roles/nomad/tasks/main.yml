@@ -8,11 +8,11 @@
     nvidia_support: true
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
 
-- name: Install docker with nvidia support
-  include_role:
-    name: grycap.docker
-  vars:
-    docker_nvidia_support: "{{ nvidia_support }}"
+#- name: Install docker with nvidia support
+#  include_role:
+#    name: grycap.docker
+#  vars:
+#    docker_nvidia_support: "{{ nvidia_support }}"
 
 - name: "Install packages"
   include_tasks: dependencies.yml
@@ -31,17 +31,19 @@
 
 - name: "Copy nomad-ca.pem"
   include_tasks: copy_certificates.yml
+  when: ("nomad" in groups and inventory_hostname in groups["nomad"])
+
+- name: "Copy nomad-ca.pem in new nodes"
+  include_tasks: copy_new.yml
+  when: ("nomad_new" in groups and inventory_hostname in groups["nomad_new"])
 
 - name: "Configure nomad.hcl"
   include_tasks: configure.yml
 
-- name: "Copy nomad-ca.pem"
-  include_tasks: copy_client_certificates.yml
-
 - name: "Configure nomad.hcl"
   include_tasks: configure_client.yml
-  when: ("nomad_cpu_clients" in groups and inventory_hostname in groups["nomad_cpu_clients"]) or
-        ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
 - name: Configure nomad server
 
@@ -51,7 +53,8 @@
 
   - name: "Server configuration"
     include_tasks: configure_server.yml
-  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"])
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
+        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
 
 - name: Configure nomad client
 
@@ -62,7 +65,8 @@
   - name: "Client configuration"
     include_tasks: configure_client.yml
 
-  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"])
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or 
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
 - name: "Create nomad policies"
   include_tasks: policies.yml
@@ -73,11 +77,13 @@
 
 - name: "Set Client tokens"
   include_tasks: set_tokens.yml
-  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"])
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
 - name: "Set Server tokens"
   include_tasks: set_server_tokens.yml
-  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"])
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
+        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
 
 - name: "Export nomad addr"
   lineinfile:

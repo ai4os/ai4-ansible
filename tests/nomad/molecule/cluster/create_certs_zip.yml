@@ -1,21 +1,12 @@
 ---
-- name: Consul
+- name: Create certs zip
   hosts: consul
   become: true
 
   tasks:
 
     - include_vars: "../../../../group_vars/all.yml"
-
-    - name: "Include consul"
-      include_role:
-        name: "../../../../roles/consul"
-      vars:
-        username: root
-        path: /tmp/
-        consul_public_ip: "{{ hostvars['server0']['ansible_default_ipv4']['address'] }}"
-      when: ("consul" in groups and inventory_hostname in groups["consul"])
-  
+ 
     - block:
 
       - name: "Generate token for each new consul agent"
@@ -28,7 +19,7 @@
           - server2
           - vnode-2
 
-      - name: "Fetch server certs from consul-master to ansible-master"
+      - name: "Fetch consul server tokens from consul-master to ansible-master"
         fetch:
           src: "/tmp/{{ item }}_consul_token"
           dest: "/tmp/consul_fetched/"
@@ -41,6 +32,37 @@
         command: cp -r /tmp/consul_fetched /tmp/{{ new_certs }}
         args:
           creates: /tmp/{{ new_certs }}
+        delegate_to: localhost
+
+      - name: "Generate token for each nomad server"
+        shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
+        args:
+          chdir: "/tmp"
+          creates: "/tmp/{{ item}}_nomad_token"
+        loop:
+          - server2
+
+      - name: "Generate token for each nomad client"
+        shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
+        args:
+          chdir: "/tmp"
+          creates: "/tmp/{{ item}}_nomad_token"
+        loop:
+          - vnode-2
+
+      - name: "Fetch nomad server tokens from consul-master to ansible-master"
+        fetch:
+          src: "/tmp/{{ item }}_nomad_token"
+          dest: "/tmp/nomad_fetched/"
+          flat: yes
+        loop:
+          - server2
+          - vnode-2
+
+      - name: Copy nomad certs
+        shell: cp -r /tmp/nomad_fetched/* /tmp/{{ new_certs }}
+        args:
+          creates: /tmp/{{ new_certs }}/nomad-ca.pem
         delegate_to: localhost
 
       - name: Set new certs dir permissions

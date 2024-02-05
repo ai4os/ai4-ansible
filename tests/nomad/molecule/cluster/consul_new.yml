@@ -1,5 +1,5 @@
 ---
-- name: Consul
+- name: Consul Add
   hosts: consul_new
   become: true
 
@@ -14,5 +14,3 @@
         username: root
         path: /tmp/
         consul_public_ip: "{{ hostvars['server0']['ansible_default_ipv4']['address'] }}"
-      when: ("consul" in groups and inventory_hostname in groups["consul"])
-  

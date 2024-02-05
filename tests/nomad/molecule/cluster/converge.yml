@@ -3,8 +3,12 @@
   hosts: all
   become: true
 
-- import_playbook: create_consul.yml
+- import_playbook: consul.yml
 
-- import_playbook: create_nomad.yml
+- import_playbook: nomad.yml
 
-- import_playbook: create_consul_new.yml
+- import_playbook: create_certs_zip.yml
+
+- import_playbook: consul_new.yml
+
+- import_playbook: nomad_new.yml
