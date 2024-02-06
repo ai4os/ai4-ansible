@@ -34,7 +34,7 @@
 - name: "Define job config for traefik service"
   template:
     src: templates/{{ item }}.j2
-    dest: "{{ path}}{{ item }}-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl"
+    dest: "{{ path}}{{ item }}-{{ nomad_dc }}.hcl"
     owner: ubuntu
   with_items:
     - traefik
@@ -47,6 +47,6 @@
 - name: "Plan and run service job"
   shell: "{{ item }}"
   with_items:
-    - nomad job plan traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl
-    - nomad job run traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl
+    - nomad job plan traefik-{{ nomad_dc }}.hcl
+    - nomad job run traefik-{{ nomad_dc }}.hcl
   ignore_errors: true
