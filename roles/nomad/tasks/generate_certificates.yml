@@ -1,6 +1,14 @@
 - name: "Install cfssl"
   package:
    name: golang-cfssl
+  when: ansible_os_family == "Debian"
+
+- name: "Install cfssl"
+  get_url:
+    url: https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
+    dest: /usr/local/bin/cfssl
+    mode: 0755
+  when: ansible_os_family == "RedHat"
 
 - name: "Generate CA certificates"
   shell: cfssl print-defaults csr | cfssl gencert -initca - | cfssljson -bare nomad-ca
