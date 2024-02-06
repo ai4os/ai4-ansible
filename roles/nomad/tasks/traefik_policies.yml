@@ -1,17 +1,15 @@
 - name: "Define traefik policies"
-  template:
-    src: templates/{{ item }}.j2
-    dest: "{{ consul_policies_dir }}/{{ item }}.hcl"
-    owner: ubuntu
-  with_items:
-    - traefik-dashboard-server-policy
+  copy:
+    src: traefik-dashboard-server-policy.hcl
+    dest: "{{ consul_policies_dir }}/traefik-dashboard-server-policy.hcl"
+    owner: "{{ username }}"
 
 - name: "Check if traefik policy exists"
   command: consul acl policy list
   register: consul_policy_list
 
 - name: "Create traefik policy"
-  shell: consul acl policy create -name traefik-dashboard -description "Traefik Dashboard Policy" -rules @"{{ consul_policies_dir }}/traefik-dashboard-server-policy.hcl"
+  command: consul acl policy create -name traefik-dashboard -description "Traefik Dashboard Policy" -rules @"{{ consul_policies_dir }}/traefik-dashboard-server-policy.hcl"
   when: ' "Traefik" not in consul_policy_list.stdout '
 
 - name: "Check if traefik token exists"

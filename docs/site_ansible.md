@@ -287,10 +287,3 @@ Specifically, modify the following variables:
     ```console
     ansible-playbook -i <new_hosts_file> playbook-join-nomad.yaml
     ```
-
-* Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to
-  configure the volumes, docker and the Traefik service.
-
-    ```console
-    ansible-playbook -i <new_hosts_file> playbook-join-traefik.yaml
-    ```

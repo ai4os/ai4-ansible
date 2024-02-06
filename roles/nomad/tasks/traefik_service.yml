@@ -14,6 +14,7 @@
   ansible.builtin.unarchive:
     src: "{{ path }}{{ traefik_certs }}.zip"
     dest: "{{ path }}"
+    creates: "{{ path }}{{ traefik_certs }}/domain.pem"
   delegate_to: 127.0.0.1
 
 - name: "Create traefik SSL certs directory in traefik_master if it does not exist"

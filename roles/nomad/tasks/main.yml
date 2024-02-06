@@ -33,6 +33,7 @@
     name: grycap.docker
   vars:
     docker_nvidia_support: "{{ nvidia_support }}"
+    docker_compose_version: "1.29.2"
 
 - name: "Install packages"
   include_tasks: dependencies.yml
@@ -92,6 +93,12 @@
   include_tasks: policies.yml
   when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
+- name: "Create traefik policy"
+  include_tasks: traefik_policies.yml
+  when:
+    - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+    - ("traefik_master" in groups or "traefik_new_master" in groups) # Assume that if traefik is master exists, we are installing traefik
+
 - name: "Get tokens"
   include_tasks: copy_tokens.yml
 
@@ -131,3 +138,11 @@
   with_items: "{{ nomad_namespaces }}"
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
   changed_when: false
+
+- name: "Create job for traefik service"
+  include_tasks: traefik_service.yml
+  when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"])
+
+- name: "Create job for traefik service in new nodes"
+  include_tasks: traefik_add_service.yml
+  when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])

@@ -15,4 +15,3 @@
      - role: nomad
        when:
          - from_scratch_cluster_installation
-         - ("nomad" in groups and inventory_hostname in groups["nomad"])
