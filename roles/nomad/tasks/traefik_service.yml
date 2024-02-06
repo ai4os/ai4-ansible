@@ -57,6 +57,5 @@
   args:
     chdir: "{{ path }}"
   with_items:
-    - nomad job plan traefik-{{ nomad_dc }}.hcl
     - nomad job run traefik-{{ nomad_dc }}.hcl
   when: replace_traefik_token is changed
