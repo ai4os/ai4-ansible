@@ -13,4 +13,6 @@
          success_msg: "INSTALLING CONSUL FROM SCRATCH"
    roles:
      - role: consul
-       when: from_scratch_cluster_installation
+       when:
+         - from_scratch_cluster_installation
+         - ("consul" in groups and inventory_hostname in groups["consul"])

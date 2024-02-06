@@ -1,0 +1,21 @@
+---
+- name: Nomad
+  hosts: nomad
+  become: true
+
+  tasks:
+
+    - include_vars: "../../../../group_vars/all.yml"
+
+    - name: "Include nomad"
+      include_role:
+        name: "../../../../roles/nomad"
+      vars:
+        username: root
+        path: /tmp/
+        nomad_dc: ifca-ai4eosc
+        domain: ifca
+        nomad_namespaces:
+          - ai4eosc
+          - imagine
+          - tutorials

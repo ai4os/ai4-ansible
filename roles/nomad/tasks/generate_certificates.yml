@@ -1,0 +1,78 @@
+- name: "Install cfssl"
+  package:
+   name: golang-cfssl
+  when: ansible_os_family == "Debian"
+
+- block:
+  - name: "Install cfssl"
+    get_url:
+      url: https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
+      dest: /usr/bin/cfssl
+      mode: 0755
+
+  - name: "Install cfssljson"
+    get_url:
+      url: https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64
+      dest: /usr/bin/cfssljson
+      mode: 0755
+  when: ansible_os_family == "RedHat"
+
+- name: "Generate CA certificates"
+  shell: cfssl print-defaults csr | cfssl gencert -initca - | cfssljson -bare nomad-ca
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}nomad-ca.pem"
+
+- name: "Increase the default certificate expiration time"
+  copy:
+   src: cfssl.json
+   dest: "{{ path }}cfssl.json"
+
+- name: "Generate server certificate"
+  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},server.{{ consul_dc_name }}.nomad,server.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare server"
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}server.pem"
+
+- name: "Generate client certificate"
+  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},client.{{ consul_dc_name }}.nomad,client.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare client"
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}client.pem"
+
+- name: "Generate CLI certificate"
+  shell: "echo '{}' | cfssl gencert -ca=nomad-ca.pem -ca-key=nomad-ca-key.pem -profile=client - | cfssljson -bare cli"
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}cli.pem"
+
+- name: "Export nomad addr"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "{{ item }}"
+  with_items:
+    - export NOMAD_ADDR=https://127.0.0.1:4646
+    - export NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
+    - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
+    - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"
+  changed_when: false
+
+- name: "Generate web browser certificate for nomad's UI"
+  shell: "openssl pkcs12 -export -inkey ./cli-key.pem -in ./cli.pem -out ./cli.p12 -passout pass:{{ nomad_ui_passwd }} -passin pass:{{ nomad_ui_passwd }}"
+  args:
+    chdir: "{{ path }}"
+    creates: "{{ path }}cli.p12"
+
+- name: "Create zip with nomad's UI certificate"
+  community.general.archive:
+    path:
+      - cli.p12
+      - cli.pem
+      - cli-key.pem
+      - nomad-ca.pem
+    dest: "{{ consul_dc_name }}.zip"
+    format: zip

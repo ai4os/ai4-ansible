@@ -1,8 +1,0 @@
-- name: "Copy CA certificates from ansible_master to nomad_hosts"
-  copy:
-   src: "{{ nomad_fetched }}{{ item }}.pem"
-   dest: "{{ nomad_certs }}"
-  with_items:
-    - nomad-ca
-    - cli
-    - cli-key

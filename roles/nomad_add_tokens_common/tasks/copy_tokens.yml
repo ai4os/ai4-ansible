@@ -1,4 +1,0 @@
-- name: "Copy each nomad agent token from ansible_master to each nomad_host"
-  copy:
-   src: "{{ path }}{{ new_certs }}/{{ inventory_hostname }}_nomad_token"
-   dest: "{{ consul_certs }}"

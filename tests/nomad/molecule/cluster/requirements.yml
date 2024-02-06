@@ -1,0 +1,3 @@
+- name: kevincoakley.facter
+- name: grycap.docker
+- name: NVIDIA.nvidia_driver

@@ -1,0 +1,123 @@
+---
+# tasks file for nomad_install
+
+- set_fact:
+    nvidia_support: false
+
+- set_fact:
+    nvidia_support: true
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
+
+- set_fact:
+    docker_config_values:
+      registry-mirrors: ["{{ docker_registry }}"]
+
+- set_fact:
+    docker_config_values:
+      data-root: "{{ mount_dir }}"
+      registry-mirrors: ["{{ docker_registry }}"]
+  when: vol_name is defined
+
+- name: Install docker with nvidia support
+  include_role:
+    name: grycap.docker
+  vars:
+    docker_nvidia_support: "{{ nvidia_support }}"
+
+- name: "Install packages"
+  include_tasks: dependencies.yml
+
+- name: "Install nomad"
+  include_tasks: install.yml
+
+- name: Generating nomad certificates
+  block:
+  - name: "Generate"
+    include_tasks: generate_certificates.yml
+
+  - name: "Copy"
+    include_tasks: fetch_certificates.yml
+  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+
+- name: "Copy nomad-ca.pem"
+  include_tasks: copy_certificates.yml
+  when: ("nomad" in groups and inventory_hostname in groups["nomad"])
+
+- name: "Copy nomad-ca.pem in new nodes"
+  include_tasks: copy_new.yml
+  when: ("nomad_new" in groups and inventory_hostname in groups["nomad_new"])
+
+- name: "Configure nomad.hcl"
+  include_tasks: configure.yml
+
+- name: "Configure nomad.hcl"
+  include_tasks: configure_client.yml
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
+
+- name: Configure nomad server
+
+  block:
+  - name: "Copy server certificates"
+    include_tasks: copy_server_certificates.yml
+
+  - name: "Server configuration"
+    include_tasks: configure_server.yml
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
+        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
+
+- name: Configure nomad client
+
+  block:
+  - name: "Copy client certificates"
+    include_tasks: copy_client_certificates.yml
+
+  - name: "Client configuration"
+    include_tasks: configure_client.yml
+
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or 
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
+
+- name: "Create nomad policies"
+  include_tasks: policies.yml
+  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+
+- name: "Get tokens"
+  include_tasks: copy_tokens.yml
+
+- name: "Set Client tokens"
+  include_tasks: set_tokens.yml
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
+
+- name: "Set Server tokens"
+  include_tasks: set_server_tokens.yml
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
+        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
+
+- name: "Export nomad addr"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "{{ item }}"
+  with_items:
+    - export NOMAD_ADDR=https://127.0.0.1:4646
+    - export NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
+    - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
+    - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"
+  changed_when: false
+
+- name: start nomad
+  service:
+    name: nomad
+    state: started
+    enabled: yes
+
+- name: "Create nomad namespaces"
+  shell: "nomad namespace apply {{ item }}"
+  with_items: "{{ nomad_namespaces }}"
+  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+  changed_when: false
