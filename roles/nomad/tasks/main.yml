@@ -8,15 +8,19 @@
     nvidia_support: true
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
 
-- set_fact:
-    docker_config_values:
-      registry-mirrors: ["{{ docker_registry }}"]
+- block:
 
-- set_fact:
-    docker_config_values:
-      data-root: "{{ mount_dir }}"
-      registry-mirrors: ["{{ docker_registry }}"]
-  when: vol_name is defined
+  - set_fact:
+      docker_config_values:
+        registry-mirrors: ["{{ docker_registry }}"]
+
+  - set_fact:
+      docker_config_values:
+        data-root: "{{ mount_dir }}"
+        registry-mirrors: ["{{ docker_registry }}"]
+    when: vol_name is defined
+
+  when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"])
 
 - name: Install docker with nvidia support
   include_role:
