@@ -54,6 +54,8 @@
 
 - name: "Plan and run service job"
   command: "{{ item }}"
+  args:
+    chdir: "{{ path }}"
   with_items:
     - nomad job plan traefik-{{ nomad_dc }}.hcl
     - nomad job run traefik-{{ nomad_dc }}.hcl
