@@ -2,6 +2,7 @@
   - name: "Get number of consul servers"
     shell: "consul members | grep server | wc -l"
     register: grep_result
+    changed_when: false
 
   - name: "Set number of consul servers as a variable"
     set_fact:
