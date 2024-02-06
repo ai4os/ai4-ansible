@@ -8,7 +8,7 @@ leave_on_terminate = true
 # Enable the server
 server {
     enabled = true
-    bootstrap_expect = {{ groups['nomad_servers'] | length }}  
+    bootstrap_expect = {{ num_nomad_servers }}  
 }
  
 # Require TLS
