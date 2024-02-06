@@ -20,6 +20,12 @@
         registry-mirrors: ["{{ docker_registry }}"]
     when: vol_name is defined
 
+  - name: "Enable swap limit capabilities"
+    include_tasks: swap.yml
+
+  - name: "Mount volume"
+    include_tasks: volume.yml
+
   when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"])
 
 - name: Install docker with nvidia support
