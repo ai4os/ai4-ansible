@@ -14,10 +14,9 @@
 
   tasks:
     - block:
-      delegate_to: localhost
 
       - name: "Create traefik SSL certs directory in ansible_master"
-        ansible.builtin.file:
+        file:
           path: /tmp/ifca-deployments.cloud.ai4eosc.eu
           state: directory
           mode: '0755'
@@ -43,8 +42,4 @@
           provider: selfsigned
           csr_path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.csr
 
-
-
-  traefik_certs_dir: /etc/nomad.d/traefik-certs
-traefik_certs: ifca-deployments.cloud.ai4eosc.eu
- 
+      delegate_to: localhost
