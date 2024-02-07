@@ -11,3 +11,35 @@
 
   roles:
     - role: kevincoakley.facter
+
+  tasks:
+    - block:
+
+      - name: "Create traefik SSL certs directory in ansible_master"
+        file:
+          path: /tmp/ifca-deployments.cloud.ai4eosc.eu
+          state: directory
+          mode: '0755'
+
+      - name: Create private key (RSA, 4096 bits)
+        community.crypto.openssl_privatekey:
+          path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.key
+          mode: 0644
+          format: pkcs8
+
+      - name: Generate an OpenSSL Certificate Signing Request with Subject information
+        community.crypto.openssl_csr:
+          path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.csr
+          privatekey_path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.key
+          country_name: ES
+          organization_name: AI4EOSC
+          common_name: ifca-deployments.cloud.ai4eosc.eu
+
+      - name: Create simple self-signed certificate
+        community.crypto.x509_certificate:
+          path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.pem
+          privatekey_path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.key
+          provider: selfsigned
+          csr_path: /tmp/ifca-deployments.cloud.ai4eosc.eu/domain.csr
+
+      delegate_to: localhost

@@ -8,27 +8,42 @@
     nvidia_support: true
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
 
-- set_fact:
-    docker_config_values:
-      registry-mirrors: ["{{ docker_registry }}"]
+- block:
 
-- set_fact:
-    docker_config_values:
-      data-root: "{{ mount_dir }}"
-      registry-mirrors: ["{{ docker_registry }}"]
-  when: vol_name is defined
+  - set_fact:
+      docker_config_values:
+        registry-mirrors: ["{{ docker_registry }}"]
+
+  - set_fact:
+      docker_config_values:
+        data-root: "{{ mount_dir }}"
+        registry-mirrors: ["{{ docker_registry }}"]
+    when: vol_name is defined
+
+  - name: "Enable swap limit capabilities"
+    include_tasks: swap.yml
+
+  - name: "Mount volume"
+    include_tasks: volume.yml
+
+  when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"])
 
 - name: Install docker with nvidia support
   include_role:
     name: grycap.docker
   vars:
     docker_nvidia_support: "{{ nvidia_support }}"
+    docker_compose_version: "1.29.2"
 
 - name: "Install packages"
   include_tasks: dependencies.yml
 
 - name: "Install nomad"
   include_tasks: install.yml
+
+- name: "Install nvidia plugin"
+  include_tasks: nvidia_plugin.yml
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
 
 - name: Generating nomad certificates
   block:
@@ -82,6 +97,12 @@
   include_tasks: policies.yml
   when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
+- name: "Create traefik policy"
+  include_tasks: traefik_policies.yml
+  when:
+    - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+    - ("traefik_master" in groups or "traefik_new_master" in groups) # Assume that if traefik is master exists, we are installing traefik
+
 - name: "Get tokens"
   include_tasks: copy_tokens.yml
 
@@ -121,3 +142,11 @@
   with_items: "{{ nomad_namespaces }}"
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
   changed_when: false
+
+- name: "Create job for traefik service"
+  include_tasks: traefik_service.yml
+  when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"])
+
+- name: "Create job for traefik service in new nodes"
+  include_tasks: traefik_add_service.yml
+  when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])

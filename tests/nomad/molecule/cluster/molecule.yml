@@ -59,6 +59,7 @@ platforms:
       - consul
       - nomad_clients
       - nomad
+      - traefik_master
     networks:
       - name: "consul"
     network_mode: "consul"

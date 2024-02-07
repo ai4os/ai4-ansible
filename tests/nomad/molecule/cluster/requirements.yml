@@ -1,3 +1,6 @@
-- name: kevincoakley.facter
-- name: grycap.docker
-- name: NVIDIA.nvidia_driver
+roles:
+  - src: kevincoakley.facter
+  - src: grycap.docker
+  - src: NVIDIA.nvidia_driver
+collections:
+  - name: community.crypto
