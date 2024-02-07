@@ -296,10 +296,3 @@ Specifically, modify the following variables:
     ```console
     ansible-playbook -i <new_hosts_file> playbook-nomad.yaml
     ```
-
-* Execute [playbook-traefik.yaml](../playbook-traefik.yaml) playbook to
-  configure the volumes, docker and the Traefik service.
-
-    ```console
-    ansible-playbook -i <new_hosts_file> playbook-traefik.yaml
-    ```

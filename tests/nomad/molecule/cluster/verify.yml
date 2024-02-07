@@ -43,3 +43,19 @@
         fail_msg: "Error getting nodes"
         success_msg: "Nomad nodes up and running"
   
+    - name: Test traefik
+      command: nomad status
+      register: jobs
+      changed_when: false
+
+    - debug:
+        var: jobs.stdout
+
+    - name: Check service running
+      assert:
+        that:
+          - "'traefik-ifca-ai4eosc' in jobs.stdout"
+          - "'running' in jobs.stdout"
+        fail_msg: "Error getting jobs"
+        success_msg: "Traefik job up and running"
+  

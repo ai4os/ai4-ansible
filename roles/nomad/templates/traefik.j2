@@ -1,6 +1,6 @@
-job "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
+job "traefik-{{ nomad_dc }}" {
   region      = "{{ consul_dc_name }}"
-  datacenters = ["{{ hostvars[inventory_hostname]['nomad_dc'] }}"]
+  datacenters = ["{{ nomad_dc }}"]
   type     = "service"
   priority = 100          # traefik job cannot be displaced by a regular job
  
@@ -12,10 +12,10 @@ job "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
     value     = "{{ inventory_hostname }}"
   }
 
-  group "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
+  group "traefik-{{ nomad_dc }}" {
     count = 1
  
-    task "traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}" {
+    task "traefik-{{ nomad_dc }}" {
  
       driver = "docker"
  
