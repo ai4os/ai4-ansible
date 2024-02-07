@@ -15,18 +15,14 @@
           creates: "/tmp/{{ item }}_consul_token"
         environment:
           CONSUL_HTTP_TOKEN: "{{ consul_token }}"
-        loop:
-          - server2
-          - vnode-2
+        loop: "{{ groups['consul_new'] }}"
 
       - name: "Fetch consul server tokens from consul-master to ansible-master"
         fetch:
           src: "/tmp/{{ item }}_consul_token"
           dest: "/tmp/consul_fetched/"
           flat: yes
-        loop:
-          - server2
-          - vnode-2
+        loop: "{{ groups['consul_new'] }}"
 
       - name: Create new certs dir
         command: cp -r /tmp/consul_fetched /tmp/{{ new_certs }}
@@ -39,25 +35,21 @@
         args:
           chdir: "/tmp"
           creates: "/tmp/{{ item}}_nomad_token"
-        loop:
-          - server2
+        loop: "{{ groups['nomad_new_servers'] }}"
 
       - name: "Generate token for each nomad client"
         shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
         args:
           chdir: "/tmp"
           creates: "/tmp/{{ item}}_nomad_token"
-        loop:
-          - vnode-2
+        loop: "{{ groups['nomad_new_clients'] }}"
 
       - name: "Fetch nomad server tokens from consul-master to ansible-master"
         fetch:
           src: "/tmp/{{ item }}_nomad_token"
           dest: "/tmp/nomad_fetched/"
           flat: yes
-        loop:
-          - server2
-          - vnode-2
+        loop: "{{ groups['nomad_new'] }}"
 
       - name: Copy nomad certs
         shell: cp -r /tmp/nomad_fetched/* /tmp/{{ new_certs }}
