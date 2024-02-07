@@ -2,6 +2,7 @@
   get_url:
    url: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
    dest: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
+   force: no
 
 - name: "Unzip nomad file"
   unarchive:
