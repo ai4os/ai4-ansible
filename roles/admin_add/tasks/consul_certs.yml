@@ -1,11 +1,18 @@
 ## Generate and copy consul certs and keys for new consul nodes
 
+# Workaround to avoid generating the new certs again
+- name: "Check if new consul certs exist"
+  stat:
+    path: "{{ path }}{{ new_certs }}"
+  delegate_to: localhost
+  register: new_certs_stat
+
 - name: "Generate certificate for each new consul server"
   command: consul tls cert create -server -dc {{ consul_dc_name }} -domain consul
   args:
     chdir: "{{ path }}"
-    creates: "{{ path }}{{ new_certs }}" # a workaround to avoid running the command multiple times
   loop: "{{ groups['consul_new_servers'] }}"
+  when: new_certs_stat.stat.exists == false
 
 - name: Find the newly created server certs and keys
   shell: "ls -t *.pem | head -n {{ groups['consul_new_servers'] | length * 2 }}"
