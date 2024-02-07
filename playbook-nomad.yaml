@@ -3,6 +3,7 @@
 
  - name: CAUTION WARNING
    hosts: nomad
+   become: true
    tasks:
      - name: Security check
        assert:
