@@ -280,8 +280,15 @@ Specifically, modify the following variables:
       - tutorials
     ```
 
+## 4. Install role dependencies
 
-## 4. Execute playbooks
+* Install grycap.docker role needed in the nomad deployment.
+
+    ```console
+    ansible-galaxy install grycap.docker
+    ```
+
+## 5. Execute playbooks
 
 * Execute [playbook-consul.yaml](../playbook-consul.yaml) playbook to deploy
   Consul.
