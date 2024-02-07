@@ -1,0 +1,5 @@
+ - name: Test scripts copy
+   hosts: nomad_servers
+   roles:
+     - { role: nomad_server_scripts }
+

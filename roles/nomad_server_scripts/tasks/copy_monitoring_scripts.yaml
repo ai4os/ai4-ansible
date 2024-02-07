@@ -1,0 +1,6 @@
+- name: Copy delete_trash script
+  ansible.builtin.copy:
+    src: templates/delete_trash.sh
+    dest: /home/ubuntu/monitoring/delete_trash.sh
+    owner: ubuntu
+    mode: '777'
