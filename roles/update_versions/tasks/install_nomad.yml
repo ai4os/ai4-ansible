@@ -1,16 +1,11 @@
-- name: "Check if nomad ZIP file exists"
-  stat:
-   path: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
-  register: stat_nomad_zip
-
 - name: "Download Nomad binary"
-  command: curl --silent --remote-name "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
-  when: not stat_nomad_zip.stat.exists
+  get_url:
+   url: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
+   dest: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
+   force: no
 
 - name: "Unzip nomad file"
-  command: "{{ item }}"
-  with_items:
-   - unzip {{ path }}nomad_{{ nomad_version }}_linux_amd64.zip
-   - mv nomad {{ path_bin }}
-
-
+  unarchive:
+   src: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
+   dest: "{{ path_bin }}"
+   remote_src: yes
