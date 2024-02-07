@@ -62,7 +62,7 @@
       - name: Copy nomad certs
         shell: cp -r /tmp/nomad_fetched/* /tmp/{{ new_certs }}
         args:
-          creates: /tmp/{{ new_certs }}/nomad-ca.pem
+          creates: /tmp/{{ new_certs }}/nomad-agent-ca.pem
         delegate_to: localhost
 
       - name: Set new certs dir permissions

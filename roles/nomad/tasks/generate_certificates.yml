@@ -1,46 +1,27 @@
 
-- name: "Install cfssl"
-  get_url:
-    url: https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
-    dest: /usr/bin/cfssl
-    force: no
-    mode: 0755
-
-- name: "Install cfssljson"
-  get_url:
-    url: https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64
-    dest: /usr/bin/cfssljson
-    mode: 0755
-    force: no
-
-- name: "Generate CA certificates"
-  shell: cfssl print-defaults csr | cfssl gencert -initca - | cfssljson -bare nomad-ca
+- name: Create Nomad TLS CA
+  command: nomad tls ca create -days=3650
   args:
     chdir: "{{ path }}"
-    creates: "{{ path }}nomad-ca.pem"
+    creates: "{{ path }}nomad-agent-ca.pem"
 
-- name: "Increase the default certificate expiration time"
-  copy:
-   src: cfssl.json
-   dest: "{{ path }}cfssl.json"
-
-- name: "Generate server certificate"
-  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},server.{{ consul_dc_name }}.nomad,server.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare server"
+- name: Create Nomad TLS Server Cert
+  command: nomad tls cert create -server -days=3650 -additional-dnsname={{ inventory_hostname }} -additional-dnsname=server.{{ consul_dc_name }}.nomad -ca {{ path }}nomad-agent-ca.pem -key {{ path }}nomad-agent-ca-key.pem
   args:
     chdir: "{{ path }}"
-    creates: "{{ path }}server.pem"
+    creates: "{{ path }}global-server-nomad.pem"
 
-- name: "Generate client certificate"
-  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},client.{{ consul_dc_name }}.nomad,client.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare client"
+- name: Create Nomad TLS client Cert
+  command: nomad tls cert create -client -days=3650 -additional-dnsname={{ inventory_hostname }} -additional-dnsname=server.{{ consul_dc_name }}.nomad -ca {{ path }}nomad-agent-ca.pem -key {{ path }}nomad-agent-ca-key.pem
   args:
     chdir: "{{ path }}"
-    creates: "{{ path }}client.pem"
+    creates: "{{ path }}global-client-nomad.pem"
 
-- name: "Generate CLI certificate"
-  shell: "echo '{}' | cfssl gencert -ca=nomad-ca.pem -ca-key=nomad-ca-key.pem -profile=client - | cfssljson -bare cli"
+- name: Create Nomad TLS CLI Cert
+  command: nomad tls cert create -cli -days=3650
   args:
     chdir: "{{ path }}"
-    creates: "{{ path }}cli.pem"
+    creates: "{{ path }}global-cli-nomad.pem"
 
 - name: "Export nomad addr"
   lineinfile:
@@ -48,9 +29,9 @@
     line: "{{ item }}"
   with_items:
     - export NOMAD_ADDR=https://127.0.0.1:4646
-    - export NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
-    - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
-    - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
+    - export NOMAD_CACERT={{ nomad_certs }}nomad-agent-ca.pem
+    - export NOMAD_CLIENT_CERT={{ nomad_certs }}global-cli-nomad.pem
+    - export NOMAD_CLIENT_KEY={{ nomad_certs }}global-cli-nomad-key.pem
 
 - name: "Set exports"
   become: false
@@ -58,7 +39,7 @@
   changed_when: false
 
 - name: "Generate web browser certificate for nomad's UI"
-  shell: "openssl pkcs12 -export -inkey ./cli-key.pem -in ./cli.pem -out ./cli.p12 -passout pass:{{ nomad_ui_passwd }} -passin pass:{{ nomad_ui_passwd }}"
+  shell: "openssl pkcs12 -export -inkey ./global-cli-nomad-key.pem -in ./global-cli-nomad.pem -out ./cli.p12 -passout pass:{{ nomad_ui_passwd }} -passin pass:{{ nomad_ui_passwd }}"
   args:
     chdir: "{{ path }}"
     creates: "{{ path }}cli.p12"
@@ -67,8 +48,8 @@
   community.general.archive:
     path:
       - cli.p12
-      - cli.pem
-      - cli-key.pem
-      - nomad-ca.pem
+      - global-cli-nomad.pem
+      - global-cli-nomad-key.pem
+      - nomad-agent-ca.pem
     dest: "{{ consul_dc_name }}.zip"
     format: zip

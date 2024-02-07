@@ -3,5 +3,5 @@
    src: "{{ certs_path }}{{ item }}.pem"
    dest: "{{ nomad_certs }}"
   with_items:
-    - client
-    - client-key
+    - global-client-nomad
+    - global-client-nomad-key

@@ -8,7 +8,7 @@
   unarchive:
     src: "{{ path }}{{ new_certs }}.zip"
     dest: "{{ path }}"
-    creates: "{{ path }}{{ new_certs }}/nomad-ca.pem"
+    creates: "{{ path }}{{ new_certs }}/nomad-agent-ca.pem"
   delegate_to: localhost
   run_once: true
 
@@ -21,6 +21,6 @@
    src: "{{ certs_path }}{{ item }}.pem"
    dest: "{{ nomad_certs }}"
   with_items:
-    - nomad-ca
-    - cli
-    - cli-key
+    - nomad-agent-ca
+    - global-cli-nomad
+    - global-cli-nomad-key

@@ -7,6 +7,6 @@
    src: "{{ nomad_fetched }}{{ item }}.pem"
    dest: "{{ nomad_certs }}"
   with_items:
-    - nomad-ca
-    - cli
-    - cli-key
+    - nomad-agent-ca
+    - global-cli-nomad
+    - global-cli-nomad-key

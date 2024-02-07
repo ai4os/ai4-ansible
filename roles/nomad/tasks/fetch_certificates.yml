@@ -12,15 +12,10 @@
     dest: "{{ nomad_fetched }}{{ item }}.pem"
     flat: yes
   loop:
-    - "nomad-ca"
-    - "client"
-    - "client-key"
-    - "server"
-    - "server-key"
-    - "cli"
-    - "cli-key"
-
-
-
-
-
+    - "nomad-agent-ca"
+    - "global-client-nomad"
+    - "global-client-nomad-key"
+    - "global-server-nomad"
+    - "global-server-nomad-key"
+    - "global-cli-nomad"
+    - "global-cli-nomad-key"

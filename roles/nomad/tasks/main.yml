@@ -54,11 +54,11 @@
     include_tasks: fetch_certificates.yml
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
 
-- name: "Copy nomad-ca.pem"
+- name: "Copy nomad-agent-ca.pem"
   include_tasks: copy_certificates.yml
   when: ("nomad" in groups and inventory_hostname in groups["nomad"])
 
-- name: "Copy nomad-ca.pem in new nodes"
+- name: "Copy nomad-agent-ca.pem in new nodes"
   include_tasks: copy_new.yml
   when: ("nomad_new" in groups and inventory_hostname in groups["nomad_new"])
 
@@ -122,9 +122,9 @@
     line: "{{ item }}"
   with_items:
     - export NOMAD_ADDR=https://127.0.0.1:4646
-    - export NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
-    - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
-    - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
+    - export NOMAD_CACERT={{ nomad_certs }}nomad-agent-ca.pem
+    - export NOMAD_CLIENT_CERT={{ nomad_certs }}global-cli-nomad.pem
+    - export NOMAD_CLIENT_KEY={{ nomad_certs }}global-cli-nomad-key.pem
 
 - name: "Set exports"
   become: false
