@@ -272,7 +272,15 @@ Specifically, modify the following variables:
     ```
 
 
-## 4. Execute playbooks
+## 4. Install role dependencies
+
+* Install grycap.docker role needed in the nomad join recipe.
+
+    ```console
+    ansible-galaxy install grycap.docker
+    ```
+
+## 5. Execute playbooks
 
 * Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join
   Consul.
