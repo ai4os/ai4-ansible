@@ -41,6 +41,10 @@
 - name: "Install nomad"
   include_tasks: install.yml
 
+- name: "Install nvidia plugin"
+  include_tasks: nvidia_plugin.yml
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"])
+
 - name: Generating nomad certificates
   block:
   - name: "Generate"

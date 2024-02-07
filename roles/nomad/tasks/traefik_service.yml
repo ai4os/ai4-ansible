@@ -33,11 +33,10 @@
 
 - name: "Define job config for traefik service"
   template:
-    src: templates/{{ item }}.j2
-    dest: "{{ path }}{{ item }}-{{ nomad_dc }}.hcl"
+    src: templates/traefik.j2
+    dest: "{{ path }}traefik-{{ nomad_dc }}.hcl"
     owner: "{{ username }}"
-  with_items:
-    - traefik
+    force: no
 
 - name: Get traefik Token
   set_fact:
