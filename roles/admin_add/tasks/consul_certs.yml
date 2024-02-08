@@ -1,26 +1,38 @@
 ## Generate and copy consul certs and keys for new consul nodes
 
+# Workaround to avoid generating the new certs again
+- name: "Check if new consul certs exist"
+  stat:
+    path: "{{ path }}{{ new_certs }}"
+  delegate_to: localhost
+  register: new_certs_stat
+
 - name: "Generate certificate for each new consul server"
   command: consul tls cert create -server -dc {{ consul_dc_name }} -domain consul
+  args:
+    chdir: "{{ path }}"
   loop: "{{ groups['consul_new_servers'] }}"
+  when: new_certs_stat.stat.exists == false
 
 - name: Find the newly created server certs and keys
   shell: "ls -t *.pem | head -n {{ groups['consul_new_servers'] | length * 2 }}"
+  args:
+    chdir: "{{ path }}"
   register: new_certs_and_keys
   changed_when: false
 
 - name: Create new directory for new certs in ansible_master"
-  ansible.builtin.file:
+  file:
     path: "{{ path }}{{ new_certs }}"
     state: directory
     mode: '777'
   delegate_to: 127.0.0.1
 
 - name: Copy the certs and keys to new directory
-  ansible.posix.synchronize:
-    src: "{{ item }}"
-    dest: "{{ path }}{{ new_certs }}/"
-    mode: pull
+  fetch:
+    src: "{{ path }}{{ item }}"
+    dest: "{{ path }}{{ new_certs }}/{{ item }}"
+    flat: yes
   with_items: "{{ new_certs_and_keys.stdout_lines }}"
 
 - name: "Fetch CA cert from consul-master to ansible-master"
