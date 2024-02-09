@@ -84,6 +84,16 @@ where:
 
 ## 2. Create nodes
 
+> ⓘ  **Tip** \
+> We recommend having a _few big nodes_ instead of a lot of small ones,
+> because this leads to:
+> * better resource utilization: no duplicated user docker images between nodes,
+> less node resources remainders that are not able to fill a full job, etc
+> * better node management: you need to apply Ansible in fewer nodes.
+>
+> But this of course depends on your available flavors.
+
+
 To create a node in OpenstacK:
 
 1. Click `Launch Instance` in section `Project > Compute > Instances`.
