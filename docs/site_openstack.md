@@ -138,9 +138,19 @@ To associate a public IP to an instance:
 
 ## 4. Create and attach volumes
 
-CPU and GPU client nodes are recommended to have an attached volume.
-
+CPU and GPU client compute nodes **must** have an attached volume.
 Server and Traefik nodes do not need attached volumes.
+
+The reason is that Nomad jobs need to use the docker
+[storage-opt](https://docs.docker.com/engine/reference/commandline/dockerd/#overlay2size)
+option to limit the disk in containers. An because Docker is using the
+Overlay storage driver, the filesystem has to be `xfs`.
+Ansible will configure that volume with xfs and make Docker run in it.
+
+Volumes are also needed because otherwise nodes would fill up quite quickly with
+Docker images (which in the current cluster add up to 70GB in some nodes)
+and in addition, we wouldn't be able to offer users enough space to copy their dataset
+to the deployments.
 
 To create a volume:
 
