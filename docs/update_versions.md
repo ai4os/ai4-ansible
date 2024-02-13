@@ -68,7 +68,7 @@ Specifically, modify the following variables:
 
     Line example:
     ```yaml
-    nomad_version: 1.7.2
+    nomad_version: 1.7.3
     ```
 
 - **consul_version**
