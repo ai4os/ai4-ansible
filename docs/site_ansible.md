@@ -168,7 +168,7 @@ In addition, SSL certificates are needed for the new Traefik node.
 For this:
 
 - Remember the `domain` name you selected in the previous step, when configuring
-  cpu/gpu clients.
+  CPU/GPU clients.
 - Send an email to the provided contact person asking for certificates covering:
   + `<domain>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
   + `*.<domain>-deployments.cloud.ai4eosc.eu` (for AI4EOSC sites)
@@ -177,7 +177,8 @@ For this:
 - You will receive a reply with a `.key` file.
 - You will receive an email with several `.pem` files.
   Download the one stating **Certificate (w/ issuer after), PEM encoded**.
-- Put both files (`.key`and `.pem`) in a folder and zip the content (`<traefik_certs>.zip`).
+- Rename both `.key` and `.pem` files to `domain.key` and `domain.pem`.
+- Put both files `domain.key` and `domain.pem` in a new folder and zip it (to create `<new_traefik_certs>.zip`).
 - Go to [nsupdate](https://nsupdate.fedcloud.eu/) and log with your EGI credentials.
   You should be able to see you new domains in `Overview`.
   Go to each host and use `Set new IPv4 address` to set the IP address to the public IP
@@ -187,7 +188,7 @@ Once having obtained both ZIP files, place them in the Ansible master. By defaul
 under `/home/ubuntu/`:
 
 - `/home/ubuntu/<new_site_certs>.zip`.
-- `/home/ubuntu/<traefik_certs>.zip`.
+- `/home/ubuntu/<new_traefik_certs>.zip`.
 
 ## 3. Modify group_vars
 
@@ -263,7 +264,7 @@ Specifically, modify the following variables:
 
     Line template:
     ```yaml
-    traefik_certs: <new_traefik_certs_zip_name>
+    traefik_certs: <new_traefik_certs>
     ```
 
     Line example:
