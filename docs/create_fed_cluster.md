@@ -256,6 +256,19 @@ Specifically, modify the following variables:
     Line example:
     ```yaml
     traefik_certs: ifca-deployments.cloud.ai4eosc.eu
+     ```
+- **nomad_ui_passwd**
+
+    Set this variable on section *Nomad* to the desired *strong* password for the Nomad UI `.p12` certificate.
+  
+    Line template:
+    ```yaml
+      nomad_ui_passwd: <strong_password>
+    ```
+    
+    Line example:
+    ```yaml
+      nomad_ui_passwd: 1234
     ```
 
 - **nomad_namespaces**
