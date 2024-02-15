@@ -89,3 +89,8 @@
    become: true
    roles:
      - { role: nomad_namespaces, when: from_scratch_cluster_installation }
+
+ - name: Copy scripts
+   hosts: monitoring
+   roles:
+     - { role: nomad_server_scripts }
