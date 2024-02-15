@@ -90,7 +90,7 @@
    roles:
      - { role: nomad_namespaces, when: from_scratch_cluster_installation }
 
- - name: Copy scripts
+ - name: Configure scripts
    hosts: monitoring
    roles:
      - { role: nomad_server_scripts }

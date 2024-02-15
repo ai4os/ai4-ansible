@@ -58,7 +58,7 @@
    roles:
      - { role: nomad_restart }
 
- - name: Copy scripts
+ - name: Configure scripts
    hosts: monitoring
    roles:
      - { role: nomad_server_scripts }
