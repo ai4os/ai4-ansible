@@ -1,5 +1,0 @@
- - name: Test scripts copy
-   hosts: monitoring
-   roles:
-     - { role: nomad_server_scripts }
-
