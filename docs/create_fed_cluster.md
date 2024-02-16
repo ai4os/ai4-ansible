@@ -155,13 +155,29 @@ Specifically, modify the following groups:
     <_nomad_client1_name> vol_name=<vol_name> partition_name=<partition_name>
       ...
     <nomad_clientN_name> vol_name=<vol_name> partition_name=<partition_name>
-    ````
+    ```
 
     Group example:
     ```ini
-    [nomad_new_volume]
+    [nomad_volume]
     node-ifca-1 vol_name=vdb partition_name=part1
     node-ifca-gpu-0 vol_name=vdb partition_name=part1
+    ```
+
+
+- **monitoring**
+
+    Modify the line to match the names of the Nomad server.
+
+    Line template:
+    ```ini
+    <server_name>
+    ```
+
+    Group example:
+    ```ini
+    [monitoring]
+    node-ifca-0
     ```
 
 

@@ -146,7 +146,7 @@ Specifically, modify the following groups:
     Line template:
     ```ini
     <new_nomad_client_name> vol_name=<new_vol_name> partition_name=<new_partition_name>
-    ````
+    ```
 
     Group example:
     ```ini
@@ -155,6 +155,20 @@ Specifically, modify the following groups:
     new-gpu-client1 vol_name=vdb partition_name=part1
     ```
 
+- **monitoring**
+
+    Modify the line to match the names of the new Nomad server.
+
+    Line template:
+    ```ini
+    <new_server_name>
+    ```
+
+    Group example:
+    ```ini
+    [monitoring]
+    new-server
+    ```
 
 ## 2. Ask for certificates
 

@@ -58,3 +58,7 @@
    roles:
      - { role: nomad_restart }
 
+ - name: Configure scripts
+   hosts: monitoring
+   roles:
+     - { role: nomad_server_scripts }
