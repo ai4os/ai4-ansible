@@ -1,0 +1,18 @@
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /opt/monitoring
+    state: directory
+    mode: '0755'
+
+- name: Copy delete_trash script
+  ansible.builtin.copy:
+    src: delete_trash.sh
+    dest: /opt/monitoring/delete_trash.sh
+    owner: "{{ username }}"
+    mode: '777'
+
+- name: Add job to crontab"
+  ansible.builtin.cron:
+    name: "Empty trash"
+    special_time: daily
+    job: "/opt/monitoring/delete_trash.sh"

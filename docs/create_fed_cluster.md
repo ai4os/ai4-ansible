@@ -155,13 +155,29 @@ Specifically, modify the following groups:
     <_nomad_client1_name> vol_name=<vol_name> partition_name=<partition_name>
       ...
     <nomad_clientN_name> vol_name=<vol_name> partition_name=<partition_name>
-    ````
+    ```
 
     Group example:
     ```ini
-    [nomad_new_volume]
+    [nomad_volume]
     node-ifca-1 vol_name=vdb partition_name=part1
     node-ifca-gpu-0 vol_name=vdb partition_name=part1
+    ```
+
+
+- **monitoring**
+
+    Modify the line to match the names of the Nomad server.
+
+    Line template:
+    ```ini
+    <server_name>
+    ```
+
+    Group example:
+    ```ini
+    [monitoring]
+    node-ifca-0
     ```
 
 
@@ -256,6 +272,19 @@ Specifically, modify the following variables:
     Line example:
     ```yaml
     traefik_certs: ifca-deployments.cloud.ai4eosc.eu
+     ```
+- **nomad_ui_passwd**
+
+    Set this variable on section *Nomad* to the desired *strong* password for the Nomad UI `.p12` certificate.
+  
+    Line template:
+    ```yaml
+      nomad_ui_passwd: <strong_password>
+    ```
+    
+    Line example:
+    ```yaml
+      nomad_ui_passwd: 1234
     ```
 
 - **nomad_namespaces**

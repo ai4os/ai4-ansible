@@ -11,12 +11,12 @@ to generate certs.
 
 ## 1. Configure hosts
 
-Copy [hosts_ifca_admin_template](../hosts_ifca_admin_template) into a new hosts file
+Copy [hosts_ifca_admin_add_template](../hosts_ifca_admin_add_template) into a new hosts file
 (e.g. `myhosts`).
 
 Modify the new hosts file to match the new cluster configuration reflected in the
 _received_ hosts file from the new site admin.
-An example can be found on [hosts_ifca_admin_example](../hosts_ifca_admin_example).
+An example can be found on [hosts_ifca_admin_add_example](../hosts_ifca_admin_add_example).
 Specifically, modify the following groups:
 
 - **consul_master**

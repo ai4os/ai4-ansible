@@ -121,6 +121,10 @@
     command: nvidia-ctk runtime configure --runtime=docker
     when: nvidia_installed.rc != 0
 
+  - name: Restart docker
+    shell: sudo systemctl restart docker
+    when: nvidia_installed.rc != 0
+
   - name: Download cuda-ubuntu2004.pin
     get_url:
       url: "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin"
@@ -153,4 +157,7 @@
       update_cache: yes
     when: nvidia_installed.rc != 0
 
+  - name: Restart nomad
+    shell: sudo systmctl restart noamd
+    when: nvidia_installed.rc != 0
 

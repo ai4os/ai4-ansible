@@ -44,6 +44,9 @@
 <new_nomad_clientN_name> vol_name=<new_vol_name> partition_name=<new_partition_name>
 
 
+# ---- Monitoring scripts
+[monitoring]
+<new_server_name>
 
 
 
