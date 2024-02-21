@@ -11,7 +11,9 @@
 
     - name: Install crontabs on RedHat
       package:
-        name: crontabs
+        name:
+        - crontabs
+        - cronie
       when: ansible_os_family == "RedHat"
 
   roles:
