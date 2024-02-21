@@ -23,6 +23,7 @@ platforms:
       - nomad_master
       - nomad_servers
       - nomad
+      - monitoring
     networks:
       - name: "consul"
     network_mode: "consul"
