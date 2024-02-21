@@ -101,7 +101,7 @@
   include_tasks: traefik_policies.yml
   when:
     - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
-    - ("traefik_master" in groups or "traefik_new_master" in groups) # Assume that if traefik is master exists, we are installing traefik
+    - ("traefik_master" in groups) # Assume that if traefik is master exists, we are installing traefik
 
 - name: "Get tokens"
   include_tasks: copy_tokens.yml
