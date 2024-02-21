@@ -56,6 +56,7 @@ nomad_nvidia_plugin_version: 1.0.0
 gpu_plugin_dir: plugins
 nomad_reserved_memory_mb: 4096
 nomad_username: nomad
+nomad_cni_version: 1.0.0
 
 # -- Consul
 consul_version: 1.17.1

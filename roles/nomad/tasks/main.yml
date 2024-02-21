@@ -30,12 +30,18 @@
   when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"]) or
         ("nomad_new_volume" in groups and inventory_hostname in groups["nomad_new_volume"])
 
-- name: Install docker with nvidia support
-  include_role:
-    name: grycap.docker
-  vars:
-    docker_nvidia_support: "{{ nvidia_support }}"
-    docker_compose_version: "1.29.2"
+- block:
+
+  - name: Install docker with nvidia support
+    include_role:
+      name: grycap.docker
+    vars:
+      docker_nvidia_support: "{{ nvidia_support }}"
+      docker_compose_version: "1.29.2"
+
+  - name: "Install CNI plugins"
+    include_tasks: install_cni.yml
+
   when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
         ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
