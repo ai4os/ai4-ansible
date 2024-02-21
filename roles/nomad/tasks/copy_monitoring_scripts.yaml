@@ -8,7 +8,7 @@
   ansible.builtin.copy:
     src: delete_trash.sh
     dest: /opt/monitoring/delete_trash.sh
-    owner: ubuntu
+    owner: "{{ username }}"
     mode: '777'
 
 - name: Add job to crontab"
