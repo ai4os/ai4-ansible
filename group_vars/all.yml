@@ -38,7 +38,7 @@ traefik_certs_dir: /etc/nomad.d/traefik-certs
 traefik_certs: ifca-deployments.cloud.ai4eosc.eu
 
 # -- Nomad
-nomad_version: 1.7.2
+nomad_version: 1.7.3
 nomad_data_dir: /opt/nomad
 nomad: "{{ path_bin }}nomad"
 nomad_config_dir: /etc/nomad.d

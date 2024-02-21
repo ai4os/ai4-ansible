@@ -42,6 +42,9 @@ new-cpu-client vol_name=vdb partition_name=part1
 new-gpu-client vol_name=vdb partition_name=part1
 
 
+# ---- Monitoring scripts
+[monitoring]
+new-server
 
 
 
