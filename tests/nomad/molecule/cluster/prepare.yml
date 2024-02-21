@@ -9,6 +9,11 @@
         update_cache: yes
       when: ansible_os_family == "Debian"
 
+    - name: Install crontabs on RedHat
+      package:
+        name: crontabs
+      when: ansible_os_family == "RedHat"
+
   roles:
     - role: kevincoakley.facter
 
