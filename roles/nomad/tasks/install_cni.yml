@@ -11,6 +11,11 @@
     remote_src: yes
     creates: /opt/cni/binbridge
 
+- name: Create /etc/sysctl.d
+  file:
+    path: /etc/sysctl.d/
+    state: directory
+
 - name: Create /etc/sysctl.d/99-nomad-cni.conf
   register: cni_sysctl
   copy:
