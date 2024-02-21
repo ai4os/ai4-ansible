@@ -10,12 +10,12 @@ client {
   enabled = true
   meta {
    namespace = "{{ nomad_namespaces | join(',')  }}"
-{% if "traefik_master" in groups and inventory_hostname in groups['traefik_master'] %}
+{% if ("traefik_master" in groups and inventory_hostname in groups['traefik_master']) or ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master']) %}
    compute = false
    tags = "traefik"
 {% else %}
    compute = true
-  {% if "nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"] %}
+  {% if ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]) %}
    tags= "gpu"
   {% else %}
    tags= "cpu"
@@ -23,7 +23,7 @@ client {
 {% endif %}
    domain = "{{ domain }}"
   }
-{% if "traefik_master" not in groups or inventory_hostname not in groups['traefik_master'] %}
+{% if ("traefik_master" not in groups or inventory_hostname not in groups['traefik_master']) and ("traefik_new_master" not in groups or inventory_hostname not in groups['traefik_new_master']) %}
   reserved = {
    memory = {{ nomad_reserved_memory_mb }}
   }
@@ -95,7 +95,7 @@ plugin "raw_exec" {
   }
 }
 
-{% if "nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"] %}
+{% if ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]) %}
 plugin "nomad-device-nvidia" {
   config {
     enabled            = true
