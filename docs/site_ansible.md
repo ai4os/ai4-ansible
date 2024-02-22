@@ -287,7 +287,15 @@ Specifically, modify the following variables:
     ```
 
 
-## 4. Execute playbooks
+## 4. Install role dependencies
+
+* Install grycap.docker role needed in the nomad join recipe.
+
+    ```console
+    ansible-galaxy install grycap.docker
+    ```
+
+## 5. Execute playbooks
 
 * Execute [playbook-join-consul.yaml](../playbook-join-consul.yaml) playbook to join
   Consul.
@@ -301,11 +309,4 @@ Specifically, modify the following variables:
 
     ```console
     ansible-playbook -i <new_hosts_file> playbook-join-nomad.yaml
-    ```
-
-* Execute [playbook-join-traefik.yaml](../playbook-join-traefik.yaml) playbook to
-  configure the volumes, docker and the Traefik service.
-
-    ```console
-    ansible-playbook -i <new_hosts_file> playbook-join-traefik.yaml
     ```

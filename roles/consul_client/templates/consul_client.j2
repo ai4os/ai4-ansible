@@ -1,9 +1,0 @@
-advertise_addr = "{{ my_ip }}"                   # IP of the machine
- 
-bind_addr = "0.0.0.0"                               # Choose any address to designate an interface to which Consul services will bind, including HTTP and DNS server
- 
-acl {
-  tokens {
-    agent  = "{{ default_token }}" # This is the ACL token, which will tell our consul cluster, which of the agent can read and write what type of data
-  }                                                 # We will deal with that tokens later
-}

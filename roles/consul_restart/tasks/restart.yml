@@ -1,2 +1,0 @@
-- name: "Restart"
-  shell: sudo systemctl restart consul

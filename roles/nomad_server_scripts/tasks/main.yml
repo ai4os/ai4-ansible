@@ -1,6 +1,0 @@
----
-# tasks file for roles/test_scripts
-- name: Copy scripts
-  block:
-  - name: "Copy monitoring scripts"
-    include_tasks: copy_monitoring_scripts.yaml

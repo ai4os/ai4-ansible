@@ -1,0 +1,7 @@
+- name: "Copy certificates from ansible_master to nomad_hosts"
+  copy:
+   src: "{{ certs_path }}{{ item }}.pem"
+   dest: "{{ nomad_certs }}"
+  with_items:
+    - server
+    - server-key

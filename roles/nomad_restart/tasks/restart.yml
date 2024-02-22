@@ -1,3 +1,0 @@
-- name: "Restart"
-  shell: sudo systemctl restart nomad
-

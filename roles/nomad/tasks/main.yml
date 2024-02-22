@@ -1,0 +1,163 @@
+---
+# tasks file for nomad_install
+
+- set_fact:
+    nvidia_support: false
+
+- set_fact:
+    nvidia_support: true
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
+        ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"])
+
+- block:
+
+  - set_fact:
+      docker_config_values:
+        registry-mirrors: ["{{ docker_registry }}"]
+
+  - set_fact:
+      docker_config_values:
+        data-root: "{{ mount_dir }}"
+        registry-mirrors: ["{{ docker_registry }}"]
+    when: vol_name is defined
+
+  - name: "Enable swap limit capabilities"
+    include_tasks: swap.yml
+
+  - name: "Mount volume"
+    include_tasks: volume.yml
+
+  when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"]) or
+        ("nomad_new_volume" in groups and inventory_hostname in groups["nomad_new_volume"])
+
+- block:
+
+  - name: Install docker with nvidia support
+    include_role:
+      name: grycap.docker
+    vars:
+      docker_nvidia_support: "{{ nvidia_support }}"
+      docker_compose_version: "1.29.2"
+
+  - name: "Install CNI plugins"
+    include_tasks: install_cni.yml
+
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
+
+- name: "Install packages"
+  include_tasks: dependencies.yml
+
+- name: "Install nomad"
+  include_tasks: install.yml
+
+- name: "Install nvidia plugin"
+  include_tasks: nvidia_plugin.yml
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
+        ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"])
+
+- name: Generating nomad certificates
+  block:
+  - name: "Generate"
+    include_tasks: generate_certificates.yml
+
+  - name: "Copy"
+    include_tasks: fetch_certificates.yml
+  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+
+- name: "Copy nomad-ca.pem"
+  include_tasks: copy_certificates.yml
+  when: ("nomad" in groups and inventory_hostname in groups["nomad"])
+
+- name: "Copy nomad-ca.pem in new nodes"
+  include_tasks: copy_new.yml
+  when: ("nomad_new" in groups and inventory_hostname in groups["nomad_new"])
+
+- name: "Configure nomad.hcl"
+  include_tasks: configure.yml
+
+- name: Configure nomad server
+
+  block:
+  - name: "Copy server certificates"
+    include_tasks: copy_server_certificates.yml
+
+  - name: "Server configuration"
+    include_tasks: configure_server.yml
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
+        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
+
+- name: Configure nomad client
+
+  block:
+  - name: "Copy client certificates"
+    include_tasks: copy_client_certificates.yml
+
+  - name: "Client configuration"
+    include_tasks: configure_client.yml
+
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or 
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
+
+- name: "Create nomad policies"
+  include_tasks: policies.yml
+  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+
+- name: "Create traefik policy"
+  include_tasks: traefik_policies.yml
+  when:
+    - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+    - ("traefik_master" in groups) # Assume that if traefik is master exists, we are installing traefik
+
+- name: "Get tokens"
+  include_tasks: copy_tokens.yml
+
+- name: "Set Client tokens"
+  include_tasks: set_tokens.yml
+  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
+        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
+
+- name: "Set Server tokens"
+  include_tasks: set_server_tokens.yml
+  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
+        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
+
+- name: "Export nomad addr"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "{{ item }}"
+  with_items:
+    - export NOMAD_ADDR=https://127.0.0.1:4646
+    - export NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
+    - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
+    - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"
+  changed_when: false
+
+- name: start nomad
+  service:
+    name: nomad
+    state: started
+    enabled: yes
+
+- name: "Create nomad namespaces"
+  shell: "nomad namespace apply {{ item }}"
+  with_items: "{{ nomad_namespaces }}"
+  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+  changed_when: false
+
+- name: "Create job for traefik service"
+  include_tasks: traefik_service.yml
+  when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"])
+
+- name: "Create job for traefik service in new nodes"
+  include_tasks: traefik_add_service.yml
+  when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
+
+# tasks file for roles/test_scripts
+- name: "Copy monitoring scripts"
+  include_tasks: copy_monitoring_scripts.yaml
+  when: ("monitoring" in groups and inventory_hostname in groups["monitoring"])

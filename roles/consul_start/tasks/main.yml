@@ -1,6 +1,0 @@
----
-# tasks file for consul_start
-
-  - name: "Start consul"
-    include_tasks: start.yml
-

@@ -1,0 +1,36 @@
+- name: "Find server index"
+  shell: "ls {{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
+  register: numbers
+  delegate_to: 127.0.0.1
+  changed_when: False
+
+- name: "Get server index"
+  set_fact: 
+    server_index: "{{ numbers.stdout_lines | last | int }}"
+
+- name: "Copy server certs from consul-master to consul-servers"
+  copy:
+    src: "{{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+    dest: "{{ consul_certs }}"
+
+- name: "Copy server keys from consul-master to consul-servers"
+  copy:
+    src: "{{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+    dest: "{{ consul_certs }}"
+
+- name: "Export consul server cert"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "export CONSUL_CLIENT_CERT={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+    regexp: "^export CONSUL_CLIENT_CERT="
+
+- name: "Export consul server cert"
+  lineinfile:
+    path: "{{ environment_file }}"
+    line: "export CONSUL_CLIENT_KEY={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+    regexp: "^export CONSUL_CLIENT_KEY="
+
+- name: "Set exports"
+  become: false
+  shell: ". {{ environment_file }}"
+  changed_when: false

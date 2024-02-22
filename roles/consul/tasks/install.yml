@@ -1,0 +1,42 @@
+- name: "Download Consul binary"
+  get_url:
+   url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
+   dest: "{{ path }}consul_{{ consul_version }}_linux_amd64.zip"
+   force: no
+
+- name: "Unzip consul file"
+  unarchive:
+   src: "{{ path }}consul_{{ consul_version }}_linux_amd64.zip"
+   dest: "{{ path_bin }}"
+   remote_src: yes
+
+- name: "Create consul certs and data dir"
+  file:
+   path: "{{ item }}"
+   state: directory
+   mode: 0755
+  loop:
+   - "{{ consul_certs_dir }}"
+   - "{{ consul_data_dir }}"
+
+- name: "Create consul user"
+  user:
+   name: "{{ consul_username }}"
+   shell: /bin/false
+   system: yes
+   home: "{{ consul_config_dir }}"
+
+- name: "Configure autocomplete-install"
+  command: "{{ consul }} -autocomplete-install"
+  args:
+   chdir: "{{ path_bin }}"
+  changed_when: False
+  ignore_errors: True
+
+- name: "Copy consul.service configuration"
+  template:
+    src: templates/consul_service.j2
+    dest: "{{ path_system }}consul.service"
+  notify:
+    - systemctl daemon-reload
+    - Restart consul

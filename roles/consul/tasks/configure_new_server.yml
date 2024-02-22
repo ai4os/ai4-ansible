@@ -1,0 +1,29 @@
+- name: "Find server index"
+  shell: "ls {{ path }}{{ new_certs }}/{{ consul_dc_name }}-server-consul-*-key.pem | egrep -o [0-9]+"
+  register: numbers
+  delegate_to: 127.0.0.1
+  changed_when: false
+
+- name: "Get server index"
+  set_fact:
+    server_index: "{{ numbers.stdout_lines | last | int }}"
+
+- name: "Copy consul.hcl configuration"
+  template:
+    src: templates/consul.j2
+    dest: "{{ consul_config }}consul.hcl"
+    owner: "{{ consul_username }}"
+    force: no
+  vars:
+    server: True
+  notify: Restart consul
+
+- name: "Copy server.hcl configuration"
+  template:
+    src: templates/consul_server.j2
+    dest: "{{ consul_config }}server.hcl"
+    owner: "{{ consul_username }}"
+    force: no
+  vars:
+    server_new: True
+  notify: Restart consul

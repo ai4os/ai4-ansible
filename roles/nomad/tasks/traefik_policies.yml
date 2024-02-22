@@ -1,0 +1,32 @@
+- name: "Define traefik policies"
+  copy:
+    src: traefik-dashboard-server-policy.hcl
+    dest: "{{ consul_policies_dir }}/traefik-dashboard-server-policy.hcl"
+    owner: "{{ username }}"
+
+- name: "Check if traefik policy exists"
+  command: consul acl policy list
+  register: consul_policy_list
+  changed_when: false
+
+- name: "Create traefik policy"
+  command: consul acl policy create -name traefik-dashboard -description "Traefik Dashboard Policy" -rules @"{{ consul_policies_dir }}/traefik-dashboard-server-policy.hcl"
+  when: ' "Traefik" not in consul_policy_list.stdout '
+
+- name: "Check if traefik token exists"
+  command: consul acl token list
+  register: consul_token_list
+  changed_when: false
+
+- name: "Create traefik token"
+  shell: consul acl token create -description "Token for Traefik Dashboard Service" -policy-name "traefik-dashboard" > traefik_token
+  args:
+    chdir: "{{ path }}"
+    creates: "traefik_token"
+  when: ' "Traefik" not in consul_token_list.stdout '
+
+- name: "Fetch traefik token from consul-master to ansible-master"
+  fetch:
+    src: "{{ path }}traefik_token"
+    dest: "{{ consul_fetched }}"
+    flat: yes

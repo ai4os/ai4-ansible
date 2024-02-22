@@ -1,7 +1,0 @@
-- name: "Install unzip and cfssl"
-  ansible.builtin.package:
-   name:
-     - unzip
-     - golang-cfssl
-   update_cache: yes
-

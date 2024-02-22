@@ -1,0 +1,6 @@
+- name: "Set consul token con client.hcl"
+  replace:
+    path: "{{ consul_config }}client.hcl"
+    replace: "{{ agent_consul_token }}"
+    regexp: '{{ default_token }}'
+  notify: Restart consul

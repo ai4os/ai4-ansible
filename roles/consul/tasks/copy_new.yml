@@ -1,0 +1,22 @@
+## Copy consul certs, keys and tokens from zip file
+- name: Wait Certificates Zip file
+  wait_for:
+    path: "{{ path }}{{ new_certs }}.zip"
+  delegate_to: localhost
+
+- name: "Unzip file in ansible_master if it is zipped"
+  unarchive:
+    src: "{{ path }}{{ new_certs }}.zip"
+    dest: "{{ path }}"
+    creates: "{{ path }}{{ new_certs }}/consul-agent-ca.pem"
+  delegate_to: 127.0.0.1
+  run_once: true
+
+- name: "Set certs storage path"
+  set_fact:
+    certs_path: "{{ path }}{{ new_certs }}/"
+
+- name: "Copy CA certificates from ansible_master to consul_hosts"
+  copy:
+   src: "{{ certs_path }}consul-agent-ca.pem"
+   dest: "{{ consul_certs }}"

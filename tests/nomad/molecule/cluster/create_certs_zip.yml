@@ -1,0 +1,16 @@
+---
+- name: Create certs zip
+  hosts: consul_master
+  become: true
+
+  tasks:
+
+    - include_vars: "../../../../group_vars/all.yml"
+ 
+    - name: "Include admin_add"
+      include_role:
+        name: "../../../../roles/admin_add"
+      vars:
+        add_new_nodes: true
+        username: root
+        path: /tmp/

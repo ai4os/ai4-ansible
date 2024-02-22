@@ -1,0 +1,21 @@
+
+- name: "Copy consul.hcl configuration"
+  vars:
+    server_index: "{{ lookup('ansible.utils.index_of', groups['consul_servers'], 'eq', inventory_hostname) }}"
+    server: True
+  template:
+    src: templates/consul.j2
+    dest: "{{ consul_config }}consul.hcl"
+    owner: "{{ consul_username }}"
+    force: no
+  notify: Restart consul
+
+- name: "Copy server.hcl configuration"
+  template:
+    src: templates/consul_server.j2
+    dest: "{{ consul_config }}server.hcl"
+    owner: "{{ consul_username }}"
+    force: no
+  vars:
+    server_new: False
+  notify: Restart consul

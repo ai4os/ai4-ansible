@@ -1,9 +1,0 @@
----
-# tasks file for consul_restart
-
-- name: Restart consul
-
-  block:
-  - name: "Restart"
-    include_tasks: restart.yml
-

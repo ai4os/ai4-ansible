@@ -1,9 +1,0 @@
----
-# tasks file for nomad_tokens_server
-
-- name: Set nomad server tokens
-
-  block:
-  - name: "Set tokens"
-    include_tasks: set_tokens.yml
-

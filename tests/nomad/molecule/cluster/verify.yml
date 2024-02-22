@@ -1,0 +1,79 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: "Set exports"
+      become: false
+      shell: ". /etc/environment"
+      changed_when: false
+
+    - name: Test
+      command: consul members
+      register: nodes
+      changed_when: false
+
+    - debug:
+        var: nodes.stdout
+
+    - name: Check consul servers running
+      assert:
+        that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   server")
+        fail_msg: "Error getting members"
+        success_msg: "Consul servers installed and running"
+      loop: "{{ groups['consul_servers'] }}"
+
+    - name: Check client clients running
+      assert:
+        that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   client")
+        fail_msg: "Error getting members"
+        success_msg: "Consul clients installed and running"
+      loop: "{{ groups['consul_clients'] }}"
+
+    - name: Test
+      command: nomad server members
+      register: servers
+      changed_when: false
+
+    - debug:
+        var: servers.stdout
+
+    - name: Check nomad servers running
+      assert:
+        that: servers.stdout | regex_search("{{ item }}.* alive ")
+        fail_msg: "Error getting members"
+        success_msg: "Nomad servers installed and running"
+      loop: "{{ groups['nomad_servers'] }}"
+
+    - name: Test clients
+      command: nomad node status
+      register: nodes
+      changed_when: false
+
+    - debug:
+        var: nodes.stdout
+
+    - name: Check nomad clients running
+      assert:
+        that: nodes.stdout | regex_search("{{ item }}.* ready")
+        fail_msg: "Error getting members"
+        success_msg: "Nomad clients installed and running"
+      loop: "{{ groups['nomad_clients'] }}"
+  
+    - name: Test traefik
+      command: nomad status
+      register: jobs
+      changed_when: false
+
+    - debug:
+        var: jobs.stdout
+
+    - name: Check service running
+      assert:
+        that:
+          - "'traefik-ifca-ai4eosc  service  100       running' in jobs.stdout"
+        fail_msg: "Error getting jobs"
+        success_msg: "Traefik job up and running"
+  

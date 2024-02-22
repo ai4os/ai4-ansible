@@ -309,8 +309,15 @@ Specifically, modify the following variables:
       - tutorials
     ```
 
+## 4. Install role dependencies
 
-## 4. Execute playbooks
+* Install grycap.docker role needed in the nomad deployment.
+
+    ```console
+    ansible-galaxy install grycap.docker
+    ```
+
+## 5. Execute playbooks
 
 * Execute [playbook-consul.yaml](../playbook-consul.yaml) playbook to deploy
   Consul.
@@ -324,11 +331,4 @@ Specifically, modify the following variables:
 
     ```console
     ansible-playbook -i <new_hosts_file> playbook-nomad.yaml
-    ```
-
-* Execute [playbook-traefik.yaml](../playbook-traefik.yaml) playbook to
-  configure the volumes, docker and the Traefik service.
-
-    ```console
-    ansible-playbook -i <new_hosts_file> playbook-traefik.yaml
     ```

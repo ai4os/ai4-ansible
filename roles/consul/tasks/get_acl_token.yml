@@ -1,0 +1,10 @@
+- name: Wait ACL Token
+  wait_for:
+    path: "{{ certs_path }}/{{ inventory_hostname }}_consul_token"
+  delegate_to: localhost
+
+- name: Get ACL Token
+  set_fact:
+    agent_consul_token: "{{ lookup('file', certs_path + '/' + inventory_hostname + '_consul_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'

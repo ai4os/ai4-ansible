@@ -1,90 +1,17 @@
 ######## FROM SCRATCH CONSUL INSTALLATION ########
 ##################################################
 
- - name: CAUTION WARNING
+ - name: Consul installation
    hosts: consul
-   tasks:
+   become: true
+   pre_tasks:
      - name: Security check
        assert:
          that:
            - from_scratch_cluster_installation
          fail_msg: "ABORTING FROM-SCRATCH CONSUL INSTALLATION"
          success_msg: "INSTALLING CONSUL FROM SCRATCH"
-
- - name: Consul installation
-   hosts: consul
-   become: true
    roles:
-     - { role: consul_install, when: from_scratch_cluster_installation }
-
- - name: Consul master configuration
-   hosts: consul_master
-   become: true
-   roles:
-     - { role: consul_master, when: from_scratch_cluster_installation }
-
- - name: Consul common configuration
-   hosts: consul
-   become: true
-   roles:
-     - { role: consul_common, when: from_scratch_cluster_installation }
-
- - name: Consul clients configuration
-   hosts: consul_clients
-   become: true
-   roles: 
-     - { role: consul_client, when: from_scratch_cluster_installation }
-      
- - name: Consul server configuration
-   hosts: consul_servers 
-   become: true
-   roles:
-     - { role: consul_server, when: from_scratch_cluster_installation }
- 
- - name: Start consul
-   hosts: consul
-   become: true
-   roles:
-     - { role: consul_start, when: from_scratch_cluster_installation }
-
- - name: Restart consul
-   hosts: consul
-   become: true
-   roles:
-     - { role: consul_restart, when: from_scratch_cluster_installation }
-
- - name: Consul ACLs
-   hosts: consul_master
-   become: true
-   roles: 
-     - { role: consul_acl, when: from_scratch_cluster_installation }
-
- - name: Get consul tokens
-   hosts: consul
-   become: true
-   roles:
-     - { role: consul_tokens_common, when: from_scratch_cluster_installation }
-
- - name: Set server tokens
-   hosts: consul_servers
-   become: true
-   roles:
-     - { role: consul_tokens_server, when: from_scratch_cluster_installation }
-
- - name: Set client tokens
-   hosts: consul_clients
-   become: true
-   roles:
-     - { role: consul_tokens_client, when: from_scratch_cluster_installation }
-
- - name: Start consul
-   hosts: consul
-   become: true
-   roles:
-     - { role: consul_start, when: from_scratch_cluster_installation }
-
- - name: Restart consul
-   hosts: consul
-   become: true
-   roles: 
-     - { role: consul_restart, when: from_scratch_cluster_installation }
+     - role: consul
+       when:
+         - from_scratch_cluster_installation

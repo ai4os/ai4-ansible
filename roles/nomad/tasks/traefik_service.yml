@@ -1,0 +1,60 @@
+- name: "Copy traefik token from ansible_master to traefik_master"
+  copy:
+   src: "{{ consul_fetched }}traefik_token"
+   dest: "{{ consul_certs }}"
+
+- name: "Create traefik SSL certs directory in ansible_master if it does not exist"
+  ansible.builtin.file:
+    path: "{{ path }}{{ traefik_certs }}"
+    state: directory
+    mode: '0755'
+  delegate_to: 127.0.0.1
+
+- name: "Unzip file in ansible_master if it is zipped"
+  ansible.builtin.unarchive:
+    src: "{{ path }}{{ traefik_certs }}.zip"
+    dest: "{{ path }}"
+    creates: "{{ path }}{{ traefik_certs }}/domain.pem"
+  delegate_to: 127.0.0.1
+
+- name: "Create traefik SSL certs directory in traefik_master if it does not exist"
+  ansible.builtin.file:
+    path: "{{ traefik_certs_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: "Copy traefik SSL certificates from ansible_master to trafik_master"
+  copy:
+   src: "{{ path }}{{ traefik_certs }}/{{ item }}"
+   dest: "{{ traefik_certs_dir }}"
+  with_items: 
+    - domain.key
+    - domain.pem
+
+- name: "Define job config for traefik service"
+  template:
+    src: templates/traefik.j2
+    dest: "{{ path }}traefik-{{ nomad_dc }}.hcl"
+    owner: "{{ username }}"
+    force: no
+
+- name: Get traefik Token
+  set_fact:
+    token_consul_token: "{{ lookup('file', consul_fetched + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
+
+- name: "Set traefik token on traefik.hcl"
+  replace:
+    path: "{{ path }}traefik-{{ nomad_dc }}.hcl"
+    replace: "{{ token_consul_token }}"
+    regexp: '{{ default_token }}'
+  register: replace_traefik_token
+
+- name: "Plan and run service job"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ path }}"
+  with_items:
+    - nomad job run traefik-{{ nomad_dc }}.hcl
+  when: replace_traefik_token is changed
