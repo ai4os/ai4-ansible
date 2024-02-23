@@ -240,3 +240,8 @@ variable in order to avoid future accidental executions.
     ```yaml
     add_new_nodes: false
     ```
+
+## 6. Configura OpenStack to grant access to the new site
+
+Follow the [ifca_openstack.md](ifca_openstack.md) instructions.
+
