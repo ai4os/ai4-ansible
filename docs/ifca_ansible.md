@@ -241,7 +241,7 @@ variable in order to avoid future accidental executions.
     add_new_nodes: false
     ```
 
-## 6. Configura OpenStack to grant access to the new site
+## 6. Configure OpenStack to grant access to the new site
 
 Follow the [ifca_openstack.md](ifca_openstack.md) instructions.
 
