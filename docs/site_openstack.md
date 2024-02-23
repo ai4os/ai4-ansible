@@ -9,7 +9,7 @@ Once this tutorials is completed:
 
 ## 1. Create security groups
 
-You need to create 4 security groups: *default*, *Consul*, *Nomad* an *Traefik*.
+You need to create 5 security groups: *default*, *Consul*, *Nomad*, *Traefik* and *Federation*.
 To create each one of them:
 
 1. In section `Project > Network > Security Groups`, click `Create Security Group`.
@@ -75,11 +75,21 @@ The needed rules for each group are:
 | Ingress | IPv4 | TCP | 8081 | <new_site_network> | Traefik dashboard |
 | Ingress | IPv4 | TCP | 8081 | <traefik_node_public_IP>/24 | Traefik dashboard |
 
+- Federation
+
+| Direction | Ether Type | IP Protocol | Port Range | Remote IP Prefix | Description |
+| --- | --- | --- | --- | --- | --- |
+| Ingress | IPv4 | TCP | Any | <fed_site_1_network> | <Name of the federated site 1> subnet |
+...
+| Ingress | IPv4 | TCP | Any | <fed_site_n_network> | <Name of the federated site N> subnet |
+
+
 where:
 
 * `<new_site_network>` is subnet of the new site (eg. `193.146.75.0/24`).
 * `<traefik_node_public_IP>` is the public IP assigned to the new site’s Traefik node
   (eg. `193.144.210.0`).
+* `<fed_site_i_network>`is the subnetof the ith site in the federated cluster. The list of all sites with their subnets must be provided from the IFCA admin.
 
 
 ## 2. Create nodes
