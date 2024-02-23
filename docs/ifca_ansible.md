@@ -5,8 +5,11 @@ following steps from the [Ansible master](../README.md#ansible-configuration)
 to generate certs.
 
 > ⚠  **Requirements** \
-> Before starting this tutorial, the IFCA admin must **receive the hosts file**
+> 1. This tutorial must be followed **only after having completed the previous instructions** from [ifca_openstack.md](ifca_openstack.md).
+> 
+> 2. Before starting this tutorial, the IFCA admin must **receive the hosts file**
 > from the new site admin.
+> 
 
 
 ## 1. Configure hosts
@@ -241,7 +244,5 @@ variable in order to avoid future accidental executions.
     add_new_nodes: false
     ```
 
-## 6. Configure OpenStack to grant access to the new site
 
-Follow the [ifca_openstack.md](ifca_openstack.md) instructions.
 
