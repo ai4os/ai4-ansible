@@ -11,32 +11,35 @@
   register: vol_info
 
 - name: "Partition disk volume if unpartitioned"
-  shell: "{{ item }}"
-  with_items:
-    - "sudo parted --script {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }} mklabel gpt"
-    - "sudo parted -a opt {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }} mkpart primary ext4 0% 100%" 
-  when: unpart_disk.stdout | int == 0
-
-- name: "Check mounting in partition"
-  shell: "sudo mount | grep {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1 | wc -l"
-  register: mountings
+  parted:
+    device: "{{ disks_path }}{{ vol_name }}"
+    number: 1
+    state: present
+    part_type: primary
+    label: gpt
+    align: optimal
+    fs_type: ext4
+    part_end: "100%"
+    part_start: "0%"
+    name: "{{ partition_name }}"
+  when: vol_info.partitions | length == 0
 
 - name: "Create filesystem on partition"
-  shell: "{{ item }}"
-  with_items:
-    - "sudo mkfs.xfs -f -L {{ partition_name }} {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1"
-  when: mountings.stdout | int == 0
+  filesystem:
+    fstype: xfs
+    dev: "{{ disks_path }}{{ vol_name }}"
+    force: false
+  register: format
 
-- name: "Create mounting dir and mount filesystem on partition"
-  shell: "{{ item }}"
-  with_items:
-    - "sudo mkdir -p {{ mount_dir }}"
-    - "sudo mount -o defaults,pquota {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1 {{ mount_dir }}"
-  when: mountings.stdout | int == 0
+- name: "Create mounting dir"
+  file:
+    path: "{{mount_dir}}"
+    state: directory
 
-- name: "Add entry to /etc/fstab"
-  ansible.builtin.lineinfile:
-    path: /etc/fstab
-    line: "{{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }}1 {{ mount_dir }} xfs defaults,pquota 0 0"
-    insertafter: EOF
-  when: mountings.stdout | int == 0
+- name: "mount filesystem on partition"
+  mount:
+    name: "{{mount_dir}}"
+    src: "{{ disks_path }}{{ vol_name }}1"
+    state: mounted
+    fstype: xfs
+    opts: defaults,pquota
