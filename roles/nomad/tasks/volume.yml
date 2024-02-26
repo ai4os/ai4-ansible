@@ -4,7 +4,7 @@
      - parted
    update_cache: yes
 
-- name: "Chec if disk volume is unpartitioned"
+- name: "Check if disk volume is unpartitioned"
   parted:
     device: "{{ disks_path }}{{ vol_name }}"
     state: info
