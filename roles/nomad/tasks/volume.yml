@@ -4,10 +4,11 @@
      - parted
    update_cache: yes
 
-- name: "Check disk parititions"
-  shell: lsblk {{ disks_path }}{{ hostvars[inventory_hostname]['vol_name'] }} | grep -c part
-  register: unpart_disk
-  ignore_errors: true
+- name: "Check if disk volume is unpartitioned"
+  parted:
+    device: "{{ disks_path }}{{ vol_name }}"
+    state: info
+  register: vol_info
 
 - name: "Partition disk volume if unpartitioned"
   shell: "{{ item }}"
