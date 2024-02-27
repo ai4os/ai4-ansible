@@ -11,7 +11,7 @@ client {
   meta {
   
    # list of namespaces supported by each client (those specificed in the hosts file)
-   namespace = "{{ nomad_namespaces | join(',')  }}"
+   namespace = "{{ nomad_namespaces }}"
 
 {% if ("traefik_master" in groups and inventory_hostname in groups['traefik_master']) or ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master']) %}
    # Traefik tags needed for both functionalities: traefik_master in from-scratch deployment and traefik_new_master in joining cluster
