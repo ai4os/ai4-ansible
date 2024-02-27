@@ -1,3 +1,5 @@
+# Configure Nomad clients
+
 - name: "Copy client.hcl configuration"
   template:
    src: templates/nomad_client.j2

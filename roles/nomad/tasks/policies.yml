@@ -1,3 +1,6 @@
+## Generate Nomad's policies and tokens ONLY in from-scratch deployment functionality
+
+# Create Nomad's policies
 - name: "Define nomad server policy"
   copy:
     src: nomad_server_policy.hcl
@@ -30,6 +33,7 @@
   command: consul acl policy create -name nomad-client -description "Nomad Client Policy" -rules @{{ consul_policies_dir }}/nomad-client-policy.hcl
   when: client_pol.rc != 0
 
+# Generate agent's tokens
 - name: "Generate token for each nomad server"
   shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
   args:
@@ -44,6 +48,7 @@
     creates: "{{ item}}_nomad_token"
   loop: "{{ groups['nomad_clients'] }}"
 
+# Fetch generated tokens from consul-master to ansible-master's {{nomad_fetched}} dir to later distribute them among the agents
 - name: "Fetch nomad agent token from consul-master to ansible-master"
   fetch:
     src: "{{ path }}{{ item }}_nomad_token"

@@ -1,8 +1,13 @@
+# Configure Traefik service for joining functionality
+
+# Copy Nomad's Traefik token from ansible-master's {{new_certs}} dir to the Traefik node's dir.
+
 - name: "Copy traefik token from ansible_master to traefik_master"
   copy:
    src: "{{ path }}{{ new_certs }}/traefik_token"
    dest: "{{ consul_certs }}"
 
+# Unzip Traefik SSL certs from {{traefik_certs}}.zip to {{traefik_certs}} dir in ansible-master
 - name: "Create traefik SSL certs directory in ansible_master if it does not exist"
   ansible.builtin.file:
     path: "{{ path }}{{ traefik_certs }}"
@@ -16,6 +21,7 @@
     dest: "{{ path }}"
   delegate_to: 127.0.0.1
 
+# Copy Traefik SSL certs from {{traefik_certs}} dir in ansible-master to the Traefik node's dir.
 - name: "Create traefik SSL certs directory in traefik_master if it does not exist"
   ansible.builtin.file:
     path: "{{ traefik_certs_dir }}"
@@ -30,6 +36,7 @@
     - domain.key
     - domain.pem
 
+# Define Traefik service job
 - name: "Define job config for traefik service"
   template:
     src: templates/{{ item }}.j2
@@ -38,11 +45,13 @@
   with_items:
     - traefik
 
+# Set Traefik token in the service job
 - name: "Set traefik token"
   shell: "{{ item }}"
   with_items:
     - sed -i 's/'{{ default_token }}'/'"$(sudo cat {{ consul_certs }}traefik_token | grep -oP 'SecretID:\s+\K\S+')"'/g' {{ path }}traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl
 
+# Run the Traefik service job
 - name: "Plan and run service job"
   shell: "{{ item }}"
   with_items:

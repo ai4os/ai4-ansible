@@ -1,4 +1,6 @@
 
+# Generating Nomad certificates ONLY in from-scratch cluster deployment functionanility
+
 - name: "Install cfssl"
   get_url:
     url: https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
@@ -56,6 +58,8 @@
   become: false
   shell: ". {{ environment_file }}"
   changed_when: false
+
+# Nomad's UI certificate is generated with {{nomad_ui_passwd}} and saved in {{consul_dc_name}}.zip to be shared
 
 - name: "Generate web browser certificate for nomad's UI"
   shell: "openssl pkcs12 -export -inkey ./cli-key.pem -in ./cli.pem -out ./cli.p12 -passout pass:{{ nomad_ui_passwd }} -passin pass:{{ nomad_ui_passwd }}"

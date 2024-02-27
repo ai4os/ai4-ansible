@@ -1,3 +1,7 @@
+
+# Nvidia plugin must be placed on {{gpu_plugin_dir}} in Nomad's data_dir path
+# On Nomad's clients with volumes, data_dir points to {{mount_dir}}.
+
 - name: Set facts for gpu plugin
   set_facts:
     plugin_dir: "{{ nomad_data_dir }}/{{ gpu_plugin_dir }}"

@@ -8,6 +8,8 @@ leave_on_terminate = true
 # Enable the server
 server {
     enabled = true
+
+    # bootstrap_expect must coincide with the total number of Nomad servers
     bootstrap_expect = {{ num_nomad_servers }}  
 }
  
@@ -29,6 +31,7 @@ consul {
     # The address to the Consul agent.
     address = "127.0.0.1:8500"
  
+    # token is first set to default and then changed to each agent's token
     token = "{{ default_token }}"
  
     # The service name to register the server and client with Consul.

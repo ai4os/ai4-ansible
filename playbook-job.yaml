@@ -1,6 +1,8 @@
- - name: Job in traefik
+## Example playbook to launch a job
+
+ - name: Launch job in nomad
    hosts: job_deployer
    become: true
    roles:
-     - { role: traefik_job }
+     - { role: launch_job }
 

@@ -9,21 +9,34 @@ leave_on_terminate = true
 client {
   enabled = true
   meta {
+  
+   # list of namespaces supported by each client (those specificed in the hosts file)
    namespace = "{{ nomad_namespaces | join(',')  }}"
+
 {% if ("traefik_master" in groups and inventory_hostname in groups['traefik_master']) or ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master']) %}
+   # Traefik tags needed for both functionalities: traefik_master in from-scratch deployment and traefik_new_master in joining cluster
    compute = false
    tags = "traefik"
 {% else %}
+
+   # rest of Nomad clients tags needed for both functionalities: in nodes that are not traefik_master nor traefik_new_master
    compute = true
+   
   {% if ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]) %}
+   # GPU tag for both functionalities: nomad_gpu_clients in from-scratch deployment and nomad_new_gpu_clients in joining cluster
    tags= "gpu"
   {% else %}
+    # CPU tag for both functionalities: rest of Nomad clients (not Traefik nor GPU)
    tags= "cpu"
   {% endif %}
 {% endif %}
+
+   # Nomad client's domain (specified in the hosts file)
    domain = "{{ domain }}"
   }
+
 {% if ("traefik_master" not in groups or inventory_hostname not in groups['traefik_master']) and ("traefik_new_master" not in groups or inventory_hostname not in groups['traefik_new_master']) %}
+  # Reserve memory in compute Nomad clients (those that are not Traefik nodes: traefik_master or new_traefik_master)
   reserved = {
    memory = {{ nomad_reserved_memory_mb }}
   }
@@ -64,7 +77,8 @@ advertise {
 consul {
     # The address to the Consul agent.
     address = "127.0.0.1:8500"
- 
+
+    # token is first set to default and then changed to each agent's token
     token = "{{ default_token }}"
  
     # The service name to register the server and client with Consul.

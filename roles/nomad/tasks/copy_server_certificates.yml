@@ -1,3 +1,7 @@
+# Copy Nomad servers certificate from ansible-master's {{certs_path}} to Nomad servers
+# {{certs_path}} was previously set for each functionality:
+# it is either {{nomad_fetched}} dir for from-scratch deployment or {{new_certs}} dir for joining)
+
 - name: "Copy certificates from ansible_master to nomad_hosts"
   copy:
    src: "{{ certs_path }}{{ item }}.pem"

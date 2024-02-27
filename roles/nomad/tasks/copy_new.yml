@@ -1,3 +1,6 @@
+# Distribute certificates from ansible-master's {{new_certs}}.zip to each Nomad's agent
+# ONLY in joining federation functionanility
+
 ## Copy consul certs, keys and tokens from zip file
 - name: Wait Certificates Zip file
   wait_for:
@@ -12,6 +15,7 @@
   delegate_to: localhost
   run_once: true
 
+# certs_path is set to {{new_certs}} to later know where to get the certs from (in each functionality)
 - name: "Set certs storage path"
   set_fact:
     certs_path: "{{ path }}{{ new_certs }}/"

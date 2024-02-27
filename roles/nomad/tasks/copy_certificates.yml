@@ -1,3 +1,7 @@
+# Distribute certificates from ansible-master's {{nomad_fetched}} directory to each Nomad's agent
+# ONLY in from-scratch cluster deployment functionanility
+
+# certs_path is set to {{nomad_fetched}} to later know where to get the certs from (in each functionality)
 - name: "Set certs storage path"
   set_fact:
     certs_path: "{{ nomad_fetched }}"

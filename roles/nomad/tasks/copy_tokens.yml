@@ -1,8 +1,13 @@
+# Copy Nomad agent tokens from ansible-master's {{certs_path}} to each Nomad agent
+# {{certs_path}} was previously set for each functionality:
+# it is either {{nomad_fetched}} dir for from-scratch deployment or {{new_certs}} dir for joining)
+
 - name: "Copy each nomad agent token from ansible_master to each nomad_host"
   copy:
    src: "{{ certs_path }}{{ inventory_hostname }}_nomad_token"
    dest: "{{ consul_certs }}"
 
+# Set agent_nomad_token in each Nomad agent
 - name: "Get agent token"
   set_fact:
     agent_nomad_token: "{{ lookup('file', certs_path + inventory_hostname + '_nomad_token')| regex_search(regexp,'\\1') | first }}"

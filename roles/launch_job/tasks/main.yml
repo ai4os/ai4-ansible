@@ -1,5 +1,5 @@
 ---
-# tasks file for traefik_job
+# tasks file for launch_job
 
 - block:
   - name: "Create job"

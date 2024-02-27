@@ -3,7 +3,7 @@ job "demo-webapp" {
   datacenters = {{ groups['nomad'] | map ('extract', hostvars, 'nomad_dc') | list | unique | to_json}}
  
   group "demo" {
-    count = {{ groups['nomad_clients'] | length}}  
+    count = 3  
     network {
       port  "http"{
         to = -1

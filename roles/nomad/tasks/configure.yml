@@ -1,3 +1,4 @@
+# Configure Nomad
 - name: "Copy nomad.hcl configuration"
   template:
    src: templates/nomad.j2

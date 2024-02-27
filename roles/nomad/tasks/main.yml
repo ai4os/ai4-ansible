@@ -1,6 +1,7 @@
 ---
-# tasks file for nomad_install
+# tasks file for nomad -> Deploys Nomad
 
+# Establish nvidia_support flag only in GPU clients
 - set_fact:
     nvidia_support: false
 
@@ -9,8 +10,10 @@
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
         ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"])
 
+# Configure volumes 
 - block:
 
+  # Set docker daemon configuration
   - set_fact:
       docker_config_values:
         registry-mirrors: ["{{ docker_registry }}"]
@@ -21,15 +24,18 @@
         registry-mirrors: ["{{ docker_registry }}"]
     when: vol_name is defined
 
+  # Configure swap capabilities
   - name: "Enable swap limit capabilities"
     include_tasks: swap.yml
 
+  # Partition and mount volume
   - name: "Mount volume"
     include_tasks: volume.yml
 
   when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"]) or
         ("nomad_new_volume" in groups and inventory_hostname in groups["nomad_new_volume"])
 
+# Install client dependencies
 - block:
 
   - name: Install docker with nvidia support
@@ -45,18 +51,22 @@
   when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
         ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
+# Install common dependencies
 - name: "Install packages"
   include_tasks: dependencies.yml
 
+# Install nomad
 - name: "Install nomad"
   include_tasks: install.yml
 
+# Configure Nvidia plugin in GPU clients
 - name: "Install nvidia plugin"
   include_tasks: nvidia_plugin.yml
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
         ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"])
 
-- name: Generating nomad certificates
+# Generate initial Nomad certificates (from-scratch cluster deployment functionanility)
+- name: Generating and fetching nomad certificates
   block:
   - name: "Generate"
     include_tasks: generate_certificates.yml
@@ -65,17 +75,21 @@
     include_tasks: fetch_certificates.yml
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
 
-- name: "Copy nomad-ca.pem"
+# Copy generated Nomad certificates (from-scratch cluster deployment functionality)
+- name: "Copy nomad-ca.pem in nodes"
   include_tasks: copy_certificates.yml
   when: ("nomad" in groups and inventory_hostname in groups["nomad"])
 
+# Copy zipped Nomad certificates (joining functionality)
 - name: "Copy nomad-ca.pem in new nodes"
   include_tasks: copy_new.yml
   when: ("nomad_new" in groups and inventory_hostname in groups["nomad_new"])
 
+# Configure Nomad
 - name: "Configure nomad.hcl"
   include_tasks: configure.yml
 
+# Configure servers
 - name: Configure nomad server
 
   block:
@@ -87,6 +101,7 @@
   when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
         ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
 
+# Configure clients
 - name: Configure nomad client
 
   block:
@@ -99,29 +114,35 @@
   when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or 
         ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
+# Create initial Nomad policies (from-scratch cluster deployment functionality)
 - name: "Create nomad policies"
   include_tasks: policies.yml
   when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
+# Create initial Traefik policiy (from-scratch cluster deployment functionality)
 - name: "Create traefik policy"
   include_tasks: traefik_policies.yml
   when:
     - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
     - ("traefik_master" in groups) # Assume that if traefik is master exists, we are installing traefik
 
+# Get tokens in Nomad agents
 - name: "Get tokens"
   include_tasks: copy_tokens.yml
 
+# Set client tokens
 - name: "Set Client tokens"
   include_tasks: set_tokens.yml
   when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
         ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
+# Set server tokens
 - name: "Set Server tokens"
   include_tasks: set_server_tokens.yml
   when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
         ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
 
+# Export Nomad variables
 - name: "Export nomad addr"
   lineinfile:
     path: "{{ environment_file }}"
@@ -132,23 +153,27 @@
     - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
     - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
 
+# Apply exports
 - name: "Set exports"
   become: false
   shell: ". {{ environment_file }}"
   changed_when: false
 
+# Start Nomad
 - name: start nomad
   service:
     name: nomad
     state: started
     enabled: yes
 
+# Create initial Nomad namespaces (from-scratch cluster deployment functionality)
 - name: "Create nomad namespaces"
   shell: "nomad namespace apply {{ item }}"
   with_items: "{{ nomad_namespaces }}"
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
   changed_when: false
 
+# Deploy Traefik
 - name: "Create job for traefik service"
   include_tasks: traefik_service.yml
   when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"])
@@ -157,7 +182,7 @@
   include_tasks: traefik_add_service.yml
   when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
 
-# tasks file for roles/test_scripts
+# Copy tasks file for roles/test_scripts
 - name: "Copy monitoring scripts"
   include_tasks: copy_monitoring_scripts.yaml
   when: ("monitoring" in groups and inventory_hostname in groups["monitoring"])
