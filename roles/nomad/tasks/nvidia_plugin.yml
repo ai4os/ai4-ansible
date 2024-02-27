@@ -3,11 +3,11 @@
 # On Nomad's clients with volumes, data_dir points to {{mount_dir}}.
 
 - name: Set facts for gpu plugin
-  set_facts:
+  set_fact:
     plugin_dir: "{{ nomad_data_dir }}/{{ gpu_plugin_dir }}"
 
 - name: Set facts for gpu plugin in volume nodes
-  set_facts:
+  set_fact:
     plugin_dir: "{{ mount_dir }}/{{ gpu_plugin_dir }}"
   when: ("nomad_volume" in groups and inventory_hostname in groups["nomad_volume"]) or
         ("nomad_new_volume" in groups and inventory_hostname in groups["nomad_new_volume"])
