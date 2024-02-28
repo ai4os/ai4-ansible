@@ -4,6 +4,8 @@
      - parted
    update_cache: yes
 
+
+# Partition disk if needed
 - name: "Check if disk volume is unpartitioned"
   parted:
     device: "{{ disks_path }}{{ vol_name }}"
@@ -24,13 +26,16 @@
     name: "{{ partition_name }}"
   when: vol_info.partitions | length == 0
 
+# Set XFS on partition
 - name: "Create filesystem on partition"
   filesystem:
     fstype: xfs
-    dev: "{{ disks_path }}{{ vol_name }}"
+    dev: "{{ disks_path }}{{ vol_name }}1"
     force: false
   register: format
+  when: vol_info.partitions | length > 0  # Partition exists
 
+# Mount partition
 - name: "Create mounting dir"
   file:
     path: "{{mount_dir}}"
