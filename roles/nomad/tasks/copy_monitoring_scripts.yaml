@@ -27,11 +27,11 @@
     owner: "{{ username }}"
     mode: '777'
 
- - name: Add delete_trash to crontab
-   ansible.builtin.cron:
-     name: "Empty trash"
-     special_time: daily
-     job: "/opt/monitoring/delete_trash.sh"
+- name: Add delete_trash to crontab
+  ansible.builtin.cron:
+    name: "Empty trash"
+    special_time: daily
+    job: "/opt/monitoring/delete_trash.sh"
 
 #  - name: Add delete_dead_jobs to crontab"
 #    ansible.builtin.cron:
