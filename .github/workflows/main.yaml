@@ -14,8 +14,8 @@ on:
 
 jobs:
 
-  consul_test:
-    name: Consul Role Test
+  nomad_test:
+    name: Nomad + Consul Roles Test
     runs-on: ubuntu-latest
     strategy:
       matrix:

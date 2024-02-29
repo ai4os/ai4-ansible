@@ -27,7 +27,7 @@
     owner: "{{ username }}"
     mode: '777'
 
- - name: Add delete_trash to crontab"
+ - name: Add delete_trash to crontab
    ansible.builtin.cron:
      name: "Empty trash"
      special_time: daily
