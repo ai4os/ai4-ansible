@@ -11,3 +11,4 @@
     chdir: "{{ path }}"
   with_items:
     - nomad job run nomad-docuum-job.hcl
+  ignore_errors: true
