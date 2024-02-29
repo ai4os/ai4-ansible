@@ -1,0 +1,13 @@
+- name: Copy docuum job
+  ansible.builtin.copy:
+    src: nomad-docuum-job.hcl
+    dest: "{{ path }}/nomad-docuum-job.hcl"
+    owner: "{{ username }}"
+    mode: '777'
+
+- name: "Run job"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ path }}"
+  with_items:
+    - nomad job run nomad-docuum-job.hcl

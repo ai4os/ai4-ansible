@@ -1,0 +1,38 @@
+job "docuum" {
+  namespace = "default"
+  type      = "system"
+  region    = "global"
+  id        = "docuum"
+  priority  = "75"
+
+
+  group "usergroup" {
+
+    count = 1
+
+    task "usertask" {
+
+      driver = "docker"
+
+      config {
+        image    = "stephanmisc/docuum"
+        init = true
+        args     = ["--threshold", "50 GB"]
+       
+        mount {
+          type = "bind"
+          target = "/var/run/docker.sock"
+          source = "/var/run/docker.sock"
+        }
+
+        mount {
+          type = "volume"
+          target = "/root"
+          source = "docuum"
+        }
+      }
+      
+    }
+
+  }
+}

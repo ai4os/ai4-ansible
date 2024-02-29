@@ -182,6 +182,10 @@
   include_tasks: traefik_add_service.yml
   when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
 
+- name: "Create job for docuum service "
+  include_tasks: run_docuum_job.yml
+  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+
 # Copy tasks file for roles/test_scripts
 - name: "Copy monitoring scripts"
   include_tasks: copy_monitoring_scripts.yaml
