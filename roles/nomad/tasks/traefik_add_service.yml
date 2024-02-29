@@ -46,15 +46,22 @@
     - traefik
 
 # Set Traefik token in the service job
-- name: "Set traefik token"
-  shell: "{{ item }}"
-  with_items:
-    - sed -i 's/'{{ default_token }}'/'"$(sudo cat {{ consul_certs }}traefik_token | grep -oP 'SecretID:\s+\K\S+')"'/g' {{ path }}traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl
+- name: Get traefik Token
+  set_fact:
+    token_consul_token: "{{ lookup('file', consul_certs + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
+
+- name: "Set traefik token on traefik.hcl"
+  replace:
+    path: "{{ path }}traefik-{{ nomad_dc }}.hcl"
+    replace: "{{ token_consul_token }}"
+    regexp: '{{ default_token }}'
+  register: replace_traefik_token
 
 # Run the Traefik service job
-- name: "Plan and run service job"
-  shell: "{{ item }}"
-  with_items:
-    - nomad job plan traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl
-    - nomad job run traefik-{{ hostvars[inventory_hostname]['nomad_dc'] }}.hcl
-  ignore_errors: true
+- name: "Run service job"
+  command: nomad job run traefik-{{ nomad_dc }}.hcl
+  args:
+    chdir: "{{ path }}"
+  when: replace_traefik_token is changed

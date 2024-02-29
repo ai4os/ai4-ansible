@@ -60,9 +60,7 @@
 
 # Run the Traefik service job
 - name: "Run service job"
-  command: "{{ item }}"
+  command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  with_items:
-    - nomad job run traefik-{{ nomad_dc }}.hcl
   when: replace_traefik_token is changed
