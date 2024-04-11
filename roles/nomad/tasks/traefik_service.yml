@@ -1,9 +1,16 @@
 # Configure Traefik service for from-scratch deployment functionality
 
-# Copy Nomad's Traefik token from ansible-master's {{consul_fetched}} dir to the Traefik node's dir.
+- set_fact:
+    certs_dir: "{{ consul_fetched }}"
+
+- set_fact:
+    certs_dir: "{{ path }}{{ new_certs }}"
+  when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
+
+# Copy Nomad's Traefik token from ansible-master's {{certs_dir}} dir to the Traefik node's dir.
 - name: "Copy traefik token from ansible_master to traefik_master"
   copy:
-   src: "{{ consul_fetched }}traefik_token"
+   src: "{{ certs_dir }}traefik_token"
    dest: "{{ consul_certs }}"
 
 # Unzip Traefik SSL certs from {{traefik_certs}}.zip to {{traefik_certs}} dir in ansible-master
@@ -32,7 +39,7 @@
   copy:
    src: "{{ path }}{{ traefik_certs }}/{{ item }}"
    dest: "{{ traefik_certs_dir }}"
-  with_items: 
+  with_items:
     - domain.key
     - domain.pem
 
@@ -47,7 +54,7 @@
 # Set Traefik token in the service job
 - name: Get traefik Token
   set_fact:
-    token_consul_token: "{{ lookup('file', consul_fetched + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
+    token_consul_token: "{{ lookup('file', certs_dir + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
 
@@ -60,9 +67,7 @@
 
 # Run the Traefik service job
 - name: "Run service job"
-  command: "{{ item }}"
+  command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  with_items:
-    - nomad job run traefik-{{ nomad_dc }}.hcl
   when: replace_traefik_token is changed

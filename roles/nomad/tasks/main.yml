@@ -176,11 +176,8 @@
 # Deploy Traefik
 - name: "Create job for traefik service"
   include_tasks: traefik_service.yml
-  when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"])
-
-- name: "Create job for traefik service in new nodes"
-  include_tasks: traefik_add_service.yml
-  when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
+  when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"]) or
+        ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
 
 - name: "Create job for docuum service "
   include_tasks: run_docuum_job.yml
