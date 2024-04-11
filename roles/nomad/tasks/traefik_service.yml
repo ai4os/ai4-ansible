@@ -21,12 +21,17 @@
     mode: '0755'
   delegate_to: 127.0.0.1
 
+- stat:
+    path: "{{ path }}{{ traefik_certs }}.zip"
+  register: zip_file
+
 - name: "Unzip file in ansible_master if it is zipped"
   ansible.builtin.unarchive:
     src: "{{ path }}{{ traefik_certs }}.zip"
     dest: "{{ path }}"
     creates: "{{ path }}{{ traefik_certs }}/domain.pem"
   delegate_to: 127.0.0.1
+  when: zip_file.stat.exists
 
 # Copy Traefik SSL certs from {{traefik_certs}} dir in ansible-master to the Traefik node's dir.
 - name: "Create traefik SSL certs directory in traefik_master if it does not exist"
@@ -35,6 +40,10 @@
     state: directory
     mode: '0755'
 
+- stat:
+    path: "{{ path }}{{ traefik_certs }}/domain.key"
+  register: key_file
+
 - name: "Copy traefik SSL certificates from ansible_master to trafik_master"
   copy:
    src: "{{ path }}{{ traefik_certs }}/{{ item }}"
@@ -42,6 +51,7 @@
   with_items:
     - domain.key
     - domain.pem
+  when: key_file.stat.exists
 
 # Define Traefik service job
 - name: "Define job config for traefik service"

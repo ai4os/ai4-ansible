@@ -89,12 +89,13 @@ EOF
         [[http.services.srv-grpc.loadBalancer.servers]]
           url = "h2c://backend.local:8080"
  
+{% if key_file.stat.exists %}
 [tls.stores]
   [tls.stores.default]
     [tls.stores.default.defaultCertificate]
       certFile = "/etc/traefik/ssl-certs/domain.pem"
       keyFile  = "/etc/traefik/ssl-certs/domain.key"
- 
+{% endif %}
 EOF
  
         destination = "local/dynamic.toml"
