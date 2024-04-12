@@ -1,0 +1,26 @@
+---
+- name: Add node
+  hosts: all
+  become: true
+
+  tasks:
+
+  - name: Add vnode-3
+    add_host:
+      hostname: 'vnode-3'
+      groups:
+        - consul_new_clients
+        - consul_new
+        - nomad_new_clients
+        - nomad_new
+    changed_when: false
+
+  - name: Add server3
+    add_host:
+      hostname: 'server3'
+      groups:
+        - consul_new_servers
+        - consul_new
+        - nomad_new_servers
+        - nomad_new
+    changed_when: false

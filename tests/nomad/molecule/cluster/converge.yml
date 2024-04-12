@@ -12,3 +12,11 @@
 - import_playbook: consul_new.yml
 
 - import_playbook: nomad_new.yml
+
+- import_playbook: add_node.yml
+
+- import_playbook: create_certs_zip.yml
+
+- import_playbook: consul_new.yml
+
+- import_playbook: nomad_new.yml
