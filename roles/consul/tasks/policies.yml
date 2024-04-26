@@ -55,11 +55,11 @@
     creates: "{{ path }}{{ item }}_consul_token"
   environment:
     CONSUL_HTTP_TOKEN: "{{ consul_token }}"
-  loop: "{{ groups['consul'] }}"
+  loop: "{{ groups['consul']|map('extract', hostvars, 'ansible_hostname')|list }}"
 
 - name: "Fetch each consul agent token from consul-master to ansible-master"
   fetch:
     src: "{{ path }}{{ item }}_consul_token"
     dest: "{{ consul_fetched }}"
     flat: yes
-  loop: "{{ groups['consul'] }}"
+  loop: "{{ groups['consul']|map('extract', hostvars, 'ansible_hostname')|list }}"

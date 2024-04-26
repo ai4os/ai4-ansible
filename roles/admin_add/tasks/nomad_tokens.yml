@@ -1,23 +1,23 @@
 ## Create and copy nomad tokens for new nomad nodes
 
 - name: "Generate token for each new nomad server"
-  shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
+  shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item }}_nomad_token
   args:
     chdir: "{{ path }}"
     creates: "{{ path }}{{ item }}_nomad_token"
-  loop: "{{ groups['nomad_new_servers'] }}"
+  loop: "{{ groups['nomad_new_servers']|map('extract', hostvars,'ansible_hostname')|list }}"
 
 - name: "Generate token for each new nomad client"
-  shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
+  shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item }}_nomad_token
   args:
     chdir: "{{ path }}"
     creates: "{{ path }}{{ item }}_nomad_token"
-  loop: "{{ groups['nomad_new_clients'] }}"
+  loop: "{{ groups['nomad_new_clients']|map('extract', hostvars,'ansible_hostname')|list }}"
 
 - name: "Fetch new nomad agent tokens from consul-master to ansible-master"
   fetch:
     src: "{{ path }}{{ item }}_nomad_token"
     dest: "{{ path }}{{ new_certs }}/"
     flat: yes
-  loop: "{{ groups['nomad_new'] }}"
+  loop: "{{ groups['nomad_new']|map('extract', hostvars,'ansible_hostname')|list }}"
 
