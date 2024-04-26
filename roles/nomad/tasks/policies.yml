@@ -35,7 +35,7 @@
 
 # Generate agent's tokens
 - name: "Generate token for each nomad server"
-  shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ hostvars[item]['ansible_hostname']  }}:{{ consul_dc_name }}"  > {{ item }}_nomad_token
+  shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ hostvars[item]['ansible_hostname']  }}:{{ consul_dc_name }}"  > {{ hostvars[item]['ansible_hostname'] }}_nomad_token
   args:
     chdir: "{{ path }}"
     creates: "{{ hostvars[item]['ansible_hostname']  }}_nomad_token"
@@ -43,7 +43,7 @@
   when: hostvars[item]['ansible_hostname'] is defined
 
 - name: "Generate token for each nomad client"
-  shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ hostvars[item]['ansible_hostname'] }}:{{ consul_dc_name }}"  > {{ item }}_nomad_token
+  shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ hostvars[item]['ansible_hostname'] }}:{{ consul_dc_name }}"  > {{ hostvars[item]['ansible_hostname'] }}_nomad_token
   args:
     chdir: "{{ path }}"
     creates: "{{ hostvars[item]['ansible_hostname'] }}_nomad_token"
