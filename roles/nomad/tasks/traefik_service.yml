@@ -75,6 +75,10 @@
     regexp: '{{ default_token }}'
   register: replace_traefik_token
 
+- name: Check if nomad is running
+  wait_for:
+    port: 4646
+
 # Run the Traefik service job
 - name: "Run service job"
   command: nomad job run traefik-{{ nomad_dc }}.hcl
