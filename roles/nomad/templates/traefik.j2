@@ -9,7 +9,7 @@ job "traefik-{{ nomad_dc }}" {
   constraint {
     attribute = "${node.unique.name}"
     operator  = "="
-    value     = "{{ inventory_hostname }}"
+    value     = "{{ ansible_hostname }}"
   }
 
   group "traefik-{{ nomad_dc }}" {
