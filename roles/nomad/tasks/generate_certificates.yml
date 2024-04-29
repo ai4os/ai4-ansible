@@ -54,11 +54,6 @@
     - NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
     - NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
 
-- name: "Set exports"
-  become: false
-  shell: ". {{ environment_file }}"
-  changed_when: false
-
 # Nomad's UI certificate is generated with {{nomad_ui_passwd}} and saved in {{consul_dc_name}}.zip to be shared
 
 - name: "Generate web browser certificate for nomad's UI"
