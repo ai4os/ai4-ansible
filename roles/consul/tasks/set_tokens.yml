@@ -7,8 +7,8 @@
 - name: "Export consul token"
   lineinfile:
     path: "{{ environment_file }}"
-    line: "export CONSUL_HTTP_TOKEN={{ consul_token }}"
-    regexp: '^export CONSUL_HTTP_TOKEN='
+    line: "CONSUL_HTTP_TOKEN={{ consul_token }}"
+    regexp: '^CONSUL_HTTP_TOKEN='
 
 - name: "Set exports"
   become: false

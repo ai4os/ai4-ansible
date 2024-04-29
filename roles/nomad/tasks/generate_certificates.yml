@@ -49,10 +49,10 @@
     path: "{{ environment_file }}"
     line: "{{ item }}"
   with_items:
-    - export NOMAD_ADDR=https://127.0.0.1:4646
-    - export NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
-    - export NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
-    - export NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
+    - NOMAD_ADDR=https://127.0.0.1:4646
+    - NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
+    - NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
+    - NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
 
 - name: "Set exports"
   become: false
