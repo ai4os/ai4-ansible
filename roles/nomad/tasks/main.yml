@@ -160,24 +160,32 @@
     state: started
     enabled: yes
 
-# Create initial Nomad namespaces (from-scratch cluster deployment functionality)
-- name: "Create nomad namespaces"
-  shell: "nomad namespace apply {{ item }}"
-  with_items: "{{ nomad_namespaces }}"
-  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
-  changed_when: false
+- block:
 
-# Deploy Traefik
-- name: "Create job for traefik service"
-  include_tasks: traefik_service.yml
-  when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"]) or
-        ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
+    # Create initial Nomad namespaces (from-scratch cluster deployment functionality)
+    - name: "Create nomad namespaces"
+      shell: "nomad namespace apply {{ item }}"
+      with_items: "{{ nomad_namespaces }}"
+      when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+      changed_when: false
 
-- name: "Create job for docuum service "
-  include_tasks: run_docuum_job.yml
-  when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+    # Deploy Traefik
+    - name: "Create job for traefik service"
+      include_tasks: traefik_service.yml
+      when: ("traefik_master" in groups and inventory_hostname in groups["traefik_master"]) or
+            ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
 
-# Copy tasks file for roles/test_scripts
-- name: "Copy monitoring scripts"
-  include_tasks: copy_monitoring_scripts.yaml
-  when: ("monitoring" in groups and inventory_hostname in groups["monitoring"])
+    - name: "Create job for docuum service "
+      include_tasks: run_docuum_job.yml
+      when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+
+    # Copy tasks file for roles/test_scripts
+    - name: "Copy monitoring scripts"
+      include_tasks: copy_monitoring_scripts.yaml
+      when: ("monitoring" in groups and inventory_hostname in groups["monitoring"])
+
+  environment:
+    NOMAD_CACERT: "{{ nomad_certs }}nomad-ca.pem"
+    NOMAD_CLIENT_CERT: "{{ nomad_certs }}cli.pem"
+    NOMAD_CLIENT_KEY: "{{ nomad_certs }}cli-key.pem"
+    NOMAD_ADDR: "https://127.0.0.1:4646"

@@ -30,7 +30,4 @@
     line: "CONSUL_CLIENT_KEY={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
     regexp: "^CONSUL_CLIENT_KEY="
 
-- name: "Set exports"
-  become: false
-  shell: ". {{ environment_file }}"
-  changed_when: false
+

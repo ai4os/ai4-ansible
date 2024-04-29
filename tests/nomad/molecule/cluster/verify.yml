@@ -5,11 +5,6 @@
 
   tasks:
 
-    - name: "Set exports"
-      become: false
-      shell: ". /etc/environment"
-      changed_when: false
-
     - name: Test
       command: consul members
       register: nodes

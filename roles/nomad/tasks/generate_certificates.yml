@@ -44,16 +44,6 @@
     chdir: "{{ path }}"
     creates: "{{ path }}cli.pem"
 
-- name: "Export nomad addr"
-  lineinfile:
-    path: "{{ environment_file }}"
-    line: "{{ item }}"
-  with_items:
-    - NOMAD_ADDR=https://127.0.0.1:4646
-    - NOMAD_CACERT={{ nomad_certs }}nomad-ca.pem
-    - NOMAD_CLIENT_CERT={{ nomad_certs }}cli.pem
-    - NOMAD_CLIENT_KEY={{ nomad_certs }}cli-key.pem
-
 # Nomad's UI certificate is generated with {{nomad_ui_passwd}} and saved in {{consul_dc_name}}.zip to be shared
 
 - name: "Generate web browser certificate for nomad's UI"

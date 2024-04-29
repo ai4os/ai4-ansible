@@ -10,7 +10,3 @@
     line: "CONSUL_HTTP_TOKEN={{ consul_token }}"
     regexp: '^CONSUL_HTTP_TOKEN='
 
-- name: "Set exports"
-  become: false
-  shell: ". {{ environment_file }}"
-  changed_when: false

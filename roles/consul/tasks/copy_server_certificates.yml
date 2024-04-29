@@ -25,16 +25,11 @@
 - name: "Export consul server cert"
   lineinfile:
     path: "{{ environment_file }}"
-    line: "export CONSUL_CLIENT_CERT={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
-    regexp: "^export CONSUL_CLIENT_CERT="
+    line: "CONSUL_CLIENT_CERT={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}.pem"
+    regexp: "^CONSUL_CLIENT_CERT="
 
 - name: "Export consul server cert"
   lineinfile:
     path: "{{ environment_file }}"
-    line: "export CONSUL_CLIENT_KEY={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
-    regexp: "^export CONSUL_CLIENT_KEY="
-
-- name: "Set exports"
-  become: false
-  shell: ". {{ environment_file }}"
-  changed_when: false
+    line: "CONSUL_CLIENT_KEY={{ consul_certs }}{{ consul_dc_name }}-server-consul-{{ server_index }}-key.pem"
+    regexp: "^CONSUL_CLIENT_KEY="
