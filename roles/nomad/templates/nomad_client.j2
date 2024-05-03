@@ -33,6 +33,7 @@ client {
 
    # Nomad client's domain (specified in the hosts file)
    domain = "{{ domain }}"
+   ansible_version = "{{ commit_id_fact }}"
   }
 
 {% if ("traefik_master" not in groups or inventory_hostname not in groups['traefik_master']) and ("traefik_new_master" not in groups or inventory_hostname not in groups['traefik_new_master']) %}

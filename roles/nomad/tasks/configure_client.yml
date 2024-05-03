@@ -1,10 +1,23 @@
 # Configure Nomad clients
+- name: Commit ID
+  command: "git rev-parse HEAD"
+  register: commit_id
+  delegate_to: 127.0.0.1
 
+
+- name: Set commit ID
+  set_fact:
+    commit_id_fact: "{{ commit_id.stdout }}"
+    
 - name: "Copy client.hcl configuration"
   template:
    src: templates/nomad_client.j2
    dest: "{{ nomad_config }}client.hcl"
    owner: "{{ nomad_username }}"
-   force: no
+   force: yes
+  vars:
+    commit_id_fact: "{{ hostvars['localhost']['commit_id_fact'] }}"
+  when: true
+  
   notify:
     - Restart nomad
