@@ -7,9 +7,9 @@ job "traefik-{{ nomad_dc }}" {
   # We need to fix the client were Traefik is deployed
   # because the DNS is pointing to that client's IP.
   constraint {
-    attribute = "${node.unique.name}"
+    attribute = "${meta.tags}"
     operator  = "="
-    value     = "{{ ansible_hostname }}"
+    value     = "traefik"
   }
 
   group "traefik-{{ nomad_dc }}" {
