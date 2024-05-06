@@ -8,6 +8,13 @@
 # This script is intended to be executed daily. It focuses on removing Nomad jobs in the 'Pending' state
 # that do not have any associated tasks in states 'Queued,' 'Starting,' or 'Unknown.'
 #
+# It is necessary to import the nomad certificates as there are no environment variables in cron
+#
+
+export NOMAD_ADDR=https://publicip:4646
+export NOMAD_CACERT=/home/ubuntu/nomad-ca.pem
+export NOMAD_CLIENT_CERT=/home/ubuntu/cli.pem
+export NOMAD_CLIENT_KEY=/home/ubuntu/cli-key.pem
 
 nomad_output=$(nomad job status -verbose -namespace=* f1233bd0-c592-11ee-9fe5-756e98b92617)
 

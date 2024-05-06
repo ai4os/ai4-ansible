@@ -310,3 +310,26 @@ Specifically, modify the following variables:
     ```console
     ansible-playbook -i <new_hosts_file> playbook-join-nomad.yaml
     ```
+## 5. Common errors
+### Nomad does not recognize the graphics card
+
+The node volume may not be mounted correctly. Check within the file `/etc/nomad.d/nomad.hcl` where the nomad plugin is being searched. Check that the referenced volume is mounted correctly.
+
+```vim
+# data_dir points to /mnt/data if mounted volume (noamd_volume or nomad_new_volume) and /opt/nomad otherwise
+data_dir = "/mnt/data"
+```
+
+### Can't enable nvidia persistence service
+
+The error shown in the Ansible run indicates a file that is problematic. If you analyze the file you will see that it is a symbolic reference to /dev/null.
+
+It is necessary to delete said file and try the execution again.
+
+### Driver version mismatch
+
+If this error occurs, it is necessary to run the nomad playbook again.
+
+### Docker cannot access files on mounted volume
+
+Docker Daemon needs to be restarted if this error appears.

@@ -10,7 +10,7 @@
 # Copy Nomad's Traefik token from ansible-master's {{certs_dir}} dir to the Traefik node's dir.
 - name: "Copy traefik token from ansible_master to traefik_master"
   copy:
-   src: "{{ certs_dir }}traefik_token"
+   src: "{{ consul_fetched }}traefik_token"
    dest: "{{ consul_certs }}"
 
 # Unzip Traefik SSL certs from {{traefik_certs}}.zip to {{traefik_certs}} dir in ansible-master
@@ -64,7 +64,7 @@
 # Set Traefik token in the service job
 - name: Get traefik Token
   set_fact:
-    token_consul_token: "{{ lookup('file', certs_dir + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
+    token_consul_token: "{{ lookup('file', consul_fetched + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
 

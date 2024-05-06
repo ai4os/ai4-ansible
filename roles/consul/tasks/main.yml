@@ -1,4 +1,14 @@
 ---
+- name: Check avx
+  command: grep avx /proc/cpuinfo
+  register: grep_output
+  ignore_errors: yes
+
+- name: Verify avx
+  fail:
+    msg: "Nodes should have AVX extension"
+  when: grep_output.rc == ""
+  
 - name: "Install packages"
   include_tasks: dependencies.yml
 
