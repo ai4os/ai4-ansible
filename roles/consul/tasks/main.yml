@@ -4,6 +4,8 @@
   register: grep_output
   ignore_errors: yes
 
+# We enforce AVX as a hard requirement becase Tensorflow images are compiled to use AVX instructions
+# ref: https://github.com/tensorflow/tensorflow/issues/24548
 - name: Verify avx
   fail:
     msg: "Nodes should have AVX extension"
