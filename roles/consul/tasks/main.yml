@@ -3,6 +3,7 @@
   command: grep avx /proc/cpuinfo
   register: grep_output
   ignore_errors: yes
+  changed_when: false
 
 - name: Verify avx
   fail:
