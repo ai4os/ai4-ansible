@@ -1,6 +1,8 @@
 # Configure Nomad clients
 - name: Commit ID
   command: "git rev-parse HEAD"
+  args:
+    chdir: "{{ roles_dir | default('.') }}"
   register: commit_id
   delegate_to: 127.0.0.1
   changed_when: False
