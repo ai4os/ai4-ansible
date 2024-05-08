@@ -49,7 +49,7 @@
     src: templates/traefik.j2
     dest: "{{ path }}traefik-{{ nomad_dc }}.hcl"
     owner: "{{ username }}"
-    force: no
+    # force: no
 
 # Set Traefik token in the service job
 - name: Get traefik Token

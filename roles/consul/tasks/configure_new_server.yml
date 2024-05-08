@@ -13,7 +13,7 @@
     src: templates/consul.j2
     dest: "{{ consul_config }}consul.hcl"
     owner: "{{ consul_username }}"
-    force: no
+    # force: no
   vars:
     server: True
   notify: Restart consul
@@ -23,7 +23,7 @@
     src: templates/consul_server.j2
     dest: "{{ consul_config }}server.hcl"
     owner: "{{ consul_username }}"
-    force: no
+    # force: no
   vars:
     server_new: True
   notify: Restart consul

@@ -7,7 +7,7 @@
     src: templates/consul.j2
     dest: "{{ consul_config }}consul.hcl"
     owner: "{{ consul_username }}"
-    force: no
+    # force: no
   notify: Restart consul
 
 - name: "Copy server.hcl configuration"
@@ -15,7 +15,7 @@
     src: templates/consul_server.j2
     dest: "{{ consul_config }}server.hcl"
     owner: "{{ consul_username }}"
-    force: no
+    # force: no
   vars:
     server_new: False
   notify: Restart consul
