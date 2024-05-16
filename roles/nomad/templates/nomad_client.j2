@@ -7,7 +7,14 @@ leave_on_terminate = true
  
 # Enable the client
 client {
+
   enabled = true
+
+  options {
+    "docker.cleanup.image" = "false"
+    "docker.cleanup.image.delay" = "120d"    
+  }
+
   meta {
   
    # list of namespaces supported by each client (those specificed in the hosts file)
