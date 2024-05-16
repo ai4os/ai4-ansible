@@ -1,13 +1,13 @@
 server = true
 {% if server_new %}
 bootstrap = false
-bootstrap_expect = 1
+
 {% else %}
 bootstrap_expect = {{ groups['consul_servers'] | length}}                                 # Number of Consul servers expected in the datacenter (recommended: 3, 5 or 7)
 {% endif %}
                                                      # Must be consistent all across all servers in dc
  
-advertise_addr = "{{ my_ip }}"                    # IP of the machine
+advertise_addr = "{{ ansible_host }}"                    # IP of the machine
  
 client_addr = "0.0.0.0"                              # Choose any address to designate an interface to which Consul services will bind, including HTTP and DNS server
  

@@ -10,7 +10,7 @@ server {
     enabled = true
 
     # bootstrap_expect must coincide with the total number of Nomad servers
-    bootstrap_expect = {{ num_nomad_servers }}  
+    bootstrap_expect = 3
     eval_gc_threshold = "24h"
     batch_eval_gc_threshold = "24h"
 
@@ -50,7 +50,7 @@ consul {
 }
  
 advertise{
-    http = "{{ my_ip }}:4646"
-    rpc = "{{ my_ip }}:4647"
-    serf = "{{ my_ip }}:4648"
+    http = "{{ ansible_host }}:4646"
+    rpc = "{{ ansible_host }}:4647"
+    serf = "{{ ansible_host }}:4648"
 }
