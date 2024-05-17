@@ -5,7 +5,6 @@
   delegate_to: 127.0.0.1
   changed_when: false
 
-
 - name: Set commit ID
   set_fact:
     commit_id_fact: "{{ commit_id.stdout }}"
@@ -16,9 +15,5 @@
    dest: "{{ nomad_config }}client.hcl"
    owner: "{{ nomad_username }}"
    force: yes
-  vars:
-    commit_id_fact: "{{ hostvars['localhost']['commit_id_fact'] }}"
-  when: true
-  
   notify:
     - Restart nomad
