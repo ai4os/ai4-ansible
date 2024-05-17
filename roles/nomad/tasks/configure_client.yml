@@ -3,6 +3,7 @@
   command: "git rev-parse HEAD"
   register: commit_id
   delegate_to: 127.0.0.1
+  changed_when: false
 
 
 - name: Set commit ID
