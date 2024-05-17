@@ -4,13 +4,13 @@
     certs_dir: "{{ consul_fetched }}"
 
 - set_fact:
-    certs_dir: "{{ path }}{{ new_certs }}"
+    certs_dir: "{{ path }}{{ new_certs }}/"
   when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
 
 # Copy Nomad's Traefik token from ansible-master's {{certs_dir}} dir to the Traefik node's dir.
 - name: "Copy traefik token from ansible_master to traefik_master"
   copy:
-   src: "{{ consul_fetched }}traefik_token"
+   src: "{{ certs_dir }}traefik_token"
    dest: "{{ consul_certs }}"
 
 # Unzip Traefik SSL certs from {{traefik_certs}}.zip to {{traefik_certs}} dir in ansible-master
@@ -53,27 +53,20 @@
     - domain.pem
   when: key_file.stat.exists
 
+# Set Traefik token in the service job
+- name: Get traefik Token
+  set_fact:
+    traefik_consul_token: "{{ lookup('file', certs_dir + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
+
 # Define Traefik service job
 - name: "Define job config for traefik service"
   template:
     src: templates/traefik.j2
     dest: "{{ path }}traefik-{{ nomad_dc }}.hcl"
     owner: "{{ username }}"
-    force: no
-
-# Set Traefik token in the service job
-- name: Get traefik Token
-  set_fact:
-    token_consul_token: "{{ lookup('file', consul_fetched + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
-  vars:
-    regexp: 'SecretID:\s+(.*)'
-
-- name: "Set traefik token on traefik.hcl"
-  replace:
-    path: "{{ path }}traefik-{{ nomad_dc }}.hcl"
-    replace: "{{ token_consul_token }}"
-    regexp: '{{ default_token }}'
-  register: replace_traefik_token
+  register: create_traefik_job_config
 
 - name: Check if nomad is running
   wait_for:
@@ -84,4 +77,4 @@
   command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  when: replace_traefik_token is changed
+  when: create_traefik_job_config is changed
