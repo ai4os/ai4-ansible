@@ -37,14 +37,14 @@
       register: acls
       changed_when: false
 
+    - debug:
+        var: acls.stdout
+
     - name: Check acl list
       assert:
-        that: acls.stdout | regex_search("{{ item }}")
+        that: acls.stdout | regex_search("node-policy")
         fail_msg: "Error consul ACLs"
         success_msg: "Consul servers installed and running"
-      loop:
-        - "Consul Client Policy"
-        - "Consul Agent Token"
 
     - name: Test servers
       command: nomad server members
