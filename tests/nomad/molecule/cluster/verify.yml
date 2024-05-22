@@ -10,7 +10,7 @@
       shell: ". /etc/environment"
       changed_when: false
 
-    - name: Test
+    - name: Test consul
       command: consul members
       register: nodes
       changed_when: false
@@ -32,7 +32,21 @@
         success_msg: "Consul clients installed and running"
       loop: "{{ groups['consul_clients'] }}"
 
-    - name: Test
+    - name: Test ACL
+      command: consul acl token list
+      register: acls
+      changed_when: false
+
+    - name: Check acl list
+      assert:
+        that: acls.stdout | regex_search("{{ item }}")
+        fail_msg: "Error consul ACLs"
+        success_msg: "Consul servers installed and running"
+      loop:
+        - "Consul Client Policy"
+        - "Consul Agent Token"
+
+    - name: Test servers
       command: nomad server members
       register: servers
       changed_when: false
