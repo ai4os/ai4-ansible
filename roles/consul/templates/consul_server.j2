@@ -27,9 +27,3 @@ ports {
 ui_config {                                          # Enable the use of UI in this server
   enabled = true                                     # Consider running on some selected hosts, not all of them
 }
- 
-acl {
-  tokens {
-    agent  = "{{ default_token }}"  # This is the ACL token, which will tell our consul cluster, which of the agent can read and write what type of data
-  }                                                  # We will deal with that tokens later
-}

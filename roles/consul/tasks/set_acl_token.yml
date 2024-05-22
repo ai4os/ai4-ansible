@@ -1,0 +1,12 @@
+- name: "Copy acl.hcl configuration"
+  template:
+   src: templates/consul_acl.j2
+   dest: "{{ consul_config }}acl.hcl"
+   owner: "{{ consul_username }}"
+   force: no
+  notify: Restart consul
+
+- name: "Set agent token"
+  command: consul acl set-agent-token agent "{{ agent_consul_token }}"
+  changed_when: false
+  when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"])

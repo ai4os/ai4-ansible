@@ -85,6 +85,22 @@
   include_tasks: copy_new.yml
   when: ("nomad_new" in groups and inventory_hostname in groups["nomad_new"])
 
+# Create initial Nomad policies (from-scratch cluster deployment functionality)
+- name: "Create nomad policies"
+  include_tasks: policies.yml
+  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+
+# Create initial Traefik policiy (from-scratch cluster deployment functionality)
+- name: "Create traefik policy"
+  include_tasks: traefik_policies.yml
+  when:
+    - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
+    - ("traefik_master" in groups) # Assume that if traefik is master exists, we are installing traefik
+
+# Get tokens in Nomad agents
+- name: "Get tokens"
+  include_tasks: copy_tokens.yml
+
 # Configure Nomad
 - name: "Configure nomad.hcl"
   include_tasks: configure.yml
@@ -114,34 +130,6 @@
   when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or 
         ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
-# Create initial Nomad policies (from-scratch cluster deployment functionality)
-- name: "Create nomad policies"
-  include_tasks: policies.yml
-  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
-
-# Create initial Traefik policiy (from-scratch cluster deployment functionality)
-- name: "Create traefik policy"
-  include_tasks: traefik_policies.yml
-  when:
-    - ("consul_master" in groups and inventory_hostname in groups["consul_master"])
-    - ("traefik_master" in groups) # Assume that if traefik is master exists, we are installing traefik
-
-# Get tokens in Nomad agents
-- name: "Get tokens"
-  include_tasks: copy_tokens.yml
-
-# Set client tokens
-- name: "Set Client tokens"
-  include_tasks: set_tokens.yml
-  when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
-        ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
-
-# Set server tokens
-- name: "Set Server tokens"
-  include_tasks: set_server_tokens.yml
-  when: ("nomad_servers" in groups and inventory_hostname in groups["nomad_servers"]) or
-        ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
-
 # Export Nomad variables
 - name: "Export nomad addr"
   lineinfile:
@@ -159,6 +147,11 @@
     name: nomad
     state: started
     enabled: yes
+
+- name: Wait for Nomad to start
+  wait_for:
+    port: 4646
+    timeout: 300
 
 - block:
 

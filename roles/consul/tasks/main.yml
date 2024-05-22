@@ -5,6 +5,8 @@
   ignore_errors: yes
   changed_when: false
 
+# We enforce AVX as a hard requirement becase Tensorflow images are compiled to use AVX instructions
+# ref: https://github.com/tensorflow/tensorflow/issues/24548
 - name: Verify avx
   fail:
     msg: "Nodes should have AVX extension"
@@ -84,20 +86,8 @@
 - name: "Set tokens"
   include_tasks: set_tokens.yml
 
-# tasks file for consul_tokens_server
-
 - name: "Get acl tokens"
   include_tasks: get_acl_token.yml
 
-- name: "Set consul server tokens"
-  include_tasks: set_server_tokens.yml
-  when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"]) or
-        ('consul_new_servers' in groups and inventory_hostname in groups['consul_new_servers'])
-
-# tasks file for consul_tokens_client
-
-- name: "Set consul client tokens"
-  include_tasks: set_client_tokens.yml
-  when: ("consul_clients" in groups and inventory_hostname in groups["consul_clients"]) or
-        ("consul_new_clients" in groups and inventory_hostname in groups["consul_new_clients"])
-
+- name: "Set consul tokens"
+  include_tasks: set_acl_token.yml

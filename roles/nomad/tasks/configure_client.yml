@@ -5,7 +5,7 @@
     chdir: "{{ roles_dir | default('.') }}"
   register: commit_id
   delegate_to: 127.0.0.1
-  changed_when: False
+  changed_when: false
 
 - name: Set commit ID
   set_fact:
@@ -17,7 +17,5 @@
    dest: "{{ nomad_config }}client.hcl"
    owner: "{{ nomad_username }}"
    force: no
-  when: true
-  
   notify:
     - Restart nomad
