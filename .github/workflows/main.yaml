@@ -35,7 +35,7 @@ jobs:
       - name: Install test dependencies.
         # Pin version of requests due to an error in docker-py lib
         # https://github.com/docker/docker-py/issues/3256
-        run: pip3 install ansible molecule-plugins[docker] docker requests<2.32.0
+        run: pip3 install ansible molecule-plugins[docker] docker "requests<2.32.0"
 
       - name: Run Molecule tests.
         run: molecule test --all
