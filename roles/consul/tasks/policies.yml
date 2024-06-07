@@ -43,6 +43,27 @@
     dest: "{{ consul_policies_dir }}/node-policy.hcl"
     owner: "{{ consul_username }}"
 
+# Replication policy
+
+- name: "Define replication policies"
+  template:
+    src: templates/consul_replication_policy.j2
+    dest: "{{ consul_policies_dir }}/replication-policy.hcl"
+    owner: "{{ consul_username }}"
+
+- name: "Create replication policies"
+  command: consul acl policy create -name replication -description "Consul Replication Policy" -rules @"{{ consul_policies_dir }}/replication-policy.hcl"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_token }}"
+  when: not consul_policies.stat.exists
+
+- name: "Generate consul replication token"
+  shell:
+    cmd: consul acl token create -policy-name replication -description "Consul Replication Token" > {{ path }}consul_replication_token
+    creates: "{{ path }}consul_replication_token"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_token }}"
+
 - name: "Create consul policies"
   command: consul acl policy create -name node-policy -description "Consul Client Policy" -rules @"{{ consul_policies_dir }}/node-policy.hcl"
   environment:
@@ -61,5 +82,11 @@
   fetch:
     src: "{{ path }}{{ item }}_consul_token"
     dest: "{{ consul_fetched }}"
-    flat: yes
+    flat: yes 
   loop: "{{ groups['consul'] }}"
+
+- name: "Fetch consul replication token from consul-master to ansible-master"
+  fetch:
+    src: "{{ path }}consul_replication_token"
+    dest: "{{ consul_fetched }}"
+    flat: yes

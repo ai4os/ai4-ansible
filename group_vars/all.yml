@@ -14,17 +14,21 @@ add_new_nodes: false
 
 # -- General
 username: ubuntu
-path: /home/ubuntu/
+path: "/home/ubuntu/{{consul_dc_name}}/"
 path_system: /etc/systemd/system/
 path_bin: /usr/bin/
 
 # -- Common
-consul_public_ip: "193.146.75.205" 
+consul_public_ip: "193.146.75.205"                              #Add datacenter publics IP
+consul_servers_ips: ["193.146.75.205"]                          #Add cluster servers IPs
 my_ip: "{{ ansible_default_ipv4.address }}"
 environment_file: /etc/environment
-default_token: 12345678-1234-1234-1234-123456789ABC
+default_token: 11111111-1111-1111-1111-111111111111
+default_management_token: 22222222-2222-2222-2222-222222222222
+default_replication_token: 33333333-3333-3333-3333-333333333333
 hosts: /etc/hosts
 new_certs: "new_site_certs"
+primary_datacenter: "ai4eosc-ifca"
 
 # -- Volumes-docker
 disks_path: /dev/
@@ -68,7 +72,7 @@ consul_certs_dir: "{{ consul_config_dir }}/certs"
 consul_certs: "{{ consul_certs_dir }}/"
 consul_fetched_dir: "{{ path }}consul_fetched"
 consul_fetched: "{{ consul_fetched_dir }}/"
-consul_dc_name: ai4os-consul
+consul_dc_name: ai4os-ifca                                      #Change to DC name
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
 consul_username: consul

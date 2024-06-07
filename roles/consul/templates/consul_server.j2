@@ -1,13 +1,6 @@
 server = true
-{% if server_new %}
-bootstrap = false
-bootstrap_expect = 1
-{% else %}
-bootstrap_expect = {{ groups['consul_servers'] | length}}                                 # Number of Consul servers expected in the datacenter (recommended: 3, 5 or 7)
-{% endif %}
-                                                     # Must be consistent all across all servers in dc
  
-advertise_addr = "{{ my_ip }}"                    # IP of the machine
+advertise_addr = "{{ ansible_host }}"                      # IP of the machine
  
 client_addr = "0.0.0.0"                              # Choose any address to designate an interface to which Consul services will bind, including HTTP and DNS server
  
@@ -26,10 +19,4 @@ ports {
  
 ui_config {                                          # Enable the use of UI in this server
   enabled = true                                     # Consider running on some selected hosts, not all of them
-}
- 
-acl {
-  tokens {
-    agent  = "{{ default_token }}"  # This is the ACL token, which will tell our consul cluster, which of the agent can read and write what type of data
-  }                                                  # We will deal with that tokens later
 }
