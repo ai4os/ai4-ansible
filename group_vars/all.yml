@@ -4,7 +4,7 @@ ansible_master: { name: ansible-master, ip: 172.16.44.31 }
 # -- Security
 #########################################################
 ########## WARNING: DO NOT SET THIS VARIABLE ############
-from_scratch_cluster_installation: true
+from_scratch_cluster_installation: false
 #########################################################  
 
 # -- Admin
@@ -20,7 +20,7 @@ path_bin: /usr/bin/
 
 # -- Common
 consul_public_ip: "193.146.75.205"                              #Add datacenter publics IP
-consul_servers_ip: ["193.146.75.205"]                          #Add cluster servers IPs
+consul_servers_ip: !unsafe ["193.146.75.205"]                   #Add cluster servers IPs. Unsafe option avoids replacing double quotes with single quotes
 my_ip: "{{ ansible_default_ipv4.address }}"
 environment_file: /etc/environment
 default_token: 11111111-1111-1111-1111-111111111111
