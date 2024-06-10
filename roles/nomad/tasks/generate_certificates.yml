@@ -27,13 +27,13 @@
    dest: "{{ path }}cfssl.json"
 
 - name: "Generate server certificate"
-  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},server.{{ consul_dc_name }}.nomad,server.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare server"
+  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},server.{{ nomad_region }}.nomad,server.{{ nomad_region }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare server"
   args:
     chdir: "{{ path }}"
     creates: "{{ path }}server.pem"
 
 - name: "Generate client certificate"
-  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},client.{{ consul_dc_name }}.nomad,client.{{ consul_dc_name }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare client"
+  shell: "echo '{}' | cfssl gencert -ca={{ path }}nomad-ca.pem -ca-key={{ path }}nomad-ca-key.pem -config={{ path }}cfssl.json -hostname=\"{{ inventory_hostname }},client.{{ nomad_region }}.nomad,client.{{ nomad_region }}.nomad,localhost,127.0.0.1\" - | cfssljson -bare client"
   args:
     chdir: "{{ path }}"
     creates: "{{ path }}client.pem"
