@@ -8,6 +8,9 @@
 ## NEW SITE CONFIGURATION
 # -- Consul new
 ##### Use just one consul server
+[consul_new_master]
+<new_server_name> ansible_host=<new_server_public_IP>
+
 [consul_new_servers]
 <new_server_name> ansible_host=<new_server_public_IP>
 
@@ -68,3 +71,6 @@ nomad_new_gpu_clients
 [nomad_new:children]
 nomad_new_servers
 nomad_new_clients
+
+[consul_new_servers:children]
+consul_new_master

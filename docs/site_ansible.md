@@ -17,6 +17,22 @@ Modify the new hosts file to match the new cluster configuration. An example can
 found on [hosts_site_admin_join_example](../hosts_site_admin_join_example).
 Specifically, modify the following groups:
 
+- **consul_new_master**
+
+    Modify the line to match the new Consul master name and its public IP.
+
+    > ⚠ There should only be one Consul server.
+
+    Line template:
+    ```ini
+    <new_master_name> ansible_host=<new_server_public_IP>
+    ```
+
+    Group example:
+    ```ini
+    [consul_new_master]
+    new-server ansible_host=193.146.75.194
+
 - **consul_new_servers**
 
     Modify the line to match the new Consul server name and its public IP.
