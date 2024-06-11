@@ -10,9 +10,13 @@ server {
     enabled = true
 
     # bootstrap_expect must coincide with the total number of Nomad servers
-    bootstrap_expect = 3  
+    bootstrap_expect = {{ num_nomad_servers }}  
     eval_gc_threshold = "24h"
     batch_eval_gc_threshold = "24h"
+
+    server_join {
+        retry_join = {{ consul_servers_ip | to_json }}
+    }
 
 }
  

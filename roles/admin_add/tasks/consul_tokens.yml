@@ -14,9 +14,15 @@
     flat: yes
   loop: "{{ groups['consul_new'] }}"
 
-- name: "Fetch consul ACL token from consul-master to ansible-master"
+- name: "Fetch consul management token from consul-master to ansible-master"
   fetch:
     src: "{{ path }}consul_bootstrap"
+    dest: "{{ path }}{{ new_certs }}/"
+    flat: yes
+
+- name: "Fetch consul replication token from consul-master to ansible-master"
+  fetch:
+    src: "{{ path }}consul_replication_token"
     dest: "{{ path }}{{ new_certs }}/"
     flat: yes
 
