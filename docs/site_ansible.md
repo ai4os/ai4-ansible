@@ -256,7 +256,7 @@ Specifically, modify the following variables:
 
 - **consul_public_ip**
 
-    Set the Consul public IP of the federated cluster on section *Common*.
+    Set the Consul public IP of your consul server on section *Common*.
 
     Line template:
     ```yaml
@@ -267,6 +267,18 @@ Specifically, modify the following variables:
     ```yaml
     consul_public_ip: "193.146.75.205"
 
+- **consul_servers_ip**
+
+    Set the Consul public IPs of the cluster consul servers on section *Common*.
+
+    Line template:
+    ```yaml
+    consul_servers_ip: "<consul_public_ip>"
+    ```
+
+    Line example:
+    ```yaml
+    consul_servers_ip: ["193.146.75.205", "193.146.75.229", "193.146.75.143", "193.146.75.106"]
     
 - **new_certs**
 
