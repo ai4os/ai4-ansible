@@ -53,6 +53,7 @@ auto_encrypt {
  
 
 {% if server %}
-retry_join_wan = {{ consul_servers_ip}}  # This must be a public IP(s) used for all servers/clients in the federation
-{% endif %}
+retry_join_wan = {{ consul_servers_ip | to_json }}  # This must be a public IP(s) used for all servers/clients in the federation
+{% else %}
 retry_join = ["{{ consul_public_ip}}"]  # This must be a public IP(s) used for all servers/clients in the datacenter
+{% endif %}
