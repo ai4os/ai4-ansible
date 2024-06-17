@@ -315,6 +315,22 @@ Specifically, modify the following variables:
     ```
 
 
+- **consul_dc_name**
+
+    Set this variable on section *Consul* to the name of your local datacenter.
+
+    > ⓘ In all data centers we are putting *ai4os* or *imagine* as the prefix.
+
+    Line template:
+    ```yaml
+    consul_dc_name: <consul_dc_name>
+    ```
+
+    Line example:
+    ```yaml
+    traefik_certs: ai4os-ifca
+    ```
+
 ## 4. Install role dependencies
 
 * Install grycap.docker role needed in the nomad join recipe.
