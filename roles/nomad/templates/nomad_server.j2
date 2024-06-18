@@ -54,7 +54,7 @@ consul {
 }
  
 advertise{
-    http = "{{ ansible_host }}:4646"
-    rpc = "{{ ansible_host }}:4647"
-    serf = "{{ ansible_host }}:4648"
+    http = "{{ my_ip }}:4646"
+    rpc = "{{ my_ip }}:4647"
+    serf = "{{ my_ip }}:4648"
 }

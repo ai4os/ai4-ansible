@@ -25,8 +25,3 @@
     regexp: '{{ default_replication_token }}'
   notify: Restart consul
   when: ("consul_master" not in groups or inventory_hostname not in groups["consul_master"])
-
-- name: Restart consul
-  service:
-    name: consul
-    state: restarted

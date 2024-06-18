@@ -19,3 +19,5 @@
           - ai4eosc
           - imagine
           - tutorials
+        consul_servers_ip: []
+        my_ip: "{{ ansible_default_ipv4.address }}"
