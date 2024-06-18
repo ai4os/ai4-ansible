@@ -14,4 +14,5 @@
         username: root
         path: /tmp/
         consul_public_ip: "{{ hostvars['server0']['ansible_default_ipv4']['address'] }}"
-        ansible_host: "{{ ansible_default_ipv4.address }}"
+        consul_servers_ip: []
+        my_ip: "{{ ansible_default_ipv4.address }}"
