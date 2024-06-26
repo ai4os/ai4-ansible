@@ -166,6 +166,12 @@
     state: started
     enabled: yes
 
+- name: "Wait for Nomad to start"
+  wait_for:
+    port: 4646
+    delay: 10
+    timeout: 60
+
 # Create initial Nomad namespaces (from-scratch cluster deployment functionality)
 - name: "Create nomad namespaces"
   shell: "nomad namespace apply {{ item }}"

@@ -9,7 +9,7 @@
     creates: "{{ path }}consul_bootstrap"
   register: acl_bootstrap
   ignore_errors: yes
-  until: '"reset index" in acl_bootstrap.stderr'
+  until: '"reset index" in acl_bootstrap.stderr or "skipped" in acl_bootstrap.stdout'
   retries: 10
   delay: 5
 
@@ -31,19 +31,14 @@
     shell:
       cmd: consul acl bootstrap
       creates: "{{ path }}consul_bootstrap"
-    register: acl_bootstrap
+    register: acl_bootstrap_retry
 
 - name: Create Consul Bootstrap Token file
   copy:
-    content: "{{ acl_bootstrap.stdout }}"
-    dest: "{{ path }}consul_bootstrap" 
+    content: "{{ acl_bootstrap_retry.stdout }}"
+    dest: "{{ path }}consul_bootstrap"
     force: false
-  when: acl_bootstrap is success
-
-- name: "Create policies dir if it does not exist"
-  file:
-    path: "{{ consul_policies_dir }}"
-    state: directory
+  when: acl_bootstrap_retry is defined
 
 - name: "Fetch consul ACL token from consul-master to ansible-master"
   fetch:
@@ -56,6 +51,11 @@
     consul_token: "{{ lookup('file', certs_path + '/consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
+
+- name: "Create policies dir if it does not exist"
+  file:
+    path: "{{ consul_policies_dir }}"
+    state: directory
 
 - name: "Define consul policies"
   template:
