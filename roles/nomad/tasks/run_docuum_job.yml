@@ -1,6 +1,6 @@
 - name: Copy docuum job
-  ansible.builtin.copy:
-    src: nomad-docuum-job.hcl
+  ansible.builtin.template:
+    src: nomad-docuum-job.j2
     dest: "{{ path }}/nomad-docuum-job.hcl"
     owner: "{{ username }}"
     mode: '777'
