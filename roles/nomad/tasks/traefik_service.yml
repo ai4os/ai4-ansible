@@ -71,3 +71,5 @@
   args:
     chdir: "{{ path }}"
   when: replace_traefik_token is changed
+  async: 60
+  poll: 5
