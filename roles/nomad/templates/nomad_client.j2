@@ -8,6 +8,12 @@ leave_on_terminate = true
 # Enable the client
 client {
   enabled = true
+
+  options {
+    "docker.cleanup.image" = "false"
+    "docker.cleanup.image.delay" = "120d"    
+  }
+
   meta {
   
    # list of namespaces supported by each client (those specificed in the hosts file)
@@ -33,6 +39,7 @@ client {
 
    # Nomad client's domain (specified in the hosts file)
    domain = "{{ domain }}"
+   ansible_version = "{{ commit_id_fact }}"
   }
 
 {% if ("traefik_master" not in groups or inventory_hostname not in groups['traefik_master']) and ("traefik_new_master" not in groups or inventory_hostname not in groups['traefik_new_master']) %}
@@ -69,9 +76,9 @@ bind_addr = "0.0.0.0"
 # and clients. The IPs can be materialized by Terraform or be replaced by an
 # init script.
 advertise {
-    http = "{{ my_ip }}:4646"
-    rpc = "{{ my_ip }}:4647"
-    serf = "{{ my_ip }}:4648"
+    http = "{{ ansible_host }}:4646"
+    rpc = "{{ ansible_host }}:4647"
+    serf = "{{ ansible_host }}:4648"
 }
  
 consul {

@@ -10,6 +10,13 @@
 # To control the script's periodicity, the script's scheduling is managed through cron.
 # It is important to set the cron schedule to be greater than the frequency of the accounting task.
 #
+# It is necessary to import the nomad certificates as there are no environment variables in cron
+#
+
+export NOMAD_ADDR=https://publicip:4646
+export NOMAD_CACERT=/home/ubuntu/nomad-ca.pem
+export NOMAD_CLIENT_CERT=/home/ubuntu/cli.pem
+export NOMAD_CLIENT_KEY=/home/ubuntu/cli-key.pem
 
 touch new_blacklist.txt
 

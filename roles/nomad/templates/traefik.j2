@@ -1,6 +1,6 @@
 job "traefik-{{ nomad_dc }}" {
-  region      = "{{ consul_dc_name }}"
-  datacenters = ["{{ nomad_dc }}"]
+  region      = "{{ nomad_region }}"
+  datacenters = ["{{ consul_dc_name }}"]
   type     = "service"
   priority = 100          # traefik job cannot be displaced by a regular job
  

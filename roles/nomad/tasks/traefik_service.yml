@@ -4,7 +4,7 @@
     certs_dir: "{{ consul_fetched }}"
 
 - set_fact:
-    certs_dir: "{{ path }}{{ new_certs }}"
+    certs_dir: "{{ path }}{{ new_certs }}/"
   when: ("traefik_new_master" in groups and inventory_hostname in groups["traefik_new_master"])
 
 # Copy Nomad's Traefik token from ansible-master's {{certs_dir}} dir to the Traefik node's dir.
@@ -81,3 +81,5 @@
   args:
     chdir: "{{ path }}"
   when: replace_traefik_token is changed
+  async: 60
+  poll: 5

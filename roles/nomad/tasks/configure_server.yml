@@ -4,16 +4,9 @@
 # It equals the number of Consul servers
 
 # Joining functionality: obtain total number from "consul members" command
-- block:
-  
-  - name: "Get number of consul servers"
-    shell: "consul members | grep server | wc -l"
-    register: grep_result
-    changed_when: false
-
-  - name: "Set number of consul servers as a variable"
-    set_fact:
-      num_nomad_servers: "{{ grep_result.stdout | int }}"
+- name: "Set number of consul servers as a variable"
+  set_fact:
+    num_nomad_servers: "{{ groups['nomad_new_servers'] | length }}"
   when: ("nomad_new_servers" in groups and inventory_hostname in groups["nomad_new_servers"])
 
 # From-scratch deployment functionality: initial number already available (it equals the number of nomad_servers in the host file)

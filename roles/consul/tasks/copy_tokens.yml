@@ -18,3 +18,14 @@
    src: "{{ certs_path }}{{ inventory_hostname }}_consul_token"
    dest: "{{ consul_certs }}"
 
+- name: Wait consul replication token
+  wait_for:
+    path: "{{ certs_path }}consul_replication_token"
+  delegate_to: localhost
+
+- name: "Copy consul replication token from ansible_master to consul_hosts"
+  copy:
+   src: "{{ certs_path }}consul_replication_token"
+   dest: "{{ consul_certs }}"
+
+

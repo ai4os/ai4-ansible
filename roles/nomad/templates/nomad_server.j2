@@ -1,5 +1,6 @@
 # Increase log verbosity
 #log_level = "DEBUG"
+
  
 # Make sure Nomad nodes leave before shutting down the agent to prevent messing up the raft consensus
 leave_on_interrupt = true
@@ -9,8 +10,19 @@ leave_on_terminate = true
 server {
     enabled = true
 
+{% if ("nomad_master" in groups and inventory_hostname in groups["nomad_master"]) %}
+    bootstrap_expect = 1
+{% endif %}
+
     # bootstrap_expect must coincide with the total number of Nomad servers
-    bootstrap_expect = {{ num_nomad_servers }}  
+    #bootstrap_expect = {{ num_nomad_servers }}  
+    eval_gc_threshold = "24h"
+    batch_eval_gc_threshold = "24h"
+
+    server_join {
+        retry_join = {{ consul_servers_ip | to_json }}
+    }
+
 }
  
 # Require TLS
