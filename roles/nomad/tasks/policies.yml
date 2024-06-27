@@ -39,14 +39,14 @@
   args:
     chdir: "{{ path }}"
     creates: "{{ item}}_nomad_token"
-  loop: "{{ groups['nomad_servers'] }}"
+  loop: "{{ groups['nomad_servers']|map('extract', hostvars,'ansible_hostname')|list }}"
 
 - name: "Generate token for each nomad client"
   shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
   args:
     chdir: "{{ path }}"
     creates: "{{ item}}_nomad_token"
-  loop: "{{ groups['nomad_clients'] }}"
+  loop: "{{ groups['nomad_clients']|map('extract', hostvars,'ansible_hostname')|list }}"
 
 # Fetch generated tokens from consul-master to ansible-master's {{nomad_fetched}} dir to later distribute them among the agents
 - name: "Fetch nomad agent token from consul-master to ansible-master"
@@ -54,4 +54,4 @@
     src: "{{ path }}{{ item }}_nomad_token"
     dest: "{{ nomad_fetched }}"
     flat: yes
-  loop: "{{ groups['nomad'] }}"
+  loop: "{{ groups['nomad']|map('extract', hostvars,'ansible_hostname')|list }}"
