@@ -3,6 +3,7 @@
   command: grep avx /proc/cpuinfo
   register: grep_output
   ignore_errors: yes
+  changed_when: false
 
 # We enforce AVX as a hard requirement becase Tensorflow images are compiled to use AVX instructions
 # ref: https://github.com/tensorflow/tensorflow/issues/24548
