@@ -17,6 +17,22 @@ Modify the new hosts file to match the new cluster configuration. An example can
 found on [hosts_site_admin_join_example](../hosts_site_admin_join_example).
 Specifically, modify the following groups:
 
+- **consul_new_master**
+
+    Modify the line to match the new Consul master name and its public IP.
+
+    > ⚠ There should only be one Consul server.
+
+    Line template:
+    ```ini
+    <new_master_name> ansible_host=<new_server_public_IP>
+    ```
+
+    Group example:
+    ```ini
+    [consul_new_master]
+    new-server ansible_host=193.146.75.194
+
 - **consul_new_servers**
 
     Modify the line to match the new Consul server name and its public IP.
@@ -240,7 +256,7 @@ Specifically, modify the following variables:
 
 - **consul_public_ip**
 
-    Set the Consul public IP of the federated cluster on section *Common*.
+    Set the Consul public IP of your consul server on section *Common*.
 
     Line template:
     ```yaml
@@ -251,6 +267,18 @@ Specifically, modify the following variables:
     ```yaml
     consul_public_ip: "193.146.75.205"
 
+- **consul_servers_ip**
+
+    Set the Consul public IPs of the cluster consul servers on section *Common*.
+
+    Line template:
+    ```yaml
+    consul_servers_ip: "<consul_public_ip>"
+    ```
+
+    Line example:
+    ```yaml
+    consul_servers_ip: ["193.146.75.205", "193.146.75.229", "193.146.75.143", "193.146.75.106"]
     
 - **new_certs**
 
@@ -286,6 +314,22 @@ Specifically, modify the following variables:
     traefik_certs: ifca-deployments.cloud.ai4eosc.eu
     ```
 
+
+- **consul_dc_name**
+
+    Set this variable on section *Consul* to the name of your local datacenter.
+
+    > ⓘ In all data centers we are putting *ai4os* or *imagine* as the prefix.
+
+    Line template:
+    ```yaml
+    consul_dc_name: <consul_dc_name>
+    ```
+
+    Line example:
+    ```yaml
+    traefik_certs: ai4os-ifca
+    ```
 
 ## 4. Install role dependencies
 

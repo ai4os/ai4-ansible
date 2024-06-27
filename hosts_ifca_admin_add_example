@@ -15,31 +15,34 @@ node-ifca-0 ansible_host=193.146.75.205
 # -- Consul new
 ##### Use just one consul server
 [consul_new_servers]
-new-server ansible_host=193.146.75.194
+node-ifca-imagine-0 ansible_host=193.146.75.106
 
 [consul_new_clients]
-new-traefik ansible_host=193.146.75.162
-new-cpu-client ansible_host=172.16.43.137
-new-gpu-client1 ansible_host=172.16.43.58
-new-gpu-client2 ansible_host=172.16.43.59
+node-ifca-imagine-traefik ansible_host=193.146.75.101
+node-ifca-imagine-1 ansible_host=172.16.43.163
+node-ifca-imagine-gpu-0 ansible_host=172.16.43.136
+node-ifca-imagine-gpu-1 ansible_host=172.16.43.123
+node-ifca-imagine-gpu-2 ansible_host=172.16.43.141
+node-ifca-imagine-gpu-3 ansible_host=172.16.43.223
 
 
 # -- Traefik new
 [traefik_new_master]
-new-traefik
-  
+node-ifca-imagine-traefik  
   
 # -- Nomad new
 [nomad_new_servers]
-new-server
+node-ifca-imagine-0
 
 [nomad_new_cpu_clients]
-new-traefik
-new-cpu-client 
+node-ifca-imagine-1
+node-ifca-imagine-traefik
   
 [nomad_new_gpu_clients]
-new-gpu-client1 
-new-gpu-client2
+node-ifca-imagine-gpu-0
+node-ifca-imagine-gpu-1
+node-ifca-imagine-gpu-2
+node-ifca-imagine-gpu-3
 
 
 
