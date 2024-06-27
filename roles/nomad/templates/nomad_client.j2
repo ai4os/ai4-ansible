@@ -77,9 +77,9 @@ bind_addr = "0.0.0.0"
 # and clients. The IPs can be materialized by Terraform or be replaced by an
 # init script.
 advertise {
-    http = "{{ my_ip }}:4646"
-    rpc = "{{ my_ip }}:4647"
-    serf = "{{ my_ip }}:4648"
+    http = "{{ ansible_host }}:4646"
+    rpc = "{{ ansible_host }}:4647"
+    serf = "{{ ansible_host }}:4648"
 }
  
 consul {

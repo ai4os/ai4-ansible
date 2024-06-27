@@ -3,27 +3,42 @@
     path: "{{ consul_policies_dir }}"
   register: consul_policies
 
-# Repeat until the error "500 (No cluster leader)" is gone
 - name: "Generate consul ACL bootstrap"
   shell:
     cmd: consul acl bootstrap
     creates: "{{ path }}consul_bootstrap"
   register: acl_bootstrap
-  until: acl_bootstrap is success
-  retries: 24
+  ignore_errors: yes
+  until: '"reset index" in acl_bootstrap.stderr or "skipped" in acl_bootstrap.stdout'
+  retries: 10
   delay: 5
+
+- when: '"reset index" in acl_bootstrap.stderr'
+  block:
+
+  - name: Get Reset Index
+    set_fact:
+      reset_index: "{{ acl_bootstrap.stderr | regex_search(regexp,'\\1') | first }}"
+    vars:
+      regexp: '.*\(reset index: (.*)\)\)'
+
+  - name: "Reset ACL bootstrap"
+    copy:
+      content: "{{ reset_index }}"
+      dest: "{{ consul_data_dir }}/acl-bootstrap-reset"
+
+  - name: "Generate consul ACL bootstrap again"
+    shell:
+      cmd: consul acl bootstrap
+      creates: "{{ path }}consul_bootstrap"
+    register: acl_bootstrap_retry
 
 - name: Create Consul Bootstrap Token file
   copy:
-    content: "{{ acl_bootstrap.stdout }}"
-    dest: "{{ path }}consul_bootstrap" 
+    content: "{{ acl_bootstrap_retry.stdout }}"
+    dest: "{{ path }}consul_bootstrap"
     force: false
-  when: acl_bootstrap is success
-
-- name: "Create policies dir if it does not exist"
-  file:
-    path: "{{ consul_policies_dir }}"
-    state: directory
+  when: acl_bootstrap_retry.stdout is defined
 
 - name: "Fetch consul ACL token from consul-master to ansible-master"
   fetch:
@@ -37,11 +52,37 @@
   vars:
     regexp: 'SecretID:\s+(.*)'
 
+- name: "Create policies dir if it does not exist"
+  file:
+    path: "{{ consul_policies_dir }}"
+    state: directory
+
 - name: "Define consul policies"
   template:
     src: templates/consul_node_policy.j2
     dest: "{{ consul_policies_dir }}/node-policy.hcl"
     owner: "{{ consul_username }}"
+
+# Replication policy
+
+- name: "Define replication policies"
+  template:
+    src: templates/consul_replication_policy.j2
+    dest: "{{ consul_policies_dir }}/replication-policy.hcl"
+    owner: "{{ consul_username }}"
+
+- name: "Create replication policies"
+  command: consul acl policy create -name replication -description "Consul Replication Policy" -rules @"{{ consul_policies_dir }}/replication-policy.hcl"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_token }}"
+  when: not consul_policies.stat.exists
+
+- name: "Generate consul replication token"
+  shell:
+    cmd: consul acl token create -policy-name replication -description "Consul Replication Token" > {{ path }}consul_replication_token
+    creates: "{{ path }}consul_replication_token"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_token }}"
 
 - name: "Create consul policies"
   command: consul acl policy create -name node-policy -description "Consul Client Policy" -rules @"{{ consul_policies_dir }}/node-policy.hcl"
@@ -61,5 +102,11 @@
   fetch:
     src: "{{ path }}{{ item }}_consul_token"
     dest: "{{ consul_fetched }}"
-    flat: yes
+    flat: yes 
   loop: "{{ groups['consul']|map('extract', hostvars, 'ansible_hostname')|list }}"
+
+- name: "Fetch consul replication token from consul-master to ansible-master"
+  fetch:
+    src: "{{ path }}consul_replication_token"
+    dest: "{{ consul_fetched }}"
+    flat: yes

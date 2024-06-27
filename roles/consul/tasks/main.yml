@@ -76,7 +76,7 @@
 - name: Force consul restart if needed
   meta: flush_handlers
 
-- name: "Generating consul ACLs policies and token access"
+- name: "Generating consul ACLs and token access"
   include_tasks: policies.yml
   when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
@@ -89,5 +89,11 @@
 - name: "Get acl tokens"
   include_tasks: get_acl_token.yml
 
-- name: "Set consul tokens"
-  include_tasks: set_acl_token.yml
+- name: "Get replication tokens"
+  include_tasks: get_replication_token.yml
+
+- name: "Get management tokens"
+  include_tasks: get_management_token.yml
+
+- name: "Set consul server tokens"
+  include_tasks: set_acl_tokens.yml

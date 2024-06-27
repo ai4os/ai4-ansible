@@ -1,0 +1,10 @@
+- name: Wait replication Token
+  wait_for:
+    path: "{{ certs_path }}/consul_replication_token"
+  delegate_to: localhost
+
+- name: Get replication Token
+  set_fact:
+    replication_consul_token: "{{ lookup('file', certs_path + '/' + 'consul_replication_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'

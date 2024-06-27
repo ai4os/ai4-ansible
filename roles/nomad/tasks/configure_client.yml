@@ -6,10 +6,6 @@
   register: commit_id
   delegate_to: 127.0.0.1
   changed_when: false
-
-- name: Set commit ID
-  set_fact:
-    commit_id_fact: "{{ commit_id.stdout }}"
     
 - name: "Copy client.hcl configuration"
   template:
@@ -17,5 +13,7 @@
    dest: "{{ nomad_config }}client.hcl"
    owner: "{{ nomad_username }}"
    force: no
+  vars:
+    commit_id_fact: "{{ commit_id.stdout }}"
   notify:
     - Restart nomad

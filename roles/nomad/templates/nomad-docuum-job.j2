@@ -1,7 +1,7 @@
 job "docuum" {
   namespace = "default"
   type      = "system"
-  region    = "global"
+  region      = "{{ nomad_region }}"
   id        = "docuum"
   priority  = "75"
 
