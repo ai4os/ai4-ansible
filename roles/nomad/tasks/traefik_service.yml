@@ -25,6 +25,10 @@
     path: "{{ path }}{{ traefik_certs }}.zip"
   register: zip_file
 
+- debug:
+    msg: "WARNING: Traefik SSL zip file does not exist. It will be ignored."
+  when: no zip_file.stat.exists
+
 - name: "Unzip file in ansible_master if it is zipped"
   ansible.builtin.unarchive:
     src: "{{ path }}{{ traefik_certs }}.zip"
@@ -43,6 +47,10 @@
 - stat:
     path: "{{ path }}{{ traefik_certs }}/domain.key"
   register: key_file
+
+- debug:
+    msg: "WARNING: Traefik SSL certs does not exist. They will be ignored."
+  when: no key_file.stat.exists
 
 - name: "Copy traefik SSL certificates from ansible_master to trafik_master"
   copy:
