@@ -1,4 +1,37 @@
 # Configure Nomad
+
+- name: Asignar nombre a CPU clients
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_new_cpu_clients'].index(item) }}"
+  with_items: "{{ groups['nomad_new_cpu_clients'] }}"
+  when: item in groups['nomad_new_cpu_clients']
+  debug:
+    msg: "Nombre de host: {{ host_name }}"
+
+- name: Asignar nombre a GPU clients
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_new_gpu_clients'].index(item) }}"
+  with_items: "{{ groups['nomad_new_gpu_clients'] }}"
+  when: item in groups['nomad_new_gpu_clients']
+  debug:
+    msg: "Nombre de host: {{ host_name }}"
+
+- name: Asignar nombre a Traefik
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-traefik"
+  with_items: "{{ groups['traefik_new_master'] }}"
+  when: item in groups['traefik_new_master']
+  debug:
+    msg: "Nombre de host: {{ host_name }}"
+
+- name: Asignar nombre a servidores
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_new_servers'].index(item) }}"
+  with_items: "{{ groups['nomad_new_servers'] }}"
+  when: item in groups['nomad_new_servers']
+  debug:
+    msg: "Nombre de host: {{ host_name }}"
+
 - name: "Copy nomad.hcl configuration"
   template:
    src: templates/nomad.j2
