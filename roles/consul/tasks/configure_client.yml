@@ -31,10 +31,6 @@
     consul_hostname: "{{ consul_dc_name }}-traefik"
   when: ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])
 
-- name: Show client names
-  debug:
-    msg: "Hostname: {{ consul_hostname }}"
-
 ## Copy the client configuration file 
 
 - name: "Copy consul.hcl configuration"
