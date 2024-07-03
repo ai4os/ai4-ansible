@@ -1,10 +1,7 @@
 - name: Asignar nombre a servidores
   set_fact:
-    consul_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_new_servers'].index(item) }}"
-  with_items: "{{ groups['nomad_new_servers'] }}"
-  when: item in groups['nomad_new_servers']
-  debug:
-    msg: "Nombre de host: {{ host_name }}"
+    consul_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_servers'].index(inventory_hostname) }}"
+  when: inventory_hostname in groups['nomad_servers']
 
 
 - name: "Copy consul.hcl configuration"
@@ -15,7 +12,6 @@
     src: templates/consul.j2
     dest: "{{ consul_config }}consul.hcl"
     owner: "{{ consul_username }}"
-    force: no
   notify: Restart consul
 
 - name: "Copy server.hcl configuration"

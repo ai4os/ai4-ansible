@@ -1,37 +1,45 @@
-# Configure Nomad
-
-- name: Asignar nombre a CPU clients
+# Set Nomad hostnames
+- name: Set cpu clients name
   set_fact:
-    nomad_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_new_cpu_clients'].index(item) }}"
-  with_items: "{{ groups['nomad_new_cpu_clients'] }}"
-  when: item in groups['nomad_new_cpu_clients']
-  debug:
-    msg: "Nombre de host: {{ host_name }}"
+    nomad_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_cpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_cpu_clients" in groups and inventory_hostname in groups['nomad_cpu_clients'])
 
-- name: Asignar nombre a GPU clients
+- name: Set gpu clients name
   set_fact:
-    nomad_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_new_gpu_clients'].index(item) }}"
-  with_items: "{{ groups['nomad_new_gpu_clients'] }}"
-  when: item in groups['nomad_new_gpu_clients']
-  debug:
-    msg: "Nombre de host: {{ host_name }}"
+    nomad_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_gpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups['nomad_gpu_clients'])
 
-- name: Asignar nombre a Traefik
+- name: Set traefik name
   set_fact:
     nomad_hostname: "{{ consul_dc_name }}-traefik"
-  with_items: "{{ groups['traefik_new_master'] }}"
-  when: item in groups['traefik_new_master']
-  debug:
-    msg: "Nombre de host: {{ host_name }}"
-
-- name: Asignar nombre a servidores
+  when: ("traefik_master" in groups and inventory_hostname in groups['traefik_master'])
+ 
+- name: Set servers name
   set_fact:
-    nomad_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_new_servers'].index(item) }}"
-  with_items: "{{ groups['nomad_new_servers'] }}"
-  when: item in groups['nomad_new_servers']
-  debug:
-    msg: "Nombre de host: {{ host_name }}"
+    nomad_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_servers'].index(inventory_hostname) }}"
+  when: ("nomad_servers" in groups and inventory_hostname in groups['nomad_servers'])
 
+- name: Set new CPU clients name
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_new_cpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_new_cpu_clients" in groups and inventory_hostname in groups['nomad_new_cpu_clients'])
+
+- name: Set new GPU clients name
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_new_gpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_new_gpu_clients" in groups and inventory_hostname in groups['nomad_new_gpu_clients'])
+
+- name: Set new Traefik name
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-traefik"
+  when: ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])
+ 
+- name: Set new servers name
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_new_servers'].index(inventory_hostname) }}"
+  when: ("nomad_new_servers" in groups and inventory_hostname in groups['nomad_new_servers'])
+
+# Configure Nomad
 - name: "Copy nomad.hcl configuration"
   template:
    src: templates/nomad.j2
