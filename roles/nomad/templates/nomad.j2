@@ -1,7 +1,7 @@
 datacenter = "{{ consul_dc_name }}"
 region = "{{ nomad_region }}"
 
-name: "{{ nomad_hostname }}"
+name = "{{ nomad_hostname }}"
 
 # data_dir points to {{mount_dir}} if mounted volume (noamd_volume or nomad_new_volume) and {{nomad_data_dir}} otherwise
 {% if ('nomad_volume' in groups and inventory_hostname in groups['nomad_volume']) or ('nomad_new_volume' in groups and inventory_hostname in groups['nomad_new_volume']) %}
