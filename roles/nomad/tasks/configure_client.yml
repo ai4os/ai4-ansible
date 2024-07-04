@@ -4,6 +4,12 @@
   register: commit_id
   delegate_to: 127.0.0.1
   changed_when: false
+
+- name: Real node hostname
+  command: "hostname"
+  register: real_hostname
+  delegate_to: 127.0.0.1
+  changed_when: false
     
 - name: "Copy client.hcl configuration"
   template:
@@ -13,5 +19,6 @@
    force: no
   vars:
     commit_id_fact: "{{ commit_id.stdout }}"
+    real_hostname_fact: "{{ real_hostname.stdout }}"
   notify:
     - Restart nomad
