@@ -8,7 +8,7 @@ driver:
 verifier:
   name: ansible
 platforms:
-  - name: server0
+  - name:  ai4os-ifca-server-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -29,7 +29,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: server1
+  - name: ai4os-ifca-server-1
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -47,7 +47,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: ai4os-ifca-wn-cpu-1
+  - name: ai4os-ifca-wn-cpu-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -67,7 +67,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: server2
+  - name: ai4os-ifca-new-server-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -76,6 +76,7 @@ platforms:
     privileged: true
     pre_build_image: true
     groups:
+      - consul_new_master
       - consul_new_servers
       - consul_new
       - nomad_new_servers
@@ -85,7 +86,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: ai4os-ifca-new-wn-cpu-1
+  - name: ai4os-ifca-new-wn-cpu-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -108,7 +109,3 @@ provisioner:
   name: ansible
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
-  inventory:
-    group_vars:
-      consul_new:
-        consul_dc_name: ai4os-ifca-new

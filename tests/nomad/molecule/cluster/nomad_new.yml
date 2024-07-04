@@ -13,7 +13,7 @@
       vars:
         username: root
         path: /tmp/
-        nomad_dc: ifca-ai4eosc
+        nomad_dc: ifca-ai4eosc-new
         domain: ifca
         nomad_namespaces:
           - ai4eosc

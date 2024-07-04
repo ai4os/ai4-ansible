@@ -24,6 +24,7 @@
         fail_msg: "Error getting members"
         success_msg: "Consul servers installed and running"
       loop: "{{ groups['consul_servers'] }}"
+      when: inventory_hostname in groups['consul']
 
     - name: Check client clients running
       assert:
@@ -31,6 +32,23 @@
         fail_msg: "Error getting members"
         success_msg: "Consul clients installed and running"
       loop: "{{ groups['consul_clients'] }}"
+      when: inventory_hostname in groups['consul']
+
+    - name: Check consul servers running
+      assert:
+        that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   server")
+        fail_msg: "Error getting members"
+        success_msg: "Consul servers installed and running"
+      loop: "{{ groups['consul_new_servers'] }}"
+      when: inventory_hostname in groups['consul_new']
+
+    - name: Check client clients running
+      assert:
+        that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   client")
+        fail_msg: "Error getting members"
+        success_msg: "Consul clients installed and running"
+      loop: "{{ groups['consul_new_clients'] }}"
+      when: inventory_hostname in groups['consul_new']
 
     - name: Test
       command: nomad server members
