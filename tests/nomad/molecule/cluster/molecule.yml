@@ -47,7 +47,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: vnode-1
+  - name: ai4os-ifca-wn-cpu-1
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -61,6 +61,7 @@ platforms:
       - nomad_clients
       - nomad
       - traefik_master
+      - nomad_cpu_clients
     networks:
       - name: "consul"
     network_mode: "consul"
@@ -84,7 +85,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: vnode-2
+  - name: ai4os-ifca-new-wn-cpu-1
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -97,6 +98,7 @@ platforms:
       - consul_new
       - nomad_new_clients
       - nomad_new
+      - nomad_new_cpu_clients
     networks:
       - name: "consul"
     network_mode: "consul"
@@ -106,3 +108,7 @@ provisioner:
   name: ansible
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  inventory:
+    group_vars:
+      consul_new:
+        consul_dc_name: ai4os-ifca-new
