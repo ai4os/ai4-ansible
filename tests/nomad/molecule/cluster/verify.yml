@@ -31,10 +31,10 @@
         that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   client")
         fail_msg: "Error getting members"
         success_msg: "Consul clients installed and running"
-      loop: "{{ groups['consul_clients'] }}"
+      loop: "{{ groups['traefik_master'] }}"
       when: inventory_hostname in groups['consul']
 
-    - name: Check consul servers running
+    - name: Check consul servers new running
       assert:
         that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   server")
         fail_msg: "Error getting members"
@@ -42,7 +42,7 @@
       loop: "{{ groups['consul_new_servers'] }}"
       when: inventory_hostname in groups['consul_new']
 
-    - name: Check client clients running
+    - name: Check client clients new running
       assert:
         that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   client")
         fail_msg: "Error getting members"
@@ -78,7 +78,7 @@
         that: nodes.stdout | regex_search("{{ item }}.* ready")
         fail_msg: "Error getting members"
         success_msg: "Nomad clients installed and running"
-      loop: "{{ groups['nomad_clients'] }}"
+      loop: "{{ groups['traefik_master'] + groups['nomad_new_clients'] }}"
   
     - name: Test traefik
       command: nomad status
