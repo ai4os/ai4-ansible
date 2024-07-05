@@ -1,0 +1,16 @@
+---
+- name: Cleanup
+  hosts: localhost
+  become: true
+
+  tasks:
+
+    - name: "Delete temp files"
+      file:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/ai4os-ifca
+        - /tmp/new_site_certs
+        - /tmp/new_site_certs.zip
+        - /tmp/ifca-deployments.cloud.ai4eosc.eu
