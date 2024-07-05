@@ -6,7 +6,7 @@
   register: commit_id
   delegate_to: 127.0.0.1
   changed_when: false
-    
+
 - name: "Copy client.hcl configuration"
   template:
    src: templates/nomad_client.j2

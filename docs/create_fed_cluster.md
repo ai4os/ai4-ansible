@@ -98,7 +98,7 @@ Specifically, modify the following groups:
     Add its Nomad datacenter name, domain and namespaces.
 
     > ⚠ CPU clients are Nomad clients without GPU. The Traefik node should also be
-    > included in this group.
+    > included in this group **at the end of the list**.
     > Therefore there should **always be at least 1 CPU client**: the Traefik node.
 
   

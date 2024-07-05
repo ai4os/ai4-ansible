@@ -8,6 +8,11 @@
   set_fact:
     server_index: "{{ numbers.stdout_lines | last | int }}"
 
+- name: Set new server name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_new_servers'].index(inventory_hostname) }}"
+  when: ("nomad_new_servers" in groups and inventory_hostname in groups['nomad_new_servers'])
+
 - name: "Copy consul.hcl configuration"
   template:
     src: templates/consul.j2

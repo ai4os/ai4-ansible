@@ -7,6 +7,11 @@
 
     - include_vars: "../../../../group_vars/all.yml"
  
+    - set_fact:
+        consul_dc_name: "ai4os-ifca-new"      
+      delegate_to: ai4os-ifca-new-server-0
+      delegate_facts: true
+
     - name: "Include admin_add"
       include_role:
         name: "../../../../roles/admin_add"

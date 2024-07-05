@@ -10,10 +10,16 @@
 node-ifca-0 ansible_host=193.146.75.205
 
 [consul_clients]
+node-ifca-1 ansible_host=172.16.44.109
+node-ifca-gpu-0 ansible_host=172.16.44.103
+node-ifca-gpu-1 ansible_host=172.16.44.120
+node-ifca-gpu-2 ansible_host=172.16.44.85
 node-ifca-traefik ansible_host=193.146.75.208
-node-ifca-1 ansible_host=172.16.44.26
-node-ifca-gpu-0 ansible_host=172.16.44.233
 
+[consul_servers]
+node-ifca-0
+node-ifca-2 ansible_host=193.146.75.229
+node-ifca-3 ansible_host=193.146.75.143
 
 # ----- Traefik
 [traefik_master]
@@ -24,18 +30,27 @@ node-ifca-traefik
 [nomad_master]
 node-ifca-0 nomad_dc=ifca-ai4eosc
 
+[nomad_servers]
+node-ifca-0
+node-ifca-2 nomad_dc=ifca-ai4eosc
+node-ifca-3 nomad_dc=ifca-ai4eosc
+
 [nomad_cpu_clients]
-node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
 node-ifca-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
 
 [nomad_gpu_clients]
 node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+node-ifca-gpu-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+node-ifca-gpu-2 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
 
 
 # ---- Volume-docker
 [nomad_volume]
 node-ifca-1 vol_name=vdb partition_name=part1
 node-ifca-gpu-0 vol_name=vdb partition_name=part1
+node-ifca-gpu-1 vol_name=vdb partition_name=part1
+node-ifca-gpu-2 vol_name=vdb partition_name=part1
 
 
 # ---- Monitoring scripts

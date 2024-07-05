@@ -13,6 +13,7 @@
       vars:
         username: root
         path: /tmp/
-        consul_public_ip: "{{ hostvars['server0']['ansible_default_ipv4']['address'] }}"
+        consul_dc_name: "ai4os-ifca-new"
+        consul_public_ip: "{{ hostvars['ai4os-ifca-new-server-0']['ansible_default_ipv4']['address'] }}"
         consul_servers_ip: "{{ groups['consul_servers']|map('extract', hostvars, ['ansible_default_ipv4', 'address'])|list }}"
         my_ip: "{{ ansible_default_ipv4.address }}"
