@@ -24,13 +24,30 @@
         fail_msg: "Error getting members"
         success_msg: "Consul servers installed and running"
       loop: "{{ groups['consul_servers'] }}"
+      when: inventory_hostname in groups['consul']
 
     - name: Check client clients running
+      assert:
+        that: nodes.stdout | regex_search(".*traefik  .*:8301  alive   client")
+        fail_msg: "Error getting members"
+        success_msg: "Consul clients installed and running"
+      when: inventory_hostname in groups['consul']
+
+    - name: Check consul servers new running
+      assert:
+        that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   server")
+        fail_msg: "Error getting members"
+        success_msg: "Consul servers installed and running"
+      loop: "{{ groups['consul_new_servers'] }}"
+      when: inventory_hostname in groups['consul_new']
+
+    - name: Check client clients new running
       assert:
         that: nodes.stdout | regex_search("{{ item }}  .*:8301  alive   client")
         fail_msg: "Error getting members"
         success_msg: "Consul clients installed and running"
-      loop: "{{ groups['consul_clients'] }}"
+      loop: "{{ groups['consul_new_clients'] }}"
+      when: inventory_hostname in groups['consul_new']
 
     - name: Test
       command: nomad server members
@@ -45,7 +62,7 @@
         that: servers.stdout | regex_search("{{ item }}.* alive ")
         fail_msg: "Error getting members"
         success_msg: "Nomad servers installed and running"
-      loop: "{{ groups['nomad_servers'] }}"
+      loop: "{{ groups['nomad_servers'] + groups['nomad_new_servers'] }}"
 
     - name: Test clients
       command: nomad node status
@@ -57,10 +74,16 @@
 
     - name: Check nomad clients running
       assert:
-        that: nodes.stdout | regex_search("{{ item }}.* ready")
+        that: nodes.stdout | regex_search(".*traefik.* ready")
         fail_msg: "Error getting members"
         success_msg: "Nomad clients installed and running"
-      loop: "{{ groups['nomad_clients'] }}"
+
+    - name: Check nomad clients new running
+      assert:
+        that: nodes.stdout | regex_search(".*{{ item }}.* ready")
+        fail_msg: "Error getting members"
+        success_msg: "Nomad clients installed and running"
+      loop: "{{ groups['nomad_new_clients'] }}"
   
     - name: Test traefik
       command: nomad status

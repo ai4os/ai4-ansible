@@ -43,6 +43,18 @@
     - domain.key
     - domain.pem
 
+#Set Traefik hostname
+- name: Set Traefik name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-traefik"
+  when: ("traefik_master" in groups and inventory_hostname in groups['traefik_master'])
+
+- name:  Set new Traefik name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-traefik"
+  when: ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])
+
+
 # Define Traefik service job
 - name: "Define job config for traefik service"
   template:

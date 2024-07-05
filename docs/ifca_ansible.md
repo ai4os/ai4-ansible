@@ -115,7 +115,7 @@ Specifically, modify the following groups:
     Modify the lines to match the new Nomad CPU client names.
 
     > ⓘ CPU clients are Nomad clients without GPU. The Traefik node should also be
-    > included in this group.
+    > included in this group **at the end of the list**.
 
     > ⚠ There should always be at least 1 CPU client; the Traefik node.
 

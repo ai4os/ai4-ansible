@@ -1,3 +1,37 @@
+## Set the node name based on the group
+
+- name: Set CPU clients name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_cpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_cpu_clients" in groups and inventory_hostname in groups['nomad_cpu_clients'])
+
+- name: Set GPU clients name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_gpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_gpu_clients" in groups and inventory_hostname in groups['nomad_gpu_clients'])
+
+- name: Set Traefik name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-traefik"
+  when: ("traefik_master" in groups and inventory_hostname in groups['traefik_master'])
+
+- name: Set new CPU clients name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_new_cpu_clients'].index(inventory_hostname) }}"
+  when: ("nomad_new_cpu_clients" in groups and inventory_hostname in groups['nomad_new_cpu_clients'])
+
+- name: Set new GPU clients name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_new_gpu_clients'].index(inventory_hostname) }}"
+  with_items: "{{ groups['nomad_new_gpu_clients'] }}"
+  when: ("nomad_new_gpu_clients" in groups and inventory_hostname in groups['nomad_new_gpu_clients'])
+
+- name:  Set new Traefik name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-traefik"
+  when: ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])
+
+## Copy the client configuration file 
 
 - name: "Copy consul.hcl configuration"
   template:

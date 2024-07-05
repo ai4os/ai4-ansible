@@ -8,7 +8,7 @@
   register: new_certs_stat
 
 - name: "Generate certificate for each new consul server"
-  command: consul tls cert create -server -dc {{ consul_dc_name }} -domain consul -additional-dnsname=*.{{ consul_dc_name }}.consul -additional-dnsname=*.server.{{ consul_dc_name }}.consul
+  command: consul tls cert create -server -dc {{ hostvars[item]['consul_dc_name'] }} -domain consul -additional-dnsname=*.{{ hostvars[item]['consul_dc_name'] }}.consul -additional-dnsname=*.server.{{ hostvars[item]['consul_dc_name'] }}.consul
   args:
     chdir: "{{ path }}"
   loop: "{{ groups['consul_new_servers'] }}"
