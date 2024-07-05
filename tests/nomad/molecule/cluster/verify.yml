@@ -80,7 +80,7 @@
 
     - name: Check nomad clients new running
       assert:
-        that: nodes.stdout | regex_search("{{ item }}.* ready")
+        that: nodes.stdout | regex_search(".*{{ item }}.* ready")
         fail_msg: "Error getting members"
         success_msg: "Nomad clients installed and running"
       loop: "{{ groups['nomad_new_clients'] }}"
