@@ -1,6 +1,9 @@
 server = true
  
-advertise_addr = "{{ my_ip }}"                      # IP of the machine
+advertise_addr = "{{ my_ip }}"                       # IP of the machine
+{% if my_public_ip is defined %}
+advertise_addr_wan = "{{ my_public_ip }}"            # IP of the machine
+{% endif %}
  
 client_addr = "0.0.0.0"                              # Choose any address to designate an interface to which Consul services will bind, including HTTP and DNS server
  
