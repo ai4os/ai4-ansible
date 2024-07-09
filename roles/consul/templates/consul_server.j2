@@ -1,7 +1,7 @@
 server = true
  
 advertise_addr = "{{ my_ip }}"                       # IP of the machine
-{% if my_public_ip is defined %}
+{% if my_public_ip is defined and my_public_ip != "" %}
 advertise_addr_wan = "{{ my_public_ip }}"            # IP of the machine
 {% endif %}
  
