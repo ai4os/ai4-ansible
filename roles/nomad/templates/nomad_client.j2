@@ -24,7 +24,7 @@ client {
    compute = false
    tags = "traefik"
 {% else %}
-
+  status = "test"
    # rest of Nomad clients tags needed for both functionalities: in nodes that are not traefik_master nor traefik_new_master
    compute = true
    
