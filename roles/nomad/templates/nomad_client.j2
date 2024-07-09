@@ -24,7 +24,6 @@ client {
    compute = false
    tags = "traefik"
 {% else %}
-  status = "test"
    # rest of Nomad clients tags needed for both functionalities: in nodes that are not traefik_master nor traefik_new_master
    compute = true
    
@@ -40,6 +39,8 @@ client {
    # Nomad client's domain (specified in the hosts file)
    domain = "{{ domain }}"
    ansible_version = "{{ commit_id_fact }}"
+   status = "test"
+
   }
 
 {% if ("traefik_master" not in groups or inventory_hostname not in groups['traefik_master']) and ("traefik_new_master" not in groups or inventory_hostname not in groups['traefik_new_master']) %}
