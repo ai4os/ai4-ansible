@@ -1,27 +1,12 @@
-- name: "Set consul token in consul.hcl"
-  replace:
-    path: "{{ consul_config }}consul.hcl"
-    replace: "{{ agent_consul_token }}"
-    regexp: '{{ default_token }}'
-  notify: Restart consul
-
 - name: "Set agent token"
   command: consul acl set-agent-token agent "{{ agent_consul_token }}"
   changed_when: false
   when: ("consul_servers" in groups and inventory_hostname in groups["consul_servers"])
 
-- name: "Set consul management token in consul.hcl"
-  replace:
-    path: "{{ consul_config }}consul.hcl"
-    replace: "{{ management_consul_token }}"
-    regexp: '{{ default_management_token }}'
+- name: "Copy acl.hcl configuration"
+  template:
+    src: templates/consul_acl.j2
+    dest: "{{ consul_config }}acl.hcl"
+    owner: "{{ consul_username }}"
+    force: no
   notify: Restart consul
-  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
-
-- name: "Set consul replication token in consul.hcl"
-  replace:
-    path: "{{ consul_config }}consul.hcl"
-    replace: "{{ replication_consul_token }}"
-    regexp: '{{ default_replication_token }}'
-  notify: Restart consul
-  when: ("consul_master" not in groups or inventory_hostname not in groups["consul_master"])

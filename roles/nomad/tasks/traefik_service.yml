@@ -72,6 +72,12 @@
     consul_hostname: "{{ consul_dc_name }}-traefik"
   when: ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])
 
+# Set Traefik token in the service job
+- name: Get traefik Token
+  set_fact:
+    token_consul_token: "{{ lookup('file', certs_dir + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'
 
 # Define Traefik service job
 - name: "Define job config for traefik service"
@@ -80,26 +86,13 @@
     dest: "{{ path }}traefik-{{ nomad_dc }}.hcl"
     owner: "{{ username }}"
     force: no
-
-# Set Traefik token in the service job
-- name: Get traefik Token
-  set_fact:
-    token_consul_token: "{{ lookup('file', certs_dir + 'traefik_token')| regex_search(regexp,'\\1') | first }}"
-  vars:
-    regexp: 'SecretID:\s+(.*)'
-
-- name: "Set traefik token on traefik.hcl"
-  replace:
-    path: "{{ path }}traefik-{{ nomad_dc }}.hcl"
-    replace: "{{ token_consul_token }}"
-    regexp: '{{ default_token }}'
-  register: replace_traefik_token
+  register: create_traefik_job
 
 # Run the Traefik service job
 - name: "Run service job"
   command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  when: replace_traefik_token is changed
+  when: create_traefik_job is changed
   async: 60
   poll: 5

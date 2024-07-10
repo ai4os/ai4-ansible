@@ -23,9 +23,6 @@ consul_public_ip: "193.146.75.205"                              #Add datacenter 
 consul_servers_ip: !unsafe ["193.146.75.205", "193.146.75.229", "193.146.75.143", "193.146.75.106"]                   #Add cluster servers IPs. Unsafe option avoids replacing double quotes with single quotes
 my_ip: "{{ ansible_host }}"
 environment_file: /etc/environment
-default_token: 11111111-1111-1111-1111-111111111111
-default_management_token: 22222222-2222-2222-2222-222222222222
-default_replication_token: 33333333-3333-3333-3333-333333333333
 hosts: /etc/hosts
 new_certs: "new_site_certs"
 primary_datacenter: "ai4os-ifca"
@@ -62,6 +59,7 @@ nomad_reserved_memory_mb: 4096
 nomad_username: nomad
 nomad_cni_version: 1.0.0
 nomad_region: ai4os
+nomad_client_meta: { "status": "test" }
 
 # -- Consul
 consul_version: 1.17.1
