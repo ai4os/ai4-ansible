@@ -89,22 +89,35 @@
   register: create_traefik_job
 
 #Check if traefik container is running
-- name: Get list of running containers
-  become: true
-  command: docker ps
-  register: docker_ps_output
-  changed_when: false
+- name: Run garbage collector
+  command: nomad system gc
+  register: nomad_output
 
-- name: Check if a Traefik container is running
+- name: Get list of running jobs
+  command: nomad job status
+  register: nomad_output
+
+- name: Check if a Traefik job is running
+  set_fact:
+    traefik_running: "{{ 'traefik-' ~ consul_dc_name in nomad_output.stdout }}"
+
+- name: Check if a Traefik container is running debug
   debug:
-    msg: "Traefik container is running."
-  when: "'traefik' in docker_ps_output.stdout"
-  
+    msg: "Is Traefik container running? {{ traefik_running }}"
+
+- name: Check the output of nomad job status
+  debug:
+    msg: "{{ nomad_output.stdout }}"
+
+- name: Check if a Traefik container is running3
+  debug:
+    msg: 'traefik-{{ consul_dc_name }}'
+    
 # Run the Traefik service job
 - name: "Run service job"
   command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  when: ("create_traefik_job is changed or 'traefik' not in docker_ps_output.stdout")
+  when: ("create_traefik_job is changed or traefik-{{ consul_dc_name }}' not in nomad_output.stdout")
   async: 60
   poll: 5
