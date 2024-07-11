@@ -92,14 +92,16 @@
 - name: Run garbage collector
   command: nomad system gc
   register: nomad_output
-
+  changed_when: false
+  
 - name: Get list of running jobs
   command: nomad job status
   register: nomad_output
-
+  changed_when: false
 - name: Check if a Traefik job is running
   set_fact:
     traefik_running: "{{ 'traefik-' ~ consul_dc_name in nomad_output.stdout }}"
+  changed_when: false
 
 - name: Check if a Traefik container is running debug
   debug:
