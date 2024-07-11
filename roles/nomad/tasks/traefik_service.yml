@@ -93,6 +93,7 @@
   become: true
   command: docker ps
   register: docker_ps_output
+  changed_when: false
 
 - name: Check if a Traefik container is running
   debug:
