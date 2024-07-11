@@ -93,7 +93,7 @@
   command: nomad system gc
   register: nomad_output
   changed_when: false
-  
+
 - name: Get list of running jobs
   command: nomad job status
   register: nomad_output
@@ -107,19 +107,11 @@
   debug:
     msg: "Is Traefik container running? {{ traefik_running }}"
 
-- name: Check the output of nomad job status
-  debug:
-    msg: "{{ nomad_output.stdout }}"
-
-- name: Check if a Traefik container is running3
-  debug:
-    msg: 'traefik-{{ consul_dc_name }}'
-    
 # Run the Traefik service job
 - name: "Run service job"
   command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  when: ("create_traefik_job is changed or traefik-{{ consul_dc_name }}' not in nomad_output.stdout")
+  when: create_traefik_job.changed or not traefik_running
   async: 60
   poll: 5
