@@ -95,11 +95,22 @@
     regexp: '{{ default_token }}'
   register: replace_traefik_token
 
+#Check if traefik container is running
+- name: Get list of running containers
+  become: true
+  command: docker ps
+  register: docker_ps_output
+
+- name: Check if a Traefik container is running
+  debug:
+    msg: "Traefik container is running."
+  when: "'traefik' in docker_ps_output.stdout"
+  
 # Run the Traefik service job
 - name: "Run service job"
   command: nomad job run traefik-{{ nomad_dc }}.hcl
   args:
     chdir: "{{ path }}"
-  when: replace_traefik_token is changed
+  when: ("replace_traefik_token is changed or 'traefik' not in docker_ps_output.stdout")
   async: 60
   poll: 5
