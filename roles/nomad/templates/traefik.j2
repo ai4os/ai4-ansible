@@ -59,7 +59,7 @@ job "traefik-{{ nomad_dc }}" {
   [providers.consulCatalog.endpoint]
     address = "127.0.0.1:8500"
     # token is first set to default and then changed to each agent's token
-    token = "{{ default_token }}"
+    token = "{{ token_consul_token }}"
     scheme  = "http"
  
 [providers.file]

@@ -1,8 +1,0 @@
----
-- name: Converge
-  hosts: all
-  become: true
-
-- import_playbook: create_consul.yml
-
-- import_playbook: create_consul_new.yml

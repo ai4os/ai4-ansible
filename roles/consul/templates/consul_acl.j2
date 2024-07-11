@@ -1,0 +1,19 @@
+acl = {
+ enabled = true
+ default_policy = "deny"
+ down_policy = "deny"
+ {% if ("consul_master" in groups and inventory_hostname in groups["consul_master"]) %} 
+ enable_token_persistence = true
+ enable_token_replication = true
+ {% endif %}
+ 
+ tokens = {
+    agent = "{{ agent_consul_token }}"  
+    {% if ("consul_master" in groups and inventory_hostname in groups["consul_master"]) %}
+    initial_management =  "{{ management_consul_token }}"
+    {% elif ("consul_servers" in groups and inventory_hostname in groups["consul_servers"]) or ("consul_new_servers" in groups and inventory_hostname in groups["consul_new_servers"]) %}
+    replication = "{{ replication_consul_token }}"
+    {% endif %}
+  }
+
+}

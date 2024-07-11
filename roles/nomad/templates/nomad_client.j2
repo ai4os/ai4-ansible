@@ -39,7 +39,9 @@ client {
    # Nomad client's domain (specified in the hosts file)
    domain = "{{ domain }}"
    ansible_version = "{{ commit_id_fact }}"
-   status = "test"
+{% for key, value in nomad_client_meta.items() %}
+   {{ key }} = "{{ value }}"
+{% endfor %}
 
   }
 
@@ -87,7 +89,7 @@ consul {
     address = "127.0.0.1:8500"
 
     # token is first set to default and then changed to each agent's token
-    token = "{{ default_token }}"
+    token = "{{ agent_nomad_token }}"
  
     # The service name to register the server and client with Consul.
     server_service_name = "nomad-server"
