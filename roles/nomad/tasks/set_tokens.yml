@@ -1,8 +1,0 @@
-# Change {{defaul_token}} to each agent's token {{agent_nomad_token}} in the Nomad clients files
-
-- name: "Set consul token con client.hcl"
-  replace:
-    path: "{{ nomad_config }}client.hcl"
-    replace: "{{ agent_nomad_token }}"
-    regexp: '{{ default_token }}'
-  notify: Restart nomad

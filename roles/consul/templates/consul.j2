@@ -9,24 +9,8 @@ primary_datacenter = "{{ primary_datacenter }}"
 
 acl = {
  enabled = true
- default_policy = "deny"
- down_policy = "deny"
- {% if ("consul_master" in groups and inventory_hostname in groups["consul_master"]) %} 
- enable_token_persistence = true
- enable_token_replication = true
- {% endif %}
- 
- tokens = {
-    agent = "{{ default_token }}"  
-    {% if ("consul_master" in groups and inventory_hostname in groups["consul_master"]) %}
-    initial_management =  "{{ default_management_token }}"
-    {% elif server %}
-    replication = "{{ default_replication_token }}"
-    {% endif %}
-  }
-
 }
- 
+
 tls {
   defaults {
     ca_file = "{{ consul_certs }}consul-agent-ca.pem"
