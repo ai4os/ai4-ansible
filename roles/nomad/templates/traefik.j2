@@ -1,4 +1,4 @@
-job "traefik-{{ nomad_dc }}" {
+job "traefik-{{ consul_dc_name }}" {
   region      = "{{ nomad_region }}"
   datacenters = ["{{ consul_dc_name }}"]
   type     = "service"
