@@ -70,7 +70,7 @@ Specifically, modify the following groups:
     new-gpu-client2 ansible_host=172.16.43.59
     new-traefik ansible_host=193.146.75.162
     ```
- > ⚠ The Traefik node must be in the last position in the list.
+    > ⚠ The Traefik node must be in the last position in the list.
 
 - **traefik_new_master**
 
@@ -135,7 +135,7 @@ Specifically, modify the following groups:
     new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
     ```
- > ⚠ The Traefik node must be in the last position in the list.
+    > ⚠ The Traefik node must be in the last position in the list.
 
 - **nomad_new_gpu_clients**
 
