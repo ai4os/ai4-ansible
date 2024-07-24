@@ -71,10 +71,12 @@ Specifically, modify the following groups:
     Group example:
     ```ini
     [consul_new_clients]
-    new-traefik ansible_host=193.146.75.162
     new-cpu-client ansible_host=172.16.43.137
     new-gpu-client ansible_host=172.16.43.58
+    new-traefik ansible_host=193.146.75.162
+
     ```
+    > ⚠ The Traefik node must be in the last position in the list.
 
 - **traefik_new_master**
 
@@ -127,9 +129,12 @@ Specifically, modify the following groups:
     Group example:
     ```ini
     [nomad_new_cpu_clients]
-    new-traefik
     new-cpu-client
+    new-traefik
     ```
+
+ > ⚠ The Traefik node must be in the last position in the list.
+
 
 - **nomad_new_gpu_clients**
 
