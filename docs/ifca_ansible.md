@@ -132,8 +132,7 @@ Specifically, modify the following groups:
     new-cpu-client
     new-traefik
     ```
-
- > ⚠ The Traefik node must be in the last position in the list.
+    > ⚠ The Traefik node must be in the last position in the list.
 
 
 - **nomad_new_gpu_clients**
