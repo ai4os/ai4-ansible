@@ -24,6 +24,7 @@
 - stat:
     path: "{{ path }}{{ traefik_certs }}.zip"
   register: zip_file
+  delegate_to: 127.0.0.1
 
 - debug:
     msg: "WARNING: Traefik SSL zip file does not exist. It will be ignored."
@@ -47,10 +48,15 @@
 - stat:
     path: "{{ path }}{{ traefik_certs }}/domain.key"
   register: key_file
+  delegate_to: 127.0.0.1
 
-- debug:
+
+- name: "Check if traefik SSL certs exist in ansible_master"
+  debug:
     msg: "WARNING: Traefik SSL certs does not exist. They will be ignored."
+  delegate_to: 127.0.0.1
   when: not key_file.stat.exists
+
 
 - name: "Copy traefik SSL certificates from ansible_master to trafik_master"
   copy:
