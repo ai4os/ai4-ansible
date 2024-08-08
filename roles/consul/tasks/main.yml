@@ -73,6 +73,11 @@
     name: consul
     state: started
 
+- name: Enable consul service
+  ansible.builtin.service:
+    name: consul
+    enabled: true
+
 - name: Force consul restart if needed
   meta: flush_handlers
 
