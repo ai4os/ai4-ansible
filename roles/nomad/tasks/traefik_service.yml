@@ -85,7 +85,6 @@
     src: templates/traefik.j2
     dest: "{{ path }}traefik-{{ nomad_dc }}.hcl"
     owner: "{{ username }}"
-    force: no
   register: create_traefik_job
 
 #Check if traefik container is running
