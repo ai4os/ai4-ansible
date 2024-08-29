@@ -5,7 +5,12 @@ job "docuum" {
   id        = "docuum"
   priority  = "75"
 
-
+  constraint {
+    attribute = "${meta.compute}"
+    operator  = "="
+    value     = "true"
+  }
+  
   group "usergroup" {
 
     count = 1
