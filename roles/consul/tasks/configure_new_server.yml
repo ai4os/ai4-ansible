@@ -13,6 +13,20 @@
     consul_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_new_servers'].index(inventory_hostname) }}"
   when: ("nomad_new_servers" in groups and inventory_hostname in groups['nomad_new_servers'])
 
+#Create consul snapshot
+- name: Get current time
+  shell: date +%Y%m%d%H%M%S
+  register: current_time
+
+- name: Ensure the Consul snapshots directory exists
+  file:
+    path: /home/ubuntu/consul-snapshots
+    state: directory
+    mode: '0755'
+
+- name: Save Consul snapshot
+  command: consul snapshot save /home/ubuntu/consul-snapshots/{{ current_time.stdout }}.snap
+  
 - name: "Copy consul.hcl configuration"
   template:
     src: templates/consul.j2

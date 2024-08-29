@@ -1,8 +1,28 @@
-- name: Asignar nombre a servidores
+- name: Set server names
   set_fact:
     consul_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_servers'].index(inventory_hostname) }}"
   when: inventory_hostname in groups['nomad_servers']
 
+#Create consul snapshot
+- name: Get current time
+  shell: date +%Y%m%d%H%M%S
+  register: current_time
+
+- name: Ensure the Consul snapshots directory exists
+  file:
+    path: /home/ubuntu/consul-snapshots
+    state: directory
+    mode: '0755'
+
+- name: Save Consul snapshot
+  command: consul snapshot save /home/ubuntu/consul-snapshots/{{ current_time.stdout }}.snap
+
+#Automatically create a snapshot of the Consul server
+- name: "Automatically create a snapshot of the Consul server"
+  ansible.builtin.cron:
+    name: "Create snapshot"
+    special_time: weekly
+    job: "sudo consul snapshot save /home/ubuntu/consul-snapshots/$(date +%Y%m%d%H%M%S).snap"
 
 - name: "Copy consul.hcl configuration"
   vars:
