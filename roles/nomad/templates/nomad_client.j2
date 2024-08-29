@@ -105,6 +105,10 @@ consul {
  
 plugin "docker" {
   config {
+    gc {
+      image       = false
+      image_delay = "3m"
+    }
     allow_privileged = true
     volumes {
       enabled = true
