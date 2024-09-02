@@ -177,6 +177,13 @@
   include_tasks: run_docuum_job.yml
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
 
+
+#Copy try-me script
+- name: "Copy try-me script"
+  include_tasks: copy_tryme_scripts.yml
+  when: ("nomad_tryme_clients" in groups and inventory_hostname in groups["nomad_tryme_clients"]) or
+        ("new_nomad_tryme_clients" in groups and inventory_hostname in groups["new_nomad_tryme_clients"])
+
 # Copy tasks file for roles/test_scripts
 - name: "Copy monitoring scripts"
   include_tasks: copy_monitoring_scripts.yaml

@@ -14,6 +14,11 @@
     nomad_hostname: "{{ consul_dc_name }}-traefik"
   when: ("traefik_master" in groups and inventory_hostname in groups['traefik_master'])
  
+- name: Set tryme client name
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-tn-cpu-{{ groups['nomad_tryme_clients'].index(inventory_hostname) }}"
+  when: ("nomad_tryme_clients" in groups and inventory_hostname in groups['nomad_tryme_clients'])
+
 - name: Set servers name
   set_fact:
     nomad_hostname: "{{ consul_dc_name }}-server-{{ groups['nomad_servers'].index(inventory_hostname) }}"
@@ -33,6 +38,11 @@
   set_fact:
     nomad_hostname: "{{ consul_dc_name }}-traefik"
   when: ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])
+
+- name: Set new tryme name
+  set_fact:
+    nomad_hostname: "{{ consul_dc_name }}-tn-cpu-{{ groups['new_nomad_tryme_clients'].index(inventory_hostname) }}"
+  when: ("new_nomad_tryme_clients" in groups and inventory_hostname in groups['new_nomad_tryme_clients'])
  
 - name: Set new servers name
   set_fact:
