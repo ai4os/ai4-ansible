@@ -14,6 +14,7 @@ node-ifca-1 ansible_host=172.16.44.109
 node-ifca-gpu-0 ansible_host=172.16.44.103
 node-ifca-gpu-1 ansible_host=172.16.44.120
 node-ifca-gpu-2 ansible_host=172.16.44.85
+node-ifca-tryme-0 ansible_host=172.16.44.86
 node-ifca-traefik ansible_host=193.146.75.208
 
 [consul_servers]
@@ -44,6 +45,8 @@ node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagi
 node-ifca-gpu-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
 node-ifca-gpu-2 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
 
+[nomad_tryme_clients]
+node-ifca-tryme-0
 
 # ---- Volume-docker
 [nomad_volume]
