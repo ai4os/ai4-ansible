@@ -17,12 +17,20 @@
 - name: Save Consul snapshot
   command: consul snapshot save /home/ubuntu/consul-snapshots/{{ current_time.stdout }}.snap
 
+
+- name: Copy snapshot script
+  ansible.builtin.template:
+    src: consul-snapshots.sh
+    dest: "{{ path }}/consul-snapshots.sh"
+    owner: "{{ username }}"
+    mode: '777'
+
 #Automatically create a snapshot of the Consul server
 - name: "Automatically create a snapshot of the Consul server"
   ansible.builtin.cron:
     name: "Create snapshot"
     special_time: weekly
-    job: "sudo consul snapshot save /home/ubuntu/consul-snapshots/$(date +%Y%m%d%H%M%S).snap"
+    job: "sudo /home/ubuntu/consul-snapshots.sh"
 
 - name: "Copy consul.hcl configuration"
   vars:
