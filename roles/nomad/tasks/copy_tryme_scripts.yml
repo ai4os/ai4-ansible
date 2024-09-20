@@ -1,0 +1,12 @@
+- name: Copy getDockerImages script
+  ansible.builtin.copy:
+    src: getDockerImages.sh
+    dest: /home/ubuntu/getDockerImages.sh
+    owner: "{{ username }}"
+    mode: '777'
+
+- name: Add getDockerImages to crontab
+  ansible.builtin.cron:
+    name: "Download module images"
+    hour: "*/4"
+    job: "/home/ubuntu/getDockerImages.sh"
