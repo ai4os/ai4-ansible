@@ -17,11 +17,13 @@
   - set_fact:
       docker_config_values:
         registry-mirrors: ["{{ docker_registry }}"]
+        exec-opts: ["native.cgroupdriver=cgroupfs"]
 
   - set_fact:
       docker_config_values:
         data-root: "{{ mount_dir }}"
         registry-mirrors: ["{{ docker_registry }}"]
+        exec-opts: ["native.cgroupdriver=cgroupfs"]
     when: vol_name is defined
 
   # Configure swap capabilities
@@ -44,12 +46,6 @@
     vars:
       docker_nvidia_support: "{{ nvidia_support }}"
       docker_compose_version: "1.29.2"
-      docker_config_values:
-        data-root: "/mnt/data"
-        exec-opts: ["native.cgroupdriver=cgroupfs"]
-        registry-mirrors": [
-          "https://repo.ifca.es:5000"
-        ]
 
   - name: "Install CNI plugins"
     include_tasks: install_cni.yml
