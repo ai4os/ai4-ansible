@@ -15,16 +15,15 @@
     consul_hostname: "{{ consul_dc_name }}-traefik"
   when: ("traefik_master" in groups and inventory_hostname in groups['traefik_master'])
 
-- name: Set tryme name
-  set_fact:
-    consul_hostname: "{{ consul_dc_name }}-tn-cpu-{{ groups['nomad_tryme_clients'].index(inventory_hostname) }}"
-  when: ("nomad_tryme_clients" in groups and inventory_hostname in groups['nomad_tryme_clients'])
-
 - name: Set new CPU clients name
   set_fact:
     consul_hostname: "{{ consul_dc_name }}-wn-cpu-{{ groups['nomad_new_cpu_clients'].index(inventory_hostname) }}"
   when: ("nomad_new_cpu_clients" in groups and inventory_hostname in groups['nomad_new_cpu_clients'])
 
+- name: Set tryme name
+  set_fact:
+    consul_hostname: "{{ consul_dc_name }}-tn-cpu-{{ groups['nomad_tryme_clients'].index(inventory_hostname) }}"
+  when: ("nomad_tryme_clients" in groups and inventory_hostname in groups['nomad_tryme_clients'])
 - name: Set new GPU clients name
   set_fact:
     consul_hostname: "{{ consul_dc_name }}-wn-gpu-{{ groups['nomad_new_gpu_clients'].index(inventory_hostname) }}"
