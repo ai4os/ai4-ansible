@@ -10,21 +10,19 @@
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
         ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"])
 
+
+# Set docker daemon configuration
+- set_fact:
+    docker_config_values:
+      registry-mirrors: ["{{ docker_registry }}"]
+      exec-opts: ["native.cgroupdriver=cgroupfs"]
+
 # Configure volumes 
 - block:
 
-  # Set docker daemon configuration
+  # Add data root in case of volume nodes
   - set_fact:
-      docker_config_values:
-        registry-mirrors: ["{{ docker_registry }}"]
-        exec-opts: ["native.cgroupdriver=cgroupfs"]
-
-  - set_fact:
-      docker_config_values:
-        data-root: "{{ mount_dir }}"
-        registry-mirrors: ["{{ docker_registry }}"]
-        exec-opts: ["native.cgroupdriver=cgroupfs"]
-    when: vol_name is defined
+      docker_config_values: "{{ docker_config_values | combine({'data-root': mount_dir}) }}"
 
   # Configure swap capabilities
   - name: "Enable swap limit capabilities"
