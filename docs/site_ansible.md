@@ -362,7 +362,7 @@ Specifically, modify the following variables:
 The node volume may not be mounted correctly. Check within the file `/etc/nomad.d/nomad.hcl` where the nomad plugin is being searched. Check that the referenced volume is mounted correctly.
 
 ```vim
-# data_dir points to /mnt/data if mounted volume (noamd_volume or nomad_new_volume) and /opt/nomad otherwise
+# data_dir points to /mnt/data if mounted volume (nomad_volume or nomad_new_volume) and /opt/nomad otherwise
 data_dir = "/mnt/data"
 ```
 
