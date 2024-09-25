@@ -25,7 +25,7 @@ my_ip: "{{ ansible_host }}"
 environment_file: /etc/environment
 hosts: /etc/hosts
 new_certs: "new_site_certs"
-primary_datacenter: "ai4os-ifca"
+primary_datacenter: "ifca-ai4os"
 
 # -- Volumes-docker
 disks_path: /dev/
@@ -53,6 +53,7 @@ nomad_namespaces:
   - ai4eosc
   - imagine
   - tutorials
+  - ai4life
 nomad_nvidia_plugin_version: 1.0.0
 gpu_plugin_dir: plugins
 nomad_reserved_memory_mb: 4096
@@ -71,7 +72,7 @@ consul_certs_dir: "{{ consul_config_dir }}/certs"
 consul_certs: "{{ consul_certs_dir }}/"
 consul_fetched_dir: "{{ path }}{{consul_dc_name}}/consul_fetched"
 consul_fetched: "{{ consul_fetched_dir }}/"
-consul_dc_name: ai4os-ifca                                      #Change to DC name
+consul_dc_name: ifca-ai4esoc                                      #Change to DC name
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
 consul_username: consul
