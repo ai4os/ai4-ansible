@@ -57,9 +57,18 @@ consul {
     server_auto_join = true
     client_auto_join = true
 }
- 
+
+
+{% if my_public_ip is defined and my_public_ip != "" %}
+advertise{
+    http = "{{ my_public_ip }}:4646"
+    rpc = "{{ my_public_ip }}:4647"
+    serf = "{{ my_public_ip }}:4648"
+}
+{% else %}
 advertise{
     http = "{{ my_ip }}:4646"
     rpc = "{{ my_ip }}:4647"
     serf = "{{ my_ip }}:4648"
 }
+{% endif %}
