@@ -72,7 +72,7 @@ consul_certs_dir: "{{ consul_config_dir }}/certs"
 consul_certs: "{{ consul_certs_dir }}/"
 consul_fetched_dir: "{{ path }}{{consul_dc_name}}/consul_fetched"
 consul_fetched: "{{ consul_fetched_dir }}/"
-consul_dc_name: ifca-ai4esoc                                      #Change to DC name
+consul_dc_name: ifca-ai4os                                      #Change to DC name
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
 consul_username: consul

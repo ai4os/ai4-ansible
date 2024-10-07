@@ -330,7 +330,7 @@ Specifically, modify the following variables:
 
     Line example:
     ```yaml
-    traefik_certs: ai4os-ifca
+    traefik_certs: ifca-ai4os
     ```
 
 ## 4. Install role dependencies
