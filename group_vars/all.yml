@@ -25,7 +25,7 @@ my_ip: "{{ ansible_host }}"
 environment_file: /etc/environment
 hosts: /etc/hosts
 new_certs: "new_site_certs"
-primary_datacenter: "ifca-ai4os"
+primary_datacenter: "ifca-ai4eosc"
 
 # -- Volumes-docker
 disks_path: /dev/
