@@ -31,7 +31,7 @@ for item in $items; do
   fi
 
   # Get the value of field docker_registry_repo
-  docker_registry_repo=$(echo "$metadata_response" | jq -r '.sources.docker_registry_repo')
+  docker_registry_repo=$(echo "$metadata_response" | jq -r '.links.docker_image')
 
   # Download docker image
   if [ "$docker_registry_repo" != "null" ]; then	  
