@@ -1,24 +1,22 @@
 ## Generate and copy consul tokens for new consul nodes
 
 - name: "Generate token for each new consul agent"
-  shell: consul acl token create -policy-name node-policy -description "Consul Agent Token" -node-identity "{{ item }}:{{ consul_dc_name }}" > {{ item}}_consul_token
+  shell: consul acl token create -policy-name node-policy -description "Consul Agent Token" > {{ consul_dc_name }}_consul_token
   args:
     chdir: "{{ path }}"
-    creates: "{{ path }}{{ item }}_consul_token"
-  loop: "{{ groups['consul_new']|map('extract', hostvars,'inventory_hostname')|list }}"
+    creates: "{{ path }}{{ consul_dc_name }}_consul_token"
 
-- name: "Fetch each new consul agent token from consul-master to ansible-master"
+- name: "Fetch new consul agent token from consul-master to ansible-master"
   fetch:
-    src: "{{ path }}{{ item }}_consul_token"
+    src: "{{ path }}{{ consul_dc_name }}_consul_token"
     dest: "{{ path }}{{ new_certs }}/"
     flat: yes
-  loop: "{{ groups['consul_new']|map('extract', hostvars,'inventory_hostname')|list }}"
 
-- name: "Fetch consul management token from consul-master to ansible-master"
-  fetch:
-    src: "{{ path }}consul_bootstrap"
-    dest: "{{ path }}{{ new_certs }}/"
-    flat: yes
+# - name: "Fetch consul management token from consul-master to ansible-master"
+#   fetch:
+#     src: "{{ path }}consul_bootstrap"
+#     dest: "{{ path }}{{ new_certs }}/"
+#     flat: yes
 
 - name: "Fetch consul replication token from consul-master to ansible-master"
   fetch:

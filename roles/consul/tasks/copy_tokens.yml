@@ -1,21 +1,22 @@
-- name: Wait consul ACL token
-  wait_for:
-    path: "{{ certs_path }}consul_bootstrap"
-  delegate_to: localhost
+# - name: Wait consul ACL token
+#   wait_for:
+#     path: "{{ certs_path }}consul_bootstrap"
+#   delegate_to: localhost
 
-- name: "Copy consul ACL token from ansible_master to consul_hosts"
-  copy:
-   src: "{{ certs_path }}consul_bootstrap"
-   dest: "{{ consul_certs }}"
+
+# - name: "Copy consul ACL token from ansible_master to consul_hosts"
+#   copy:
+#    src: "{{ certs_path }}consul_bootstrap"
+#    dest: "{{ consul_certs }}"
 
 - name: Wait consul agent token
   wait_for:
-    path: "{{ certs_path }}{{ ansible_hostname }}_consul_token"
+    path: "{{ certs_path }}{{ consul_dc_name }}_consul_token"
   delegate_to: localhost
 
 - name: "Copy each consul agent token from ansible_master to each consul_host"
   copy:
-   src: "{{ certs_path }}{{ ansible_hostname }}_consul_token"
+   src: "{{ certs_path }}{{ consul_dc_name }}_consul_token"
    dest: "{{ consul_certs }}"
 
 - name: Wait consul replication token

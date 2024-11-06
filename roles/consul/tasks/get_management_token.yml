@@ -8,3 +8,4 @@
     management_consul_token: "{{ lookup('file', certs_path + '/' + 'consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
+  when: from_scratch_cluster_installation

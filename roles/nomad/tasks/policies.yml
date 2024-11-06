@@ -1,57 +1,57 @@
 ## Generate Nomad's policies and tokens ONLY in from-scratch deployment functionality
 
 # Create Nomad's policies
-- name: "Define nomad server policy"
-  copy:
-    src: nomad_server_policy.hcl
-    dest: "{{ consul_policies_dir }}/nomad-server-policy.hcl"
-    owner: "{{ nomad_username }}"
+# - name: "Define nomad server policy"
+#   copy:
+#     src: nomad_server_policy.hcl
+#     dest: "{{ consul_policies_dir }}/nomad-server-policy.hcl"
+#     owner: "{{ nomad_username }}"
 
-- name: "Define nomad client policy"
-  copy:
-    src: nomad_client_policy.hcl
-    dest: "{{ consul_policies_dir }}/nomad-client-policy.hcl"
-    owner: "{{ nomad_username }}"
+# - name: "Define nomad client policy"
+#   copy:
+#     src: nomad_client_policy.hcl
+#     dest: "{{ consul_policies_dir }}/nomad-client-policy.hcl"
+#     owner: "{{ nomad_username }}"
 
-- name: "Check if nomad server policy exists"
-  command: consul acl policy read -name nomad-server
-  register: server_pol
-  changed_when: false
-  failed_when: false
+# - name: "Check if nomad server policy exists"
+#   command: consul acl policy read -name nomad-server
+#   register: server_pol
+#   changed_when: false
+#   failed_when: false
 
-- name: "Create nomad server policy"
-  command: consul acl policy create -name nomad-server -description "Nomad Server Policy" -rules @{{ consul_policies_dir }}/nomad-server-policy.hcl
-  when: server_pol.rc != 0
+# - name: "Create nomad server policy"
+#   command: consul acl policy create -name nomad-server -description "Nomad Server Policy" -rules @{{ consul_policies_dir }}/nomad-server-policy.hcl
+#   when: server_pol.rc != 0
 
-- name: "Check if nomad client policy exists"
-  command: consul acl policy read -name nomad-client
-  register: client_pol
-  changed_when: false
-  failed_when: false
+# - name: "Check if nomad client policy exists"
+#   command: consul acl policy read -name nomad-client
+#   register: client_pol
+#   changed_when: false
+#   failed_when: false
 
-- name: "Create nomad client policy"
-  command: consul acl policy create -name nomad-client -description "Nomad Client Policy" -rules @{{ consul_policies_dir }}/nomad-client-policy.hcl
-  when: client_pol.rc != 0
+# - name: "Create nomad client policy"
+#   command: consul acl policy create -name nomad-client -description "Nomad Client Policy" -rules @{{ consul_policies_dir }}/nomad-client-policy.hcl
+#   when: client_pol.rc != 0
 
 # Generate agent's tokens
-- name: "Generate token for each nomad server"
-  shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
-  args:
-    chdir: "{{ path }}"
-    creates: "{{ item}}_nomad_token"
-  loop: "{{ groups['nomad_servers']|map('extract', hostvars,'ansible_hostname')|list }}"
+# - name: "Generate token for each nomad server"
+#   shell: consul acl token create -policy-name nomad-server -description "Nomad Server Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
+#   args:
+#     chdir: "{{ path }}"
+#     creates: "{{ item}}_nomad_token"
+#   loop: "{{ groups['nomad_servers']|map('extract', hostvars,'ansible_hostname')|list }}"
 
-- name: "Generate token for each nomad client"
-  shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
-  args:
-    chdir: "{{ path }}"
-    creates: "{{ item}}_nomad_token"
-  loop: "{{ groups['nomad_clients']|map('extract', hostvars,'ansible_hostname')|list }}"
+# - name: "Generate token for each nomad client"
+#   shell: consul acl token create -policy-name nomad-client -description "Nomad Client Agent Token"  -node-identity "{{ item }}:{{ consul_dc_name }}"  > {{ item}}_nomad_token
+#   args:
+#     chdir: "{{ path }}"
+#     creates: "{{ item}}_nomad_token"
+#   loop: "{{ groups['nomad_clients']|map('extract', hostvars,'ansible_hostname')|list }}"
 
 # Fetch generated tokens from consul-master to ansible-master's {{nomad_fetched}} dir to later distribute them among the agents
-- name: "Fetch nomad agent token from consul-master to ansible-master"
-  fetch:
-    src: "{{ path }}{{ item }}_nomad_token"
-    dest: "{{ nomad_fetched }}"
-    flat: yes
-  loop: "{{ groups['nomad']|map('extract', hostvars,'ansible_hostname')|list }}"
+# - name: "Fetch nomad agent token from consul-master to ansible-master"
+#   fetch:
+#     src: "{{ path }}{{ item }}_nomad_token"
+#     dest: "{{ nomad_fetched }}"
+#     flat: yes
+#   loop: "{{ groups['nomad']|map('extract', hostvars,'ansible_hostname')|list }}"
