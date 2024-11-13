@@ -48,6 +48,17 @@
   - name: "Install CNI plugins"
     include_tasks: install_cni.yml
 
+  - name: "Hold nvidia packages"
+    apt:
+      name: "{{ item }}"
+      state: held
+    with_items:
+      - nvidia-headless-*
+      - nvidia-utils-*
+      - nvidia-headless-no-dkms-*
+      - nvidia-kernel-source-*
+    when: nvidia_support and ansible_os_family == "Debian"
+
   when: ("nomad_clients" in groups and inventory_hostname in groups["nomad_clients"]) or
         ("nomad_new_clients" in groups and inventory_hostname in groups["nomad_new_clients"])
 
