@@ -23,3 +23,4 @@
         my_ip: "{{ ansible_default_ipv4.address }}"
         consul_dc_name: "ifca-ai4os-new"
         primary_datacenter: "ifca-ai4os"
+        from_scratch_cluster_installation: false

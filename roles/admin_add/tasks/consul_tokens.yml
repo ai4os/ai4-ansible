@@ -1,6 +1,6 @@
 ## Generate and copy consul tokens for new consul nodes
 
-- name: "Generate token for each new consul agent"
+- name: "Generate token for new consul agents in {{ consul_dc_name }}"
   shell: consul acl token create -policy-name node-policy -description "Consul Agent Token" > {{ consul_dc_name }}_consul_token
   args:
     chdir: "{{ path }}"

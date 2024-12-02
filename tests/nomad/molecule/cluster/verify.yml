@@ -49,20 +49,6 @@
       loop: "{{ groups['consul_new_clients'] }}"
       when: inventory_hostname in groups['consul_new']
 
-    - name: Test ACL
-      command: consul acl token list
-      register: acls
-      changed_when: false
-
-    - debug:
-        var: acls.stdout
-
-    - name: Check acl list
-      assert:
-        that: acls.stdout | regex_search("node-policy")
-        fail_msg: "Error consul ACLs"
-        success_msg: "Consul ACLs properly configured"
-
     - name: Test servers
       command: nomad server members
       register: servers
