@@ -9,6 +9,8 @@
    src: "{{ path }}nomad_{{ nomad_version }}_linux_amd64.zip"
    dest: "{{ path_bin }}"
    remote_src: yes
+   include:
+    - nomad
 
 - name: "Create nomad certs and data dir"
   file:
