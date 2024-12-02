@@ -2,14 +2,27 @@
 # {{certs_path}} was previously set for each functionality:
 # it is either {{nomad_fetched}} dir for from-scratch deployment or {{new_certs}} dir for joining)
 
-- name: "Copy each nomad agent token from ansible_master to each nomad_host"
+# When deploying for scratch the consul token is placed on the consul folder, 
+# and its used both for consul and nomad, so it should be found on the consul fetched folder
+- name: "Get token from consul fetched"
+  set_fact:
+    certs_path: "{{ consul_fetched }}"
+  when: ("nomad" in groups and inventory_hostname in groups["nomad"])
+
+- name: "Copy agent token from ansible_master to each nomad_host"
   copy:
-   src: "{{ certs_path }}{{ ansible_hostname }}_nomad_token"
+   src: "{{ certs_path }}{{ consul_dc_name }}_consul_token"
    dest: "{{ consul_certs }}"
 
 # Set agent_nomad_token in each Nomad agent
 - name: "Get agent token"
   set_fact:
-    agent_nomad_token: "{{ lookup('file', certs_path + ansible_hostname + '_nomad_token')| regex_search(regexp,'\\1') | first }}"
+    agent_nomad_token: "{{ lookup('file', certs_path + consul_dc_name + '_consul_token')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
+
+# Restore the original value of certs_path
+- name: "Get token from consul fetched as is the same consul token on both services"
+  set_fact:
+    certs_path: "{{ nomad_fetched }}"
+  when: ("nomad" in groups and inventory_hostname in groups["nomad"])

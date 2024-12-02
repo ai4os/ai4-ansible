@@ -1,10 +1,12 @@
 - name: Wait management Token
   wait_for:
-    path: "{{ certs_path }}/consul_replication_token"
+    path: "{{ certs_path }}/consul_bootstrap"
   delegate_to: localhost
+  when: from_scratch_cluster_installation
 
 - name: Get management Token
   set_fact:
     management_consul_token: "{{ lookup('file', certs_path + '/' + 'consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
+  when: from_scratch_cluster_installation

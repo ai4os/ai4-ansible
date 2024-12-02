@@ -1,8 +1,19 @@
+# Use agent token for consul agents
+
 - name: "Get consul ACL token from consul_master"
   set_fact:
-    consul_token: "{{ lookup('file', certs_path + '/consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
+    consul_token: "{{ lookup('file', certs_path + '/' + consul_dc_name + '_consul_token')| regex_search(regexp,'\\1') | first }}"
   vars:
     regexp: 'SecretID:\s+(.*)'
+
+#Use consul bootstrap token for consul master
+
+- name: "Get consul ACL token from consul_master"
+  set_fact:
+    consul_token: "{{ lookup('file', certs_path + '/' + 'consul_bootstrap')| regex_search(regexp,'\\1') | first }}"
+  vars:
+    regexp: 'SecretID:\s+(.*)'   
+  when: ("consul_master" in groups and inventory_hostname in groups["consul_master"])
 
 - name: "Export consul token"
   lineinfile:

@@ -19,3 +19,4 @@
         add_new_nodes: true
         username: root
         path: /tmp/
+        consul_dc_name: "ifca-ai4os-new" 
