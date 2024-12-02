@@ -4,7 +4,7 @@ docker pull registry.services.ai4os.eu/ai4os/deepaas_ui:latest
 
 # Get API modules
 response=$(curl -s -X 'GET' \
-  'https://api.cloud.ai4eosc.eu/v1/catalog/modules/' \
+  'https://api.cloud.ai4eosc.eu/v1/catalog/modules' \
   -H 'accept: application/json')
 
 # Check response
