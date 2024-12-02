@@ -10,7 +10,7 @@
         name: "{{ item }}"
         state: absent
       loop:
-        - /tmp/ifca-ai4os
+        - /tmp/ifca-ai4eosc
         - /tmp/new_site_certs
         - /tmp/new_site_certs.zip
         - /tmp/ifca-deployments.cloud.ai4eosc.eu

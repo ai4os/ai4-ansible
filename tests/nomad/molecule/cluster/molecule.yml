@@ -8,7 +8,7 @@ driver:
 verifier:
   name: ansible
 platforms:
-  - name:  ifca-ai4os-server-0
+  - name:  ifca-ai4eosc-server-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -29,7 +29,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: ifca-ai4os-server-1
+  - name: ifca-ai4eosc-server-1
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -47,7 +47,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: ifca-ai4os-wn-cpu-0
+  - name: ifca-ai4eosc-wn-cpu-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -67,7 +67,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: ifca-ai4os-new-server-0
+  - name: ifca-ai4eosc-new-server-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -86,7 +86,7 @@ platforms:
     network_mode: "consul"
     published_ports:
       - 8501/tcp
-  - name: ifca-ai4os-new-wn-cpu-0
+  - name: ifca-ai4eosc-new-wn-cpu-0
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
