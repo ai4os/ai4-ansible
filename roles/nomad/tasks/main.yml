@@ -49,9 +49,7 @@
     include_tasks: install_cni.yml
 
   - name: "Hold nvidia packages"
-    apt:
-      name: "{{ item }}"
-      state: held
+    command: apt-mark hold "{{ item }}"
     with_items:
       - nvidia-headless-*
       - nvidia-utils-*
