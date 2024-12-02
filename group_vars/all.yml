@@ -1,10 +1,10 @@
 # -- Ansible
-ansible_master: { name: ansible-master, ip: 172.16.44.31 }
+ansible_master: { name: ansible-master, ip: 172.16.44.31 } #Change to your ansible master IP
 
 # -- Security
 #########################################################
 ########## WARNING: DO NOT SET THIS VARIABLE ############
-from_scratch_cluster_installation: true
+from_scratch_cluster_installation: false
 #########################################################  
 
 # -- Admin
@@ -19,12 +19,12 @@ path_system: /etc/systemd/system/
 path_bin: /usr/bin/
 
 # -- Common
-consul_public_ip: "193.146.75.205"                              #Add datacenter publics IP
+consul_public_ip: "193.146.75.205" #This is the public IP of your consul server
 consul_servers_ip: !unsafe ["193.146.75.205", "193.146.75.229", "193.146.75.143", "193.146.75.106"]                   #Add cluster servers IPs. Unsafe option avoids replacing double quotes with single quotes
 my_ip: "{{ ansible_host }}"
 environment_file: /etc/environment
 hosts: /etc/hosts
-new_certs: "new_site_certs"
+new_certs: "new_site_certs" #This is the name of the folder where you have your new certificates
 primary_datacenter: "ifca-ai4eosc"
 
 # -- Volumes-docker
@@ -36,10 +36,10 @@ grub_path: /etc/default/grub
 
 # -- Traefik
 traefik_certs_dir: /etc/nomad.d/traefik-certs
-traefik_certs: ifca-deployments.cloud.ai4eosc.eu
+traefik_certs: ifca-deployments.cloud.ai4eosc.eu #Change to your certs folder name
 
 # -- Nomad
-nomad_version: 1.7.3
+nomad_version: 1.9.1
 nomad_data_dir: /opt/nomad
 nomad: "{{ path_bin }}nomad"
 nomad_config_dir: /etc/nomad.d
@@ -61,9 +61,10 @@ nomad_username: nomad
 nomad_cni_version: 1.0.0
 nomad_region: ai4os
 nomad_client_meta: { "status": "test" }
+docker_nvidia_driver_version: 550
 
 # -- Consul
-consul_version: 1.17.1
+consul_version: 1.19.2
 consul_data_dir: /opt/consul
 consul: "{{ path_bin }}consul"
 consul_config_dir: /etc/consul.d
@@ -72,7 +73,7 @@ consul_certs_dir: "{{ consul_config_dir }}/certs"
 consul_certs: "{{ consul_certs_dir }}/"
 consul_fetched_dir: "{{ path }}{{consul_dc_name}}/consul_fetched"
 consul_fetched: "{{ consul_fetched_dir }}/"
-consul_dc_name: ifca-ai4os                                      #Change to DC name
+consul_dc_name: ifca-ai4eosc #Change to DC name
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
 consul_username: consul
