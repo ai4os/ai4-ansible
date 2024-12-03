@@ -21,6 +21,6 @@
           - tutorials
         consul_servers_ip: "{{ groups['consul_servers']|map('extract', hostvars, ['ansible_default_ipv4', 'address'])|list }}"
         my_ip: "{{ ansible_default_ipv4.address }}"
-        consul_dc_name: "ifca-ai4os-new"
-        primary_datacenter: "ifca-ai4os"
+        consul_dc_name: "ifca-ai4eosc-new"
+        primary_datacenter: "ifca-ai4eosc"
         from_scratch_cluster_installation: false

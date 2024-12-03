@@ -96,7 +96,7 @@
     - name: Check service running
       assert:
         that:
-          - "'traefik-ifca-ai4os  service  100       running' in jobs.stdout"
+          - "'traefik-ifca-ai4eosc  service  100       running' in jobs.stdout"
         fail_msg: "Error getting jobs"
         success_msg: "Traefik job up and running"
   

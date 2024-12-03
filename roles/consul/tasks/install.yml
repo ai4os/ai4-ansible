@@ -9,6 +9,8 @@
    src: "{{ path }}consul_{{ consul_version }}_linux_amd64.zip"
    dest: "{{ path_bin }}"
    remote_src: yes
+   include:
+    - consul
 
 - name: "Create consul certs and data dir"
   file:
