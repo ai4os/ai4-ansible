@@ -20,6 +20,13 @@
     owner: "{{ username }}"
     mode: '777'
 
+- name: Copy delete_test_jobs script
+  ansible.builtin.copy:
+    src: delete_test_jobs.sh
+    dest: /opt/monitoring/delete_test_jobs.sh
+    owner: "{{ username }}"
+    mode: '777'
+
 - name: Copy delete_pending_jobs script
   ansible.builtin.copy:
     src: delete_pending_jobs.sh
@@ -32,6 +39,12 @@
     name: "Empty trash"
     special_time: daily
     job: "/opt/monitoring/delete_trash.sh"
+
+- name: Add delete_test_jobs to crontab
+  ansible.builtin.cron:
+    name: "Empty trash"
+    special_time: weekly
+    job: "/opt/monitoring/delete_test_jobs.sh"
 
 #  - name: Add delete_dead_jobs to crontab"
 #    ansible.builtin.cron:
