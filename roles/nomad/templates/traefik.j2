@@ -48,7 +48,13 @@ job "traefik-{{ consul_dc_name }}" {
  
   [entryPoints.traefik]
     address = ":8081"
- 
+  
+  [entryPoints.nvflare_fl]
+    address = ":8002"
+  
+  [entryPoints.nvflare_admin]
+    address = ":8003"
+  
 [api]
   dashboard = false
   insecure  = false
