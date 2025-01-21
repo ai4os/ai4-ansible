@@ -32,7 +32,7 @@
     src: delete_pending_jobs.sh
     dest: /opt/monitoring/delete_pending_jobs.sh
     owner: "{{ username }}"
-    mode: '755
+    mode: '755'
 
 - name: Add delete_trash to crontab
   ansible.builtin.cron:
