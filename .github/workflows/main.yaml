@@ -16,7 +16,7 @@ jobs:
 
   nomad_test:
     name: Nomad + Consul Roles Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         distro:
