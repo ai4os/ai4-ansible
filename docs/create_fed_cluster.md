@@ -109,20 +109,21 @@ Specifically, modify the following groups:
       Eg. if `domain=ifca` and the cluster belongs to the `imagine` _namespace_,
       the deployments will be accessible under:
       `*.<domain>-deployments.cloud.imagine-ai.eu`
+    + _batch_ defines if the node should handle batch tasks or not.
 
 
     Line template:
     ```ini
-    <cpu_client1_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2>
+    <cpu_client1_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
       ...
-    <cpu_clientN_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2>
+    <cpu_clientN_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
     ```
 
     Group example:
     ```ini
     [nomad_cpu_clients]
-    node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
-    node-ifca-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+    node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=true
+    node-ifca-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=false
     ```
 
 - **nomad_gpu_clients**
@@ -134,15 +135,15 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <gpu_client1_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2>
+    <gpu_client1_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
       ...
-    <gpu_clientN_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2>
+    <gpu_clientN_name> nomad_dc=<nomad_dc_name> domain=<domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
     ```
 
     Group example:
     ```ini
     [nomad_gpu_clients]
-    node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+    node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=true
     ```
 
 - **nomad_volume**
