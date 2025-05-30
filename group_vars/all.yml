@@ -37,6 +37,7 @@ grub_path: /etc/default/grub
 # -- Traefik
 traefik_certs_dir: /etc/nomad.d/traefik-certs
 traefik_certs: ifca-deployments.cloud.ai4eosc.eu #Change to your certs folder name
+traefik_letsencrypt_email: admin@test.com
 
 # -- Nomad
 nomad_version: 1.9.1
