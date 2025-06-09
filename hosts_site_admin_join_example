@@ -32,12 +32,12 @@ new-traefik
 new-server nomad_dc=new_nomad_dc
 
 [nomad_new_cpu_clients]
-new-traefik nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
-new-cpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
+new-traefik nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine batch=false
+new-cpu-client nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine batch=false
 
 [nomad_new_gpu_clients]
-new-gpu-client1 nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine
-new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine
+new-gpu-client1 nomad_dc=new_nomad_dc domain=new_domain nomad_namespaces=ai4eosc,imagine batch=false
+new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine batch=false
 
 [new_nomad_tryme_clients]
 

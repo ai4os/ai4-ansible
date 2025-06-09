@@ -37,13 +37,13 @@ node-ifca-2 nomad_dc=ifca-ai4eosc
 node-ifca-3 nomad_dc=ifca-ai4eosc
 
 [nomad_cpu_clients]
-node-ifca-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
-node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+node-ifca-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=false
+node-ifca-traefik nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=false
 
 [nomad_gpu_clients]
-node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
-node-ifca-gpu-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
-node-ifca-gpu-2 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials
+node-ifca-gpu-0 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=false
+node-ifca-gpu-1 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=false
+node-ifca-gpu-2 nomad_dc=ifca-ai4eosc domain=ifca nomad_namespaces=ai4eosc,imagine,tutorials batch=false
 
 [nomad_tryme_clients]
 node-ifca-tryme-0
