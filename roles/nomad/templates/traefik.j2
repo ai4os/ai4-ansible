@@ -72,7 +72,15 @@ job "traefik-{{ consul_dc_name }}" {
  
 [providers.file]
   filename = "/etc/traefik/dynamic.toml"
- 
+
+[certificatesResolvers]
+  [certificatesResolvers.letsencrypt.acme]
+    email = "{{ traefik_letsencrypt_email }}"
+    storage = "/etc/traefik/ssl-certs/acme.json"
+
+    [certificatesResolvers.letsencrypt.acme.httpChallenge]
+      entryPoint = "web"
+
 # [log]
 #   level = "DEBUG"
  

@@ -85,6 +85,13 @@
   vars:
     regexp: 'SecretID:\s+(.*)'
 
+- name: Create acme.json file for Traefik
+  copy:
+    content: ""
+    dest: "{{ traefik_certs_dir }}/acme.json"
+    mode: '0600'
+    force: false
+
 # Define Traefik service job
 - name: "Define job config for traefik service"
   template:
