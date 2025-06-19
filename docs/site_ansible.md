@@ -119,6 +119,7 @@ Specifically, modify the following groups:
       Eg. if `domain=ifca` and your site belong to the `imagine` namespace,
       your deployments will be accessible under:
       `*.<domain>-deployments.cloud.imagine-ai.eu`
+    + _batch_ defines if the node should handle batch tasks or not.
 
     > ⚠ CPU clients are Nomad clients without GPU. The Traefik node should also be
     > included in this group **at the end of the list**.
@@ -126,14 +127,14 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_cpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+    <new_cpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
     ```
 
     Group example:
     ```ini
     [nomad_new_cpu_clients]
-    new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
-    new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
+    new-cpu-client nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine batch=false
+    new-traefik nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine batch=true
     ```
     > ⚠ The Traefik node must be in the last position in the list.
 
@@ -146,14 +147,14 @@ Specifically, modify the following groups:
 
     Line template:
     ```ini
-    <new_gpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+    <new_gpu_client_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
     ```
 
     Group example:
     ```ini
     [nomad_new_gpu_clients]
-    new-gpu-client1 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine
-    new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine
+    new-gpu-client1 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=ai4eosc,imagine batch=true
+    new-gpu-client2 nomad_dc=my_new_nomad_dc domain=my_new_domain nomad_namespaces=imagine batch=false
     ```
 
 - **nomad_new_volume**

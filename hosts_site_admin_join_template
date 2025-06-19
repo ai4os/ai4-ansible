@@ -30,14 +30,14 @@
 <new_server_name> nomad_dc=<new_nomad_dc_name>
 
 [nomad_new_cpu_clients]
-<new_cpu_client1_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+<new_cpu_client1_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
   ...
-<new_cpu_clientN_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+<new_cpu_clientN_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
   
 [nomad_new_gpu_clients]
-<new_gpu_client1_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+<new_gpu_client1_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
   ...
-<new_gpu_clientN_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2>
+<new_gpu_clientN_name> nomad_dc=<new_nomad_dc_name> domain=<new_domain> nomad_namespaces=<namespace1,namespace2> batch=<true/false>
 
 [new_nomad_tryme_clients]
 <new_tryme_client1_name>

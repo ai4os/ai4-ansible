@@ -22,20 +22,24 @@ client {
 {% if ("traefik_master" in groups and inventory_hostname in groups['traefik_master']) or ("traefik_new_master" in groups and inventory_hostname in groups['traefik_new_master'])%}
    # Traefik tags needed for both functionalities: traefik_master in from-scratch deployment and traefik_new_master in joining cluster
    compute = false
-   tags = "traefik"
+   type = "traefik"
 {% elif ("nomad_tryme_clients" in groups and inventory_hostname in groups['nomad_tryme_clients']) or ("new_nomad_tryme_clients" in groups and inventory_hostname in groups['new_nomad_tryme_clients'])%}
    # rest of Nomad clients tags needed for both functionalities: in nodes that are not traefik_master nor traefik_new_master
    compute = false
-   tags = "tryme"
+   type = "tryme"
+{% elif (batch|default(false) == "true")%}
+  type = "batch"
 {% else %}
+  type = "compute"
   compute = true
-  {% if ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]) %}
-   # GPU tag for both functionalities: nomad_gpu_clients in from-scratch deployment and nomad_new_gpu_clients in joining cluster
-   tags= "gpu"
-  {% else %}
-    # CPU tag for both functionalities: rest of Nomad clients (not Traefik nor GPU)
-   tags= "cpu"
-  {% endif %}
+{% endif %}
+
+{% if ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]) %}
+  # GPU tag for both functionalities: nomad_gpu_clients in from-scratch deployment and nomad_new_gpu_clients in joining cluster
+tags = "gpu"
+{% else %}
+  # CPU tag for both functionalities: rest of Nomad clients (not Traefik nor GPU)
+tags = "cpu"
 {% endif %}
 
    # Nomad client's domain (specified in the hosts file)
