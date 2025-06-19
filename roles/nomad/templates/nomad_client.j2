@@ -27,7 +27,7 @@ client {
    # rest of Nomad clients tags needed for both functionalities: in nodes that are not traefik_master nor traefik_new_master
    compute = false
    type = "tryme"
-{% elif (batch == "true")%}
+{% elif (batch|default(false) == "true")%}
   type = "batch"
 {% else %}
   type = "compute"
