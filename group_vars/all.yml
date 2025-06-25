@@ -40,7 +40,7 @@ traefik_certs: ifca-deployments.cloud.ai4eosc.eu #Change to your certs folder na
 traefik_letsencrypt_email: admin@test.com
 
 # -- Nomad
-nomad_version: 1.9.1
+nomad_version: 1.10.2
 nomad_data_dir: /opt/nomad
 nomad: "{{ path_bin }}nomad"
 nomad_config_dir: /etc/nomad.d
@@ -65,7 +65,7 @@ nomad_client_meta: { "status": "test" }
 docker_nvidia_driver_version: 550
 
 # -- Consul
-consul_version: 1.19.2
+consul_version: 1.21.1
 consul_data_dir: /opt/consul
 consul: "{{ path_bin }}consul"
 consul_config_dir: /etc/consul.d
