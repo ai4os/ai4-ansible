@@ -11,7 +11,8 @@ client {
 
   options {
     "docker.cleanup.image" = "false"
-    "docker.cleanup.image.delay" = "120d"    
+    "docker.cleanup.image.delay" = "120d"  
+    "fingerprint.denylist" = "env_aws,env_gce,env_azure,env_digitalocean"  
   }
 
   meta {
