@@ -72,6 +72,7 @@ The needed rules for each group are:
 | Egress | IPv6 | Any | Any | ::/0 |  |
 | Ingress | IPv4 | TCP | 80 (HTTP) | 0.0.0.0/0 |  |
 | Ingress | IPv4 | TCP | 443 (HTTPS) | 0.0.0.0/0 | Allow SSL |
+| Ingress | IPv4 | TCP | 8002-8003 | 0.0.0.0/0 | NVFLARE |
 | Ingress | IPv4 | TCP | 8081 | <new_site_network> | Traefik dashboard |
 
 - Federation
