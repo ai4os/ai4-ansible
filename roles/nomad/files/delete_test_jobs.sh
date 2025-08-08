@@ -1,8 +1,8 @@
 #!/bin/bash
 
-EXPECTED_OWNER="141741aeae18696c21292b82efd230a220afc35a9800f185bc998d435037c262@egi.eu"
-EXPECTED_OWNER_NAME="Test AI4EOSC"
-EXPECTED_OWNER_EMAIL="ai4os-cy-test@hotmail.com"
+EXPECTED_OWNER="Owner: e09d5bae-7809-47f0-917f-0ad6200ed765"
+EXPECTED_OWNER_NAME="TestAI4EOSC Cypress"
+EXPECTED_OWNER_EMAIL="ai4oscytest@gmail.com"
 
 job_ids=$(nomad job status -namespace=* | awk 'NR > 1 {print $1}')
 
