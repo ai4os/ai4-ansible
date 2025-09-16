@@ -11,27 +11,40 @@
     src: delete_trash.sh
     dest: /opt/monitoring/delete_trash.sh
     owner: "{{ username }}"
-    mode: '777'
+    mode: '755'
 
 - name: Copy delete_dead_jobs script
   ansible.builtin.copy:
     src: delete_dead_jobs.sh
     dest: /opt/monitoring/delete_dead_jobs.sh
     owner: "{{ username }}"
-    mode: '777'
+    mode: '755'
+
+- name: Copy delete_test_jobs script
+  ansible.builtin.copy:
+    src: delete_test_jobs.sh
+    dest: /opt/monitoring/delete_test_jobs.sh
+    owner: "{{ username }}"
+    mode: '755'
 
 - name: Copy delete_pending_jobs script
   ansible.builtin.copy:
     src: delete_pending_jobs.sh
     dest: /opt/monitoring/delete_pending_jobs.sh
     owner: "{{ username }}"
-    mode: '777'
+    mode: '755'
 
 - name: Add delete_trash to crontab
   ansible.builtin.cron:
     name: "Empty trash"
     special_time: daily
     job: "/opt/monitoring/delete_trash.sh"
+
+- name: Add delete_test_jobs to crontab
+  ansible.builtin.cron:
+    name: "Empty trash"
+    special_time: weekly
+    job: "/opt/monitoring/delete_test_jobs.sh"
 
 #  - name: Add delete_dead_jobs to crontab"
 #    ansible.builtin.cron:
