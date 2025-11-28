@@ -6,6 +6,14 @@ Once this tutorials is completed:
 - IFCA admins can proceed with [Running Ansible to create the federated cluster](./create_fed_cluster.md).
 - New site admin can proceed with [Running Ansible to join the federated cluster](./site_ansible.md).
 
+> [!IMPORTANT]
+> If your Openstack site allows Oauth authentication with [EGI-CheckIn](https://aai.egi.eu),
+> make sure your Keystone mapping only allows VO users from the `operators` group.
+> Otherwise, any member of the VO could potentially access your Openstack (!).
+>
+> * AI4EOSC: `urn:mace:egi.eu:group:vo.ai4eosc.eu:operators.vo.ai4eosc.eu:role=member#aai.egi.eu`
+> * iMagine: `urn:mace:egi.eu:group:vo.imagine-ai.eu:operators.vo.imagine-ai.eu:role=member#aai.egi.eu`
+
 
 ## 1. Create security groups
 
