@@ -1,0 +1,126 @@
+---
+- name: Validate Alloy configuration
+  assert:
+    that:
+      - alloy_node_name | string | length > 0
+      - alloy_datacenter | string | length > 0
+      - alloy_node_role in ['server', 'client']
+      - alloy_loki_url | string | length > 0
+      - alloy_loki_password | string | length > 0
+    fail_msg: "Alloy is enabled but alloy_node_name, alloy_datacenter, alloy_node_role, alloy_loki_url or alloy_loki_password is missing."
+
+- name: Check Docker installation
+  command: docker --version
+  register: alloy_docker_check
+  changed_when: false
+  failed_when: false
+  check_mode: no
+
+- name: Install Docker when missing
+  include_role:
+    name: grycap.docker
+  vars:
+    docker_nvidia_support: false
+    docker_compose_version: "1.29.2"
+  when: alloy_docker_check.rc != 0
+
+- name: Check Docker Compose plugin
+  command: docker compose version
+  register: alloy_compose_check
+  changed_when: false
+  failed_when: false
+  check_mode: no
+
+- name: Install Docker Compose plugin in Debian systems
+  apt:
+    name: "{{ alloy_docker_compose_package }}"
+    state: present
+    update_cache: yes
+  when:
+    - alloy_compose_check.rc != 0
+    - ansible_os_family == "Debian"
+
+- name: Install Docker Compose plugin
+  package:
+    name: "{{ alloy_docker_compose_package }}"
+    state: present
+  when:
+    - alloy_compose_check.rc != 0
+    - ansible_os_family != "Debian"
+
+- name: Verify Docker Compose plugin
+  command: docker compose version
+  register: alloy_compose_verify
+  changed_when: false
+  check_mode: no
+  when: not ansible_check_mode or alloy_compose_check.rc == 0
+
+- name: Create Alloy directory
+  file:
+    path: "{{ alloy_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy Alloy configuration
+  template:
+    src: config.alloy.j2
+    dest: "{{ alloy_dir }}/config.alloy"
+    owner: root
+    group: root
+    mode: "0640"
+  no_log: true
+  notify: Restart alloy
+
+- name: Copy Alloy docker compose file
+  template:
+    src: docker-compose.yaml.j2
+    dest: "{{ alloy_dir }}/docker-compose.yaml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart alloy
+
+- name: Copy Loki heartbeat service
+  template:
+    src: loki-heartbeat.service.j2
+    dest: "{{ path_system }}loki-heartbeat.service"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Copy Loki heartbeat timer
+  template:
+    src: loki-heartbeat.timer.j2
+    dest: "{{ path_system }}loki-heartbeat.timer"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable Loki heartbeat timer
+  systemd:
+    name: loki-heartbeat.timer
+    enabled: true
+    state: started
+    daemon_reload: yes
+
+- name: Pull Alloy container image
+  command: docker compose pull
+  args:
+    chdir: "{{ alloy_dir }}"
+  changed_when: false
+  when: alloy_pull_image | bool
+
+- name: Start Alloy container
+  command: docker compose up -d
+  args:
+    chdir: "{{ alloy_dir }}"
+  register: alloy_compose_up
+  changed_when: >
+    'Created' in alloy_compose_up.stdout or
+    'Started' in alloy_compose_up.stdout or
+    'Recreated' in alloy_compose_up.stdout or
+    'Created' in alloy_compose_up.stderr or
+    'Started' in alloy_compose_up.stderr or
+    'Recreated' in alloy_compose_up.stderr

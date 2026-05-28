@@ -1,0 +1,52 @@
+logging {
+  level = "info"
+}
+
+loki.write "central" {
+  endpoint {
+    url = {{ alloy_loki_url | to_json }}
+
+    tenant_id = {{ alloy_loki_tenant_id | to_json }}
+
+    basic_auth {
+      username = {{ alloy_loki_user | to_json }}
+      password = {{ alloy_loki_password | to_json }}
+    }
+  }
+}
+
+loki.source.journal "consul" {
+  matches    = "_SYSTEMD_UNIT=consul.service"
+  forward_to = [loki.write.central.receiver]
+
+  labels = {
+    datacenter = {{ alloy_datacenter | to_json }},
+    role       = {{ alloy_node_role | to_json }},
+    service    = "consul",
+    node       = {{ alloy_node_name | to_json }},
+  }
+}
+
+loki.source.journal "nomad" {
+  matches    = "_SYSTEMD_UNIT=nomad.service"
+  forward_to = [loki.write.central.receiver]
+
+  labels = {
+    datacenter = {{ alloy_datacenter | to_json }},
+    role       = {{ alloy_node_role | to_json }},
+    service    = "nomad",
+    node       = {{ alloy_node_name | to_json }},
+  }
+}
+
+loki.source.journal "heartbeat" {
+  matches    = "_SYSTEMD_UNIT=loki-heartbeat.service"
+  forward_to = [loki.write.central.receiver]
+
+  labels = {
+    datacenter = {{ alloy_datacenter | to_json }},
+    role       = {{ alloy_node_role | to_json }},
+    service    = "heartbeat",
+    node       = {{ alloy_node_name | to_json }},
+  }
+}

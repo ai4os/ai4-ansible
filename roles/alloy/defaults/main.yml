@@ -1,0 +1,17 @@
+---
+# defaults file for alloy log forwarding
+alloy_enabled: false
+alloy_dir: /opt/alloy
+alloy_image: grafana/alloy:latest
+alloy_container_name: alloy
+alloy_pull_image: true
+
+alloy_loki_url: ""
+alloy_loki_user: alloy
+alloy_loki_password: ""
+alloy_loki_tenant_id: default
+
+alloy_node_name: ""
+alloy_node_role: ""
+alloy_datacenter: "{{ consul_dc_name | default('') }}"
+alloy_docker_compose_package: docker-compose-plugin

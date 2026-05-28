@@ -1,0 +1,6 @@
+[Unit]
+Description=Loki Heartbeat
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/logger "[heartbeat] node={{ alloy_node_name }} alive"

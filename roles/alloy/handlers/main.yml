@@ -1,0 +1,5 @@
+---
+- name: Restart alloy
+  command: docker compose up -d --force-recreate alloy
+  args:
+    chdir: "{{ alloy_dir }}"

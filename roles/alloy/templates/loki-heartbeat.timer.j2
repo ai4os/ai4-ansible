@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Loki heartbeat every minute
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+Unit=loki-heartbeat.service
+
+[Install]
+WantedBy=timers.target

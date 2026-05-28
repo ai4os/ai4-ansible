@@ -169,6 +169,27 @@
     delay: 10
     timeout: 60
 
+- name: "Set Nomad hostname for Alloy"
+  include_tasks:
+    file: set_hostname.yml
+    apply:
+      tags: alloy
+  when: alloy_enabled | default(false) | bool
+  tags: alloy
+
+# Deploy Alloy log forwarding
+- name: "Deploy Alloy log forwarding"
+  include_role:
+    name: alloy
+    apply:
+      tags: alloy
+  vars:
+    alloy_node_name: "{{ nomad_hostname }}"
+    alloy_node_role: "{{ 'server' if (('nomad_servers' in groups and inventory_hostname in groups['nomad_servers']) or ('nomad_new_servers' in groups and inventory_hostname in groups['nomad_new_servers'])) else 'client' }}"
+    alloy_datacenter: "{{ consul_dc_name }}"
+  when: alloy_enabled | default(false) | bool
+  tags: alloy
+
 # Create initial Nomad namespaces (from-scratch cluster deployment functionality)
 - name: "Create nomad namespaces"
   shell: "nomad namespace apply {{ item }}"

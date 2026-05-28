@@ -4,7 +4,7 @@ ansible_master: { name: ansible-master, ip: 172.16.44.31 } #Change to your ansib
 # -- Security
 #########################################################
 ########## WARNING: DO NOT SET THIS VARIABLE ############
-from_scratch_cluster_installation: false
+from_scratch_cluster_installation: true
 #########################################################  
 
 # -- Admin
@@ -27,6 +27,13 @@ hosts: /etc/hosts
 new_certs: "new_site_certs" #This is the name of the folder where you have your new certificates
 primary_datacenter: "ifca-ai4eosc"
 
+# -- Alloy / Loki logs
+alloy_enabled: true
+alloy_loki_url: "https://loki.cloud.ai4eosc.eu/loki/api/v1/push"
+alloy_loki_user: "alloy"
+alloy_loki_password: ''
+alloy_loki_tenant_id: "default"
+
 # -- Volumes-docker
 disks_path: /dev/
 mount_dir: /mnt/data
@@ -40,7 +47,7 @@ traefik_certs: ifca-deployments.cloud.ai4eosc.eu #Change to your certs folder na
 traefik_letsencrypt_email: admin@test.com
 
 # -- Nomad
-nomad_version: 1.10.2
+nomad_version: 1.11.3
 nomad_data_dir: /opt/nomad
 nomad: "{{ path_bin }}nomad"
 nomad_config_dir: /etc/nomad.d
