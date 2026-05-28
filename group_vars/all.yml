@@ -8,7 +8,7 @@ from_scratch_cluster_installation: true
 #########################################################  
 
 # -- Admin
-add_new_nodes: false
+add_new_nodes: true
 
 
 
@@ -19,16 +19,16 @@ path_system: /etc/systemd/system/
 path_bin: /usr/bin/
 
 # -- Common
-consul_public_ip: "193.146.75.205" #This is the public IP of your consul server
+consul_public_ip: "193.146.75.106"                              #Add datacenter publics IP
 consul_servers_ip: !unsafe ["193.146.75.205", "193.146.75.229", "193.146.75.143", "193.146.75.106"]                   #Add cluster servers IPs. Unsafe option avoids replacing double quotes with single quotes
-my_ip: "{{ ansible_host }}"
+my_ip: "{{ ansible_host}}"
 environment_file: /etc/environment
 hosts: /etc/hosts
-new_certs: "new_site_certs" #This is the name of the folder where you have your new certificates
+new_certs: "ifca-imagine-federation-certificates"
 primary_datacenter: "ifca-ai4eosc"
 
 # -- Alloy / Loki logs
-alloy_enabled: true
+alloy_enabled: false
 alloy_loki_url: "https://loki.cloud.ai4eosc.eu/loki/api/v1/push"
 alloy_loki_user: "alloy"
 alloy_loki_password: ''
@@ -81,7 +81,7 @@ consul_certs_dir: "{{ consul_config_dir }}/certs"
 consul_certs: "{{ consul_certs_dir }}/"
 consul_fetched_dir: "{{ path }}{{consul_dc_name}}/consul_fetched"
 consul_fetched: "{{ consul_fetched_dir }}/"
-consul_dc_name: ifca-ai4eosc #Change to DC name
+consul_dc_name: ifca-imagine                                      #Change to DC name
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
 consul_username: consul
