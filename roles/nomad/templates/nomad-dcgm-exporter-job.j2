@@ -1,0 +1,74 @@
+job "dcgm-exporter" {
+  namespace = "default"
+  type        = "system"
+  region      = "{{ nomad_region }}"
+  datacenters = ["{{ consul_dc_name }}"]
+  id          = "dcgm-exporter"
+  priority    = "75"
+
+  constraint {
+    attribute = "${meta.tags}"
+    operator  = "="
+    value     = "gpu"
+  }
+
+  constraint {
+    attribute = "${meta.dcgm_exporter}"
+    operator  = "="
+    value     = "true"
+  }
+
+  group "dcgm-exporter" {
+
+    network {
+      port "metrics" {
+        static = 9400
+      }
+{% if alloy_metrics_enabled | default(false) | bool %}
+      port "alloy-health" {
+        static = 12345
+      }
+{% endif %}
+    }
+
+    task "dcgm-exporter" {
+
+      driver = "docker"
+
+      config {
+        image        = "nvcr.io/nvidia/k8s/dcgm-exporter:{{ dcgm_exporter_version }}"
+        runtime      = "nvidia"
+        network_mode = "host"
+
+        volumes = [
+          "/etc/dcgm-exporter/power-counters.csv:/etc/dcgm-exporter/default-counters.csv"
+        ]
+      }
+
+      resources {
+        cpu    = 100
+        memory = 1024
+      }
+
+      restart {
+        attempts = 3
+        delay    = "15s"
+        interval = "5m"
+        mode     = "delay"
+      }
+
+      service {
+        name     = "dcgm-exporter"
+        port     = "metrics"
+        provider = "consul"
+
+        tags = ["prometheus-metrics", "gpu"]
+      }
+    }
+
+{% set alloy_metrics_port = 9400 %}
+{% set alloy_metrics_component = "dcgm" %}
+{% set alloy_metrics_http_port = 12345 %}
+{% include "_alloy_metrics_sidecar.j2" %}
+  }
+}

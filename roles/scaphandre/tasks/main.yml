@@ -1,0 +1,39 @@
+---
+- name: "Create Scaphandre virtiofs mount point"
+  ansible.builtin.file:
+    path: "{{ scaphandre_mount_point }}"
+    state: directory
+    mode: '0750'
+
+- name: "Mount Scaphandre virtiofs share (persistent, read-only)"
+  mount:
+    path: "{{ scaphandre_mount_point }}"
+    src: "{{ scaphandre_virtiofs_tag }}"
+    fstype: virtiofs
+    opts: ro,nofail
+    state: mounted
+
+- name: "Check Scaphandre virtiofs share is mounted"
+  ansible.builtin.command: "mountpoint -q {{ scaphandre_mount_point }}"
+  register: scaphandre_mountpoint
+  changed_when: false
+  failed_when: false
+
+- name: "Warn if Scaphandre virtiofs share is not mounted"
+  ansible.builtin.debug:
+    msg: "WARNING: {{ scaphandre_mount_point }} is not a mountpoint. Virtiofs did not mount correctly."
+  when: scaphandre_mountpoint.rc != 0
+
+- name: "Download Scaphandre .deb package"
+  ansible.builtin.get_url:
+    url: "https://github.com/hubblo-org/scaphandre/releases/download/v{{ scaphandre_version }}/scaphandre_v{{ scaphandre_version }}-{{ scaphandre_deb_suffix }}_amd64.deb"
+    dest: "/tmp/scaphandre_{{ scaphandre_version }}.deb"
+    mode: '0640'
+
+# Note: the .deb's internal version label is "0.5.0-1" even for binary 1.0.2
+# (known upstream packaging bug) - apt will compare against that label, not
+# against the real scaphandre --version output, but it's stable across runs.
+- name: "Install Scaphandre .deb package"
+  ansible.builtin.apt:
+    deb: "/tmp/scaphandre_{{ scaphandre_version }}.deb"
+    state: present

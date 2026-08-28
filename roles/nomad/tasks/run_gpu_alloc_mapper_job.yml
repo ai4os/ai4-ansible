@@ -1,0 +1,21 @@
+- name: Copy gpu-alloc-mapper job
+  ansible.builtin.template:
+    src: nomad-gpu-alloc-mapper-job.j2
+    dest: "{{ path }}/nomad-gpu-alloc-mapper-job.hcl"
+    owner: "{{ username }}"
+    mode: '0640'
+  register: create_gpu_alloc_mapper_job
+
+- name: "Check if gpu-alloc-mapper job is already registered"
+  command: nomad job status -short gpu-alloc-mapper
+  register: gpu_alloc_mapper_job_status
+  changed_when: false
+  failed_when: false
+
+- name: "Run gpu-alloc-mapper job"
+  command: nomad job run nomad-gpu-alloc-mapper-job.hcl
+  args:
+    chdir: "{{ path }}"
+  when: create_gpu_alloc_mapper_job.changed or gpu_alloc_mapper_job_status.rc != 0
+  async: 60
+  poll: 5

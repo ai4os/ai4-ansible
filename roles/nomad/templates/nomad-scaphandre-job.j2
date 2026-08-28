@@ -1,0 +1,65 @@
+job "scaphandre" {
+  namespace = "default"
+  type        = "system"
+  region      = "{{ nomad_region }}"
+  datacenters = ["{{ consul_dc_name }}"]
+  id          = "scaphandre"
+  priority    = "75"
+
+  constraint {
+    attribute = "${meta.scaphandre}"
+    operator  = "="
+    value     = "true"
+  }
+
+  group "scaphandre" {
+
+    network {
+      port "metrics" {
+        static = 9401
+      }
+{% if alloy_metrics_enabled | default(false) | bool %}
+      port "alloy-health" {
+        static = 12346
+      }
+{% endif %}
+    }
+
+    task "scaphandre" {
+
+      driver = "raw_exec"
+
+      config {
+        command = "/usr/bin/scaphandre"
+        args    = ["--vm", "prometheus", "--containers", "--port", "9401"]
+      }
+
+      resources {
+        cpu    = 100
+        memory = 512
+      }
+
+      restart {
+        attempts = 3
+        delay    = "15s"
+        interval = "5m"
+        mode     = "delay"
+      }
+
+      service {
+        name     = "scaphandre"
+        port     = "metrics"
+        provider = "consul"
+
+        tags = ["prometheus-metrics", "scaphandre"]
+      }
+    }
+
+{% set alloy_metrics_port = 9401 %}
+{% set alloy_metrics_component = "scaphandre" %}
+{% set alloy_metrics_http_port = 12346 %}
+{% set alloy_metrics_keep_source_labels = ["__name__", "container_names"] %}
+{% set alloy_metrics_keep_regex = "scaph_host_power_microwatts;.*|scaph_process_power_consumption_microwatts;.+" %}
+{% include "_alloy_metrics_sidecar.j2" %}
+  }
+}

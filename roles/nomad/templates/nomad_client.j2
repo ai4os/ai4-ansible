@@ -38,6 +38,12 @@ client {
 {% if ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]) %}
   # GPU tag for both functionalities: nomad_gpu_clients in from-scratch deployment and nomad_new_gpu_clients in joining cluster
 tags = "gpu"
+{% if dcgm_exporter_enabled | default(false) | bool %}
+   dcgm_exporter = "true"
+{% endif %}
+{% if gpu_alloc_mapper_enabled | default(false) | bool %}
+   gpu_alloc_mapper = "true"
+{% endif %}
 {% else %}
   # CPU tag for both functionalities: rest of Nomad clients (not Traefik nor GPU)
 tags = "cpu"
@@ -46,6 +52,9 @@ tags = "cpu"
    # Nomad client's domain (specified in the hosts file)
    domain = "{{ domain }}"
    ansible_version = "{{ commit_id_fact }}"
+{% if scaphandre_enabled | default(false) | bool %}
+   scaphandre = "true"
+{% endif %}
 {% for key, value in nomad_client_meta.items() %}
    {{ key }} = "{{ value }}"
 {% endfor %}
