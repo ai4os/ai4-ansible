@@ -1,0 +1,2 @@
+DCGM_FI_DEV_POWER_USAGE,              gauge,   Power draw in watts
+DCGM_FI_DEV_TOTAL_ENERGY_CONSUMPTION, counter, Total energy consumption in mJ since last driver reload

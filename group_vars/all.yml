@@ -85,3 +85,35 @@ consul_dc_name: ifca-imagine                                      #Change to DC 
 consul_policies_dir: "{{ consul_config }}policies"
 consul_policies: "{{ consul_policies_dir }}/"
 consul_username: consul
+
+# -- DCGM Exporter (GPU power monitoring)
+dcgm_exporter_enabled: false
+dcgm_exporter_version: "4.5.3-4.8.2-distroless"
+
+# -- GPU allocation mapper (maps GPU UUID -> Nomad alloc_id via docker inspect,
+# for joining with DCGM_FI_DEV_* metrics in PromQL: on(UUID) group_left(alloc_id))
+gpu_alloc_mapper_enabled: false
+gpu_alloc_mapper_script_path: /opt/nomad-scripts/nomad_gpu_alloc_mapper.py
+
+# -- Scaphandre Agent (CPU power monitoring)
+scaphandre_enabled: false
+
+# -- Alloy metrics sidecar (push mode: scrape local exporter, remote_write to Mimir)
+# Independent of alloy_enabled (Alloy/Loki logs above) -- that flag only controls
+# whether the roles/alloy role runs, which is where alloy_image would otherwise
+# come from as a role default. Set it here too so the metrics sidecar doesn't
+# silently depend on the logs role having been enabled on the same host.
+alloy_image: "grafana/alloy:latest"
+# Tenant (X-Scope-OrgID) is derived server-side from the authenticated basic-auth
+# user in the Mimir gateway, so alloy_mimir_user must match this site's tenant
+# name in Mimir -- kept equal to consul_dc_name so there's a single value to set
+# per site instead of two that can drift out of sync.
+alloy_metrics_enabled: false
+alloy_mimir_url: "https://mimir.k8s.cloud.ai4eosc.eu/api/v1/push"
+alloy_mimir_user: "{{ consul_dc_name }}"
+alloy_mimir_password: ""
+# Federation-wide standard, not a per-site tuning knob: mismatched intervals
+# across sites force any shared rate()/increase() query to use the slowest
+# site's interval, losing resolution for everyone else. Keep it the same
+# everywhere unless changing it for the whole federation at once.
+alloy_scrape_interval: "30s"

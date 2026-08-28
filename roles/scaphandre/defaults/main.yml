@@ -1,0 +1,6 @@
+---
+# defaults file for scaphandre host preparation
+scaphandre_version: "1.0.2"
+scaphandre_deb_suffix: "deb12"   # covers Debian 12 based images (Ubuntu 22.04/24.04)
+scaphandre_mount_point: /var/scaphandre
+scaphandre_virtiofs_tag: scaphandre

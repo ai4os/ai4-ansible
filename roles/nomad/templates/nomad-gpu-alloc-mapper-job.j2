@@ -1,0 +1,69 @@
+job "gpu-alloc-mapper" {
+  namespace = "default"
+  type        = "system"
+  region      = "{{ nomad_region }}"
+  datacenters = ["{{ consul_dc_name }}"]
+  id          = "gpu-alloc-mapper"
+  priority    = "75"
+
+  constraint {
+    attribute = "${meta.tags}"
+    operator  = "="
+    value     = "gpu"
+  }
+
+  constraint {
+    attribute = "${meta.gpu_alloc_mapper}"
+    operator  = "="
+    value     = "true"
+  }
+
+  group "gpu-alloc-mapper" {
+
+    network {
+      port "metrics" {
+        static = 9402
+      }
+{% if alloy_metrics_enabled | default(false) | bool %}
+      port "alloy-health" {
+        static = 12347
+      }
+{% endif %}
+    }
+
+    task "gpu-alloc-mapper" {
+
+      driver = "raw_exec"
+
+      config {
+        command = "/usr/bin/python3"
+        args    = ["{{ gpu_alloc_mapper_script_path }}"]
+      }
+
+      resources {
+        cpu    = 50
+        memory = 128
+      }
+
+      restart {
+        attempts = 3
+        delay    = "15s"
+        interval = "5m"
+        mode     = "delay"
+      }
+
+      service {
+        name     = "gpu-alloc-mapper"
+        port     = "metrics"
+        provider = "consul"
+
+        tags = ["prometheus-metrics", "gpu"]
+      }
+    }
+
+{% set alloy_metrics_port = 9402 %}
+{% set alloy_metrics_component = "gpu-alloc-mapper" %}
+{% set alloy_metrics_http_port = 12347 %}
+{% include "_alloy_metrics_sidecar.j2" %}
+  }
+}

@@ -1,0 +1,18 @@
+---
+# Pre-pulls the dcgm-exporter image and stages its custom counters file on GPU
+# clients, so the Nomad system job has everything ready on first placement.
+
+- name: "Pull dcgm-exporter docker image"
+  command: "docker pull nvcr.io/nvidia/k8s/dcgm-exporter:{{ dcgm_exporter_version }}"
+
+- name: "Create dcgm-exporter config dir"
+  ansible.builtin.file:
+    path: /etc/dcgm-exporter
+    state: directory
+    mode: '0755'
+
+- name: "Copy dcgm-exporter custom counters file"
+  ansible.builtin.copy:
+    src: dcgm-power-counters.csv
+    dest: /etc/dcgm-exporter/power-counters.csv
+    mode: '0644'

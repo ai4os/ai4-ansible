@@ -1,0 +1,99 @@
+{% if alloy_metrics_enabled | default(false) | bool %}
+    task "alloy-metrics" {
+
+      driver = "docker"
+
+      # Give Alloy time to emit end-of-run staleness markers for the scraped
+      # series and flush its WAL to Mimir before Nomad SIGKILLs it. Without this
+      # (default kill_timeout = 5s) a `nomad job stop` kills the sidecar together
+      # with the exporter before the stale markers are sent, and the series keep
+      # returning their last value for ~5 min (PromQL lookback-delta).
+      kill_timeout = "30s"
+      kill_signal  = "SIGTERM"
+
+      config {
+        image        = "{{ alloy_image }}"
+        network_mode = "host"
+        args         = ["run", "--server.http.listen-addr=127.0.0.1:{{ alloy_metrics_http_port }}", "/local/config.alloy"]
+      }
+
+      env {
+        NODE_NAME = "${node.unique.name}"
+        VM_HOSTNAME = "${attr.unique.hostname}"
+      }
+
+      template {
+        destination = "local/config.alloy"
+        data = <<EOF
+logging {
+  level = "info"
+}
+
+prometheus.scrape "{{ alloy_metrics_component | replace("-", "_") }}" {
+  scrape_interval = "{{ alloy_scrape_interval }}"
+  targets = [{
+    "__address__" = "localhost:{{ alloy_metrics_port }}",
+    "instance"    = "{% raw %}{{ env "VM_HOSTNAME" }}{% endraw %}",
+    "datacenter"  = "{{ consul_dc_name }}",
+    "node"        = "{% raw %}{{ env "NODE_NAME" }}{% endraw %}",
+  }]
+{% if alloy_metrics_keep_regex is defined and alloy_metrics_keep_regex %}
+  forward_to = [prometheus.relabel.keep.receiver]
+}
+
+prometheus.relabel "keep" {
+  forward_to = [prometheus.remote_write.mimir.receiver]
+
+  rule {
+    source_labels = {{ (alloy_metrics_keep_source_labels | default(["__name__"])) | to_json }}
+    regex         = "{{ alloy_metrics_keep_regex }}"
+    action        = "keep"
+  }
+}
+{% else %}
+  forward_to = [prometheus.remote_write.mimir.receiver]
+}
+{% endif %}
+
+prometheus.remote_write "mimir" {
+  endpoint {
+    url = {{ alloy_mimir_url | to_json }}
+
+    basic_auth {
+      username = {{ alloy_mimir_user | to_json }}
+      password = {{ alloy_mimir_password | to_json }}
+    }
+  }
+}
+EOF
+      }
+
+      resources {
+        cpu    = 50
+        memory = 128
+      }
+
+      restart {
+        attempts = 3
+        delay    = "15s"
+        interval = "5m"
+        mode     = "delay"
+      }
+
+      service {
+        name     = "alloy-metrics-{{ alloy_metrics_component }}"
+        port     = "alloy-health"
+        provider = "consul"
+
+        tags = ["alloy", "metrics-sidecar"]
+
+        check {
+          type         = "http"
+          path         = "/-/ready"
+          interval     = "30s"
+          timeout      = "5s"
+          address_mode = "host"
+        }
+      }
+    }
+{% endif %}

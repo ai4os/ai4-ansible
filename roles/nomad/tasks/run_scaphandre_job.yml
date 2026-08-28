@@ -1,0 +1,21 @@
+- name: Copy scaphandre job
+  ansible.builtin.template:
+    src: nomad-scaphandre-job.j2
+    dest: "{{ path }}/nomad-scaphandre-job.hcl"
+    owner: "{{ username }}"
+    mode: '777'
+  register: create_scaphandre_job
+
+- name: "Check if scaphandre job is already registered"
+  command: nomad job status -short scaphandre
+  register: scaphandre_job_status
+  changed_when: false
+  failed_when: false
+
+- name: "Run scaphandre job"
+  command: nomad job run nomad-scaphandre-job.hcl
+  args:
+    chdir: "{{ path }}"
+  when: create_scaphandre_job.changed or scaphandre_job_status.rc != 0
+  async: 60
+  poll: 5

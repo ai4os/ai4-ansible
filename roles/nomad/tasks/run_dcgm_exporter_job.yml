@@ -1,0 +1,21 @@
+- name: Copy dcgm-exporter job
+  ansible.builtin.template:
+    src: nomad-dcgm-exporter-job.j2
+    dest: "{{ path }}/nomad-dcgm-exporter-job.hcl"
+    owner: "{{ username }}"
+    mode: '777'
+  register: create_dcgm_exporter_job
+
+- name: "Check if dcgm-exporter job is already registered"
+  command: nomad job status -short dcgm-exporter
+  register: dcgm_exporter_job_status
+  changed_when: false
+  failed_when: false
+
+- name: "Run dcgm-exporter job"
+  command: nomad job run nomad-dcgm-exporter-job.hcl
+  args:
+    chdir: "{{ path }}"
+  when: create_dcgm_exporter_job.changed or dcgm_exporter_job_status.rc != 0
+  async: 60
+  poll: 5
