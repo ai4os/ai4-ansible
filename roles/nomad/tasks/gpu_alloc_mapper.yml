@@ -3,10 +3,10 @@
   ansible.builtin.file:
     path: "{{ gpu_alloc_mapper_script_path | dirname }}"
     state: directory
-    mode: '0755'
+    mode: '0750'
 
 - name: "Copy gpu-alloc-mapper script"
   ansible.builtin.copy:
     src: nomad_gpu_alloc_mapper.py
     dest: "{{ gpu_alloc_mapper_script_path }}"
-    mode: '0755'
+    mode: '0750'

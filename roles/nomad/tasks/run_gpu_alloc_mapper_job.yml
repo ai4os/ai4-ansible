@@ -3,7 +3,7 @@
     src: nomad-gpu-alloc-mapper-job.j2
     dest: "{{ path }}/nomad-gpu-alloc-mapper-job.hcl"
     owner: "{{ username }}"
-    mode: '777'
+    mode: '0640'
   register: create_gpu_alloc_mapper_job
 
 - name: "Check if gpu-alloc-mapper job is already registered"

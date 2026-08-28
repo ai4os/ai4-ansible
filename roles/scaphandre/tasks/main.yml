@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ scaphandre_mount_point }}"
     state: directory
-    mode: '0755'
+    mode: '0750'
 
 - name: "Mount Scaphandre virtiofs share (persistent, read-only)"
   mount:
@@ -28,7 +28,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/hubblo-org/scaphandre/releases/download/v{{ scaphandre_version }}/scaphandre_v{{ scaphandre_version }}-{{ scaphandre_deb_suffix }}_amd64.deb"
     dest: "/tmp/scaphandre_{{ scaphandre_version }}.deb"
-    mode: '0644'
+    mode: '0640'
 
 # Note: the .deb's internal version label is "0.5.0-1" even for binary 1.0.2
 # (known upstream packaging bug) - apt will compare against that label, not

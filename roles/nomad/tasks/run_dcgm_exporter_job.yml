@@ -3,7 +3,7 @@
     src: nomad-dcgm-exporter-job.j2
     dest: "{{ path }}/nomad-dcgm-exporter-job.hcl"
     owner: "{{ username }}"
-    mode: '777'
+    mode: '0640'
   register: create_dcgm_exporter_job
 
 - name: "Check if dcgm-exporter job is already registered"

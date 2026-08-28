@@ -3,7 +3,7 @@
     src: nomad-scaphandre-job.j2
     dest: "{{ path }}/nomad-scaphandre-job.hcl"
     owner: "{{ username }}"
-    mode: '777'
+    mode: '0640'
   register: create_scaphandre_job
 
 - name: "Check if scaphandre job is already registered"

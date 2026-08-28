@@ -9,10 +9,10 @@
   ansible.builtin.file:
     path: /etc/dcgm-exporter
     state: directory
-    mode: '0755'
+    mode: '0750'
 
 - name: "Copy dcgm-exporter custom counters file"
   ansible.builtin.copy:
     src: dcgm-power-counters.csv
     dest: /etc/dcgm-exporter/power-counters.csv
-    mode: '0644'
+    mode: '0640'

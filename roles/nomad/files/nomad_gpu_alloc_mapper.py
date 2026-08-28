@@ -18,6 +18,13 @@ import json
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+# Plain-HTTP Prometheus exporter, like dcgm-exporter / scaphandre / node_exporter:
+# the Prometheus ecosystem scrapes over cleartext HTTP and TLS is terminated (if
+# at all) at the scraper side. Binds all interfaces so it can be reached both by
+# the co-located Alloy sidecar (localhost) and by Consul-service-discovery
+# scrapers hitting the node IP. The only data served is a GPU-UUID -> Nomad
+# alloc_id mapping, which is not sensitive.
+BIND_HOST = "0.0.0.0"  # NOSONAR
 PORT = 9402
 DOCKER_TIMEOUT = 5
 ALLOC_ID_LABEL = "com.hashicorp.nomad.alloc_id"
@@ -114,4 +121,4 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    HTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
+    HTTPServer((BIND_HOST, PORT), Handler).serve_forever()  # NOSONAR
