@@ -1,0 +1,78 @@
+---
+# Check first: if the share is already mounted (from a previous run), it's
+# read-only and the file task below would fail trying to chmod it (mode is
+# meaningless on an active read-only mount anyway).
+- name: "Check if Scaphandre mount point is already mounted"
+  ansible.builtin.command: "mountpoint -q {{ scaphandre_mount_point }}"
+  register: scaphandre_premount_check
+  changed_when: false
+  failed_when: false
+
+- name: "Create Scaphandre virtiofs mount point"
+  ansible.builtin.file:
+    path: "{{ scaphandre_mount_point }}"
+    state: directory
+    mode: '0750'
+  when: scaphandre_premount_check.rc != 0
+
+# This role runs on every host in the play, including nomad_servers, which
+# have no virtiofs share wired up at the hypervisor (they never run the
+# scaphandre job either -- see the "Warn if not mounted" task below). Without
+# ignore_errors, the immediate mount attempt failing here (e.g. "wrong fs
+# type") is fatal and skips the rest of the play for that host, including
+# job registration -- `opts: ro,nofail` only makes it non-fatal at boot time,
+# not for this task.
+- name: "Mount Scaphandre virtiofs share (persistent, read-only)"
+  mount:
+    path: "{{ scaphandre_mount_point }}"
+    src: "{{ scaphandre_virtiofs_tag }}"
+    fstype: virtiofs
+    opts: ro,nofail
+    state: mounted
+  ignore_errors: true
+
+- name: "Check Scaphandre virtiofs share is mounted"
+  ansible.builtin.command: "mountpoint -q {{ scaphandre_mount_point }}"
+  register: scaphandre_mountpoint
+  changed_when: false
+  failed_when: false
+
+- name: "Warn if Scaphandre virtiofs share is not mounted"
+  ansible.builtin.debug:
+    msg: "WARNING: {{ scaphandre_mount_point }} is not a mountpoint. Virtiofs did not mount correctly."
+  when: scaphandre_mountpoint.rc != 0
+
+# Per-host filename for the locally-built package (only used when scaphandre_local_pkg
+# is set): scaphandre_<revision>_ubuntu<major><minor>_amd64.deb, e.g.
+# scaphandre_1.0.2-ifca-advanced-computing2_ubuntu2204_amd64.deb
+- name: "Resolve Scaphandre package filename"
+  ansible.builtin.set_fact:
+    scaphandre_deb_file: >-
+      {%- if scaphandre_local_pkg -%}
+      scaphandre_{{ scaphandre_local_pkg }}_ubuntu{{ ansible_distribution_version | replace('.', '') }}_amd64.deb
+      {%- else -%}
+      scaphandre_{{ scaphandre_version }}.deb
+      {%- endif -%}
+
+- name: "Download upstream Scaphandre .deb package"
+  ansible.builtin.get_url:
+    url: "https://github.com/hubblo-org/scaphandre/releases/download/v{{ scaphandre_version }}/scaphandre_v{{ scaphandre_version }}-{{ scaphandre_deb_suffix }}_amd64.deb"
+    dest: "/tmp/{{ scaphandre_deb_file }}"
+    mode: '0640'
+  when: not scaphandre_local_pkg
+
+- name: "Copy locally-built (patched) Scaphandre .deb package"
+  ansible.builtin.copy:
+    src: "{{ scaphandre_deb_file }}"
+    dest: "/tmp/{{ scaphandre_deb_file }}"
+    mode: '0640'
+  when: scaphandre_local_pkg | length > 0
+
+# The upstream .deb has a wrong internal version label ("0.5.0-1", a known
+# packaging bug); a locally-built package (scaphandre_local_pkg) carries a real
+# Version, so apt compares against that and re-runs are a no-op unless the
+# package Version actually changes.
+- name: "Install Scaphandre .deb package"
+  ansible.builtin.apt:
+    deb: "/tmp/{{ scaphandre_deb_file }}"
+    state: present

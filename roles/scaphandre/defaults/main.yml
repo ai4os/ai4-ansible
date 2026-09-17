@@ -1,0 +1,14 @@
+---
+# defaults file for scaphandre host preparation
+scaphandre_version: "1.0.2"
+scaphandre_deb_suffix: "deb12"   # covers Debian 12 based images (Ubuntu 22.04/24.04)
+
+# When set, install a locally-built / patched package from roles/scaphandre/files/
+# instead of downloading the upstream GitHub release. The value is the package
+# revision (control-file Version), e.g. "1.0.2-ifca-advanced-computing2"; the file
+# is resolved per host as
+#   scaphandre_<revision>_ubuntu<major><minor>_amd64.deb
+# (matching the local build artifact names). Empty = use the upstream release.
+scaphandre_local_pkg: ""
+scaphandre_mount_point: /var/scaphandre
+scaphandre_virtiofs_tag: scaphandre

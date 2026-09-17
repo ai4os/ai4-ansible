@@ -74,6 +74,28 @@
   when: ("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
         ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"])
 
+# Pre-pull dcgm-exporter image and stage its counters file on GPU clients
+- name: "Prepare dcgm-exporter"
+  include_tasks:
+    file: dcgm_exporter.yml
+    apply:
+      tags: dcgm_exporter
+  when: dcgm_exporter_enabled | default(false) | bool
+    and (("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
+         ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]))
+  tags: dcgm_exporter
+
+# Stage the GPU allocation mapper script on GPU clients
+- name: "Prepare gpu-alloc-mapper"
+  include_tasks:
+    file: gpu_alloc_mapper.yml
+    apply:
+      tags: gpu_alloc_mapper
+  when: gpu_alloc_mapper_enabled | default(false) | bool
+    and (("nomad_gpu_clients" in groups and inventory_hostname in groups["nomad_gpu_clients"]) or
+         ("nomad_new_gpu_clients" in groups and inventory_hostname in groups["nomad_new_gpu_clients"]))
+  tags: gpu_alloc_mapper
+
 # Generate initial Nomad certificates (from-scratch cluster deployment functionanility)
 - name: Generating and fetching nomad certificates
   block:
@@ -190,6 +212,15 @@
   when: alloy_enabled | default(false) | bool
   tags: alloy
 
+# Prepare Scaphandre host requirements (virtiofs mount + package install)
+- name: "Prepare Scaphandre"
+  include_role:
+    name: scaphandre
+    apply:
+      tags: scaphandre
+  when: scaphandre_enabled | default(false) | bool
+  tags: scaphandre
+
 # Create initial Nomad namespaces (from-scratch cluster deployment functionality)
 - name: "Create nomad namespaces"
   shell: "nomad namespace apply {{ item }}"
@@ -206,6 +237,36 @@
 - name: "Create job for docuum service "
   include_tasks: run_docuum_job.yml
   when: ("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+
+- name: "Create job for dcgm-exporter service"
+  include_tasks:
+    file: run_dcgm_exporter_job.yml
+    apply:
+      tags: dcgm_exporter
+  when: (dcgm_exporter_enabled | default(false) | bool)
+    and (("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+         or ("consul_new_master" in groups and inventory_hostname in groups["consul_new_master"]))
+  tags: dcgm_exporter
+
+- name: "Create job for scaphandre service"
+  include_tasks:
+    file: run_scaphandre_job.yml
+    apply:
+      tags: scaphandre
+  when: (scaphandre_enabled | default(false) | bool)
+    and (("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+         or ("consul_new_master" in groups and inventory_hostname in groups["consul_new_master"]))
+  tags: scaphandre
+
+- name: "Create job for gpu-alloc-mapper service"
+  include_tasks:
+    file: run_gpu_alloc_mapper_job.yml
+    apply:
+      tags: gpu_alloc_mapper
+  when: (gpu_alloc_mapper_enabled | default(false) | bool)
+    and (("nomad_master" in groups and inventory_hostname in groups["nomad_master"])
+         or ("consul_new_master" in groups and inventory_hostname in groups["consul_new_master"]))
+  tags: gpu_alloc_mapper
 
 
 #Copy try-me script

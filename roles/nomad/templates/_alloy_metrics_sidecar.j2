@@ -1,0 +1,121 @@
+{% if alloy_metrics_enabled | default(false) | bool %}
+    task "alloy-metrics" {
+
+      driver = "docker"
+
+      # Give Alloy time to emit end-of-run staleness markers for the scraped
+      # series and flush its WAL to Mimir before Nomad SIGKILLs it. Without this
+      # (default kill_timeout = 5s) a `nomad job stop` kills the sidecar together
+      # with the exporter before the stale markers are sent, and the series keep
+      # returning their last value for ~5 min (PromQL lookback-delta).
+      kill_timeout = "30s"
+      kill_signal  = "SIGTERM"
+
+      config {
+        image        = "{{ alloy_image }}"
+        network_mode = "host"
+        args         = ["run", "--server.http.listen-addr=127.0.0.1:{{ alloy_metrics_http_port }}", "/local/config.alloy"]
+      }
+
+      env {
+        NODE_NAME = "${node.unique.name}"
+        VM_HOSTNAME = "${attr.unique.hostname}"
+      }
+
+      template {
+        destination = "local/config.alloy"
+        data = <<EOF
+logging {
+  level = "info"
+}
+
+prometheus.scrape "{{ alloy_metrics_component | replace("-", "_") }}" {
+  scrape_interval = "{{ alloy_scrape_interval }}"
+  targets = [{
+    "__address__" = "localhost:{{ alloy_metrics_port }}",
+    "instance"    = "{% raw %}{{ env "VM_HOSTNAME" }}{% endraw %}",
+    "datacenter"  = "{{ consul_dc_name }}",
+    "node"        = "{% raw %}{{ env "NODE_NAME" }}{% endraw %}",
+  }]
+  forward_to = [prometheus.relabel.keep.receiver]
+}
+
+prometheus.relabel "keep" {
+  forward_to = [prometheus.remote_write.mimir.receiver]
+
+{% if alloy_metrics_keep_regex is defined and alloy_metrics_keep_regex %}
+  rule {
+    source_labels = {{ (alloy_metrics_keep_source_labels | default(["__name__"])) | to_json }}
+    regex         = "{{ alloy_metrics_keep_regex }}"
+    action        = "keep"
+  }
+{% endif %}
+
+  // Federation-wide safelist: any container can expose arbitrary Docker
+  // labels (OCI image metadata, build info, vendor tags, ...), and any one
+  // of those can carry a value long enough to make Mimir reject the whole
+  // remote_write batch it's bundled in with a 400 -- silently dropping every
+  // series in that batch, unrelated ones included (this has already
+  // happened with Nuclio's annotation/spec labels). Rather than reactively
+  // blacklisting bad labels as we find them, keep only the labels we
+  // actually query on; everything else -- known or not yet seen -- is
+  // dropped by default. Add to this list deliberately, not to unblock a
+  // one-off dashboard need.
+  rule {
+    regex  = "__name__|datacenter|instance|job|node|UUID|alloc_id|container_id|container_names|Hostname|device|gpu|modelName|pci_bus_id|pid|container_label_com_hashicorp_nomad_alloc_id"
+    action = "labelkeep"
+  }
+}
+
+prometheus.remote_write "mimir" {
+  endpoint {
+    url = {{ alloy_mimir_url | to_json }}
+
+    basic_auth {
+      username = {{ alloy_mimir_user | to_json }}
+      password = {{ alloy_mimir_password | to_json }}
+    }
+  }
+}
+EOF
+      }
+
+      resources {
+        cpu    = 50
+        memory = 128
+      }
+
+      restart {
+        attempts = 3
+        delay    = "15s"
+        interval = "5m"
+        mode     = "delay"
+      }
+
+      service {
+        name     = "alloy-metrics-{{ alloy_metrics_component }}"
+        port     = "alloy-health"
+        provider = "consul"
+
+        tags = ["alloy", "metrics-sidecar"]
+
+        # Alloy's HTTP server only binds 127.0.0.1 (see the args above --
+        # some of these nodes have public IPs, so it's not meant to be
+        # reachable off-host). address_mode = "host" targets the node's
+        # real IP, which always gets connection-refused against a
+        # loopback-only listener: the check never passes regardless of
+        # whether Alloy is actually healthy. Run the probe inside the
+        # container instead, where 127.0.0.1 is reachable; the grafana/alloy
+        # image ships neither curl nor wget, so use bash's /dev/tcp rather
+        # than exec'ing out to one.
+        check {
+          type     = "script"
+          name     = "ready"
+          command  = "bash"
+          args     = ["-c", "exec 3<>/dev/tcp/127.0.0.1/{{ alloy_metrics_http_port }} && printf 'GET /-/ready HTTP/1.0\r\n\r\n' >&3 && head -1 <&3 | grep -q '200 OK'"]
+          interval = "30s"
+          timeout  = "5s"
+        }
+      }
+    }
+{% endif %}
