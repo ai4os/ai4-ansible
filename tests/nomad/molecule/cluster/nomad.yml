@@ -15,6 +15,7 @@
         path: /tmp/
         nomad_dc: ifca-ai4eosc
         domain: ifca
+        consul_dc_name: "ifca-ai4eosc"
         nomad_namespaces:
           - ai4eosc
           - imagine
